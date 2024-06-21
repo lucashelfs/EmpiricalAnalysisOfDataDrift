@@ -1,5 +1,5 @@
 data/usp-stream-data/*.arff
-comparison_results/
+comparison_results/*/
 *.DS_Store
 *__pycache__*
 .idea
