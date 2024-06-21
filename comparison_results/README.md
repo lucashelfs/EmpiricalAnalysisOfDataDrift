@@ -1,0 +1,1 @@
+This directory will contain all comparison results data and images.
