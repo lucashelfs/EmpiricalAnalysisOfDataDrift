@@ -1,18 +1,21 @@
 import os
 import pandas as pd
 
+from typing import Tuple
+
 from codes.config import insects_datasets, load_insect_dataset
 from sklearn.preprocessing import MinMaxScaler
 from ucimlrepo import fetch_ucirepo
 
-from river_datasets import (
+from codes.river_datasets import (
     sea_concept_drift_dataset,
     stagger_concept_drift_dataset,
     generate_dataset_from_river_generator,
     multi_sea_dataset,
     multi_stagger_dataset,
 )
-from river_config import drift_central_position, drift_width, dataset_size
+from codes.river_config import seed, drift_central_position, drift_width, dataset_size
+
 
 # TODO: change this file paths and set the new directory
 common_datasets = {
@@ -43,11 +46,6 @@ common_datasets = {
         "change_point": [(i + 1) * dataset_size // 3 for i in range(3 - 1)]
     },
 }
-
-
-def define_batches(X, batch_size):
-    X["Batch"] = (X.index // batch_size) + 1
-    return X
 
 
 def load_magic_dataset_data(file_path="~/Downloads/magic.csv"):
@@ -120,10 +118,25 @@ def load_multi_stagger(seed, dataset_size):
     return multi_stagger_df
 
 
-def load_and_prepare_dataset(dataset):
-    # Parameters
-    from river_config import seed, drift_central_position, drift_width, dataset_size
+## Tested methods below
 
+
+def find_indexes(drifts_list: list) -> list:
+    """Fetch the indexes where drifts occur."""
+    drift_indexes = [
+        index for index, value in enumerate(drifts_list) if value == "drift"
+    ]
+    return drift_indexes
+
+
+def define_batches(X: pd.DataFrame, batch_size: int) -> pd.DataFrame:
+    """Define batches on dataframe based on batch size."""
+    X["Batch"] = (X.index // batch_size) + 1
+    return X
+
+
+def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, str]:
+    """Load the desired dataset."""
     if dataset in insects_datasets.keys():
         dataset_filename_str = (
             dataset.lower()
@@ -166,8 +179,3 @@ def load_and_prepare_dataset(dataset):
         df = load_multi_stagger(seed, dataset_size)
         _ = df.pop("class")
         return df, "MULTISTAGGER"
-
-
-def find_indexes(my_list):
-    drift_indexes = [index for index, value in enumerate(my_list) if value == "drift"]
-    return drift_indexes
