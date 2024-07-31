@@ -18,55 +18,54 @@ from sklearn.metrics import (
 )
 
 from codes.config import comparisons_output_dir as output_dir
+
+
 from codes.common import (
     common_datasets,
+    calculate_index,
     define_batches,
-    load_magic_dataset_data,
-    load_magic_dataset_targets,
+    extract_drift_info,
+    datasets_with_added_drifts,
     find_indexes,
-    load_synthetic_sea,
-    load_synthetic_stagger,
-    load_multi_sea,
-    load_multi_stagger,
+    load_and_prepare_dataset,
 )
 from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
+from codes.drift_config import drift_config
 from codes.config import insects_datasets, load_insect_dataset
 
 
-from river_config import seed, drift_central_position, drift_width, dataset_size
-
-
-def load_dataset(dataset: str):
-    """Loads the dataset based on the dataset name."""
-    if dataset in insects_datasets:
-        X = load_insect_dataset(insects_datasets[dataset]["filename"])
-        Y_og = X.pop("class")
-    elif dataset == "electricity":
-        X = pd.read_csv(common_datasets[dataset]["filename"])
-        Y_og = X.pop(common_datasets[dataset]["class_column"])
-    elif dataset == "magic":
-        X = load_magic_dataset_data()
-        Y_og = load_magic_dataset_targets().values.ravel()
-    elif dataset == "SEA":
-        X = load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size)
-        Y_og = X.pop("class")
-    elif dataset == "MULTISEA":
-        X = load_multi_sea(seed, dataset_size)
-        Y_og = X.pop("class")
-    elif dataset == "STAGGER":
-        X = load_synthetic_stagger(
-            seed, drift_central_position, drift_width, dataset_size
-        )
-        Y_og = X.pop("class")
-    elif dataset == "MULTISTAGGER":
-        X = load_multi_stagger(seed, dataset_size)
-        Y_og = X.pop("class")
-    else:
-        raise ValueError("Wrong dataset configuration")
-
-    le = LabelEncoder()
-    Y = le.fit_transform(Y_og)
-    return X, Y
+# from river_config import seed, drift_central_position, drift_width, dataset_size
+# def load_dataset(dataset: str):
+#     """Loads the dataset based on the dataset name."""
+#     if dataset in insects_datasets:
+#         X = load_insect_dataset(insects_datasets[dataset]["filename"])
+#         Y_og = X.pop("class")
+#     elif dataset == "electricity":
+#         X = pd.read_csv(common_datasets[dataset]["filename"])
+#         Y_og = X.pop(common_datasets[dataset]["class_column"])
+#     elif dataset == "magic":
+#         X = load_magic_dataset_data()
+#         Y_og = load_magic_dataset_targets().values.ravel()
+#     elif dataset == "SEA":
+#         X = load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size)
+#         Y_og = X.pop("class")
+#     elif dataset == "MULTISEA":
+#         X = load_multi_sea(seed, dataset_size)
+#         Y_og = X.pop("class")
+#     elif dataset == "STAGGER":
+#         X = load_synthetic_stagger(
+#             seed, drift_central_position, drift_width, dataset_size
+#         )
+#         Y_og = X.pop("class")
+#     elif dataset == "MULTISTAGGER":
+#         X = load_multi_stagger(seed, dataset_size)
+#         Y_og = X.pop("class")
+#     else:
+#         raise ValueError("Wrong dataset configuration")
+#
+#     le = LabelEncoder()
+#     Y = le.fit_transform(Y_og)
+#     return X, Y
 
 
 def run_prequential_naive_bayes(
@@ -76,7 +75,7 @@ def run_prequential_naive_bayes(
 ):
     """Run the prequential Naive Bayes algorithm on the dataset with specific drifts."""
 
-    X, Y = load_dataset(dataset)
+    X, Y, _ = load_and_prepare_dataset(dataset)
     X = define_batches(X=X, batch_size=batch_size)
     Y = pd.DataFrame(Y, columns=["class"])
     Y = define_batches(X=Y, batch_size=batch_size)
@@ -401,7 +400,6 @@ def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
 
 def fetch_dataset_change_points(dataset_name: str, batch_size: int):
     """Fetch all change points from dataset."""
-    # Fetch che batches where change points occur on the datasets
     change_points = []
 
     if dataset_name in insects_datasets.keys():
@@ -409,6 +407,15 @@ def fetch_dataset_change_points(dataset_name: str, batch_size: int):
 
     if dataset_name in common_datasets.keys():
         change_points = common_datasets[dataset_name]["change_point"]
+
+    if dataset_name in datasets_with_added_drifts:
+        df, _, _ = load_and_prepare_dataset(dataset_name)
+        _, column, drifts = extract_drift_info(dataset_name)
+        for drift_type in drifts:
+            for drift in drifts[drift_type]:
+                start_index = calculate_index(df, drift[0])
+                end_index = calculate_index(df, drift[1])
+                change_points.extend([start_index, end_index])
 
     batches_with_change_points = [cp // batch_size for cp in change_points]
     return batches_with_change_points
@@ -418,6 +425,14 @@ def run_full_experiment():
     """Run full experiment for all datasets."""
     batch_sizes = [1000]
     datasets = ["electricity"]
+    datasets_with_added_drifts = [
+        f"{outer_key}_{inner_key}"
+        for outer_key, inner_dict in drift_config.items()
+        for inner_key in inner_dict.keys()
+    ]
+
+    for dataset in datasets_with_added_drifts:
+        datasets.append(dataset)
 
     # batch_sizes = [1000, 1500, 2000, 2500]
     # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
@@ -441,7 +456,9 @@ def run_full_experiment():
         for batch_size in batch_sizes:
             print(f"{dataset} - {batch_size}")
             drift_results, test_results, X_shape = run_test(
-                dataset=dataset, batch_size=batch_size, plot_heatmaps=True
+                dataset=dataset,
+                batch_size=batch_size,
+                plot_heatmaps=True,
             )
             num_batches = X_shape // batch_size  # Calculate the number of batches
             dataset_results[batch_size] = test_results
