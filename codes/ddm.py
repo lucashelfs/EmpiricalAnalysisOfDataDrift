@@ -16,13 +16,7 @@ def define_batches(X, batch_size):
 
 
 def plot_heatmap(
-    technique,
-    heatmap_data,
-    dataset,
-    batch_size,
-    change_points=None,
-    suffix="",
-    batches_with_drift_list=None,
+    technique, heatmap_data, dataset, batch_size, change_points=None, suffix=""
 ):
     os.makedirs(output_dir + f"/{dataset}/heatmaps/", exist_ok=True)
     sns.set(rc={"figure.figsize": (12, 8)})
@@ -147,47 +141,29 @@ def fetch_ksddm_drifts(
     plot_heatmaps=False,
     text="KSDDM",
 ):
-    if dataset is not None:
-        reference_batch = 1
-        X, dataset_filename_str = load_and_prepare_dataset(dataset)
-        X = define_batches(X, batch_size)
+    if dataset is None:
+        return
 
-        reference = X[X.Batch == reference_batch].iloc[:, :-1]
-        all_test = X[X.Batch != reference_batch]
+    reference_batch = 1
+    X, _, _ = load_and_prepare_dataset(dataset)
+    X = define_batches(X, batch_size)
 
-        ksddm = initialize_ksddm(reference, mean_threshold=mean_threshold)
-        heatmap_data, diff_heatmap_data, detected_drift = process_batches(
-            ksddm, X, reference_batch
-        )
+    reference = X[X.Batch == reference_batch].iloc[:, :-1]
+    all_test = X[X.Batch != reference_batch]
 
-        plot_data = pd.DataFrame(
-            {
-                "Batch": all_test.Batch.unique(),
-                "Detected Drift": ksddm.drift_state,
-            }
-        )
+    ksddm = initialize_ksddm(reference, mean_threshold=mean_threshold)
+    heatmap_data, _, detected_drift = process_batches(ksddm, X, reference_batch)
 
-        if plot_heatmaps:
-            drift_list = find_indexes(plot_data["Detected Drift"])
-            plot_heatmap(
-                text,
-                heatmap_data,
-                dataset,
-                batch_size,
-                change_points=None,
-                batches_with_drift_list=drift_list,
-            )
-            plot_heatmap(
-                text,
-                heatmap_data,
-                dataset,
-                batch_size,
-                change_points=None,
-                batches_with_drift_list=drift_list,
-                suffix="Chunked",
-            )
+    plot_data = pd.DataFrame(
+        {"Batch": all_test.Batch.unique(), "Detected Drift": ksddm.drift_state}
+    )
 
-        return plot_data["Detected Drift"]
+    if plot_heatmaps:
+        drift_list = find_indexes(plot_data["Detected Drift"])
+        plot_heatmap(text, heatmap_data, dataset, batch_size)
+        plot_heatmap(text, heatmap_data, dataset, batch_size, suffix="Chunked")
+
+    return plot_data["Detected Drift"]
 
 
 def fetch_hdddm_drifts(
@@ -195,7 +171,7 @@ def fetch_hdddm_drifts(
 ):
     if dataset is not None:
         reference_batch = 1
-        X, dataset_filename_str = load_and_prepare_dataset(dataset)
+        X, _, dataset_filename_str = load_and_prepare_dataset(dataset)
         X = define_batches(X, batch_size)
 
         reference = X[X.Batch == reference_batch].iloc[:, :-1]
@@ -223,14 +199,7 @@ def fetch_hdddm_drifts(
 
         if plot_heatmaps:
             drift_list = find_indexes(plot_data["Detected Drift"])
-            plot_heatmap(
-                "HDDDM",
-                heatmap_data,
-                dataset,
-                batch_size,
-                change_points=None,
-                batches_with_drift_list=drift_list,
-            )
+            plot_heatmap("HDDDM", heatmap_data, dataset, batch_size, change_points=None)
 
         return plot_data["Detected Drift"]
 
@@ -239,7 +208,7 @@ def fetch_jsddm_drifts(
     batch_size=1000, statistic="stdev", dataset=None, plot_heatmaps=False
 ):
     if dataset is not None:
-        X, _ = load_and_prepare_dataset(dataset=dataset)
+        X, _, _ = load_and_prepare_dataset(dataset=dataset)
         reference_batch = 1
         X["Batch"] = (X.index // batch_size) + 1
 
@@ -268,13 +237,6 @@ def fetch_jsddm_drifts(
 
         if plot_heatmaps:
             drift_list = find_indexes(plot_data["Detected Drift"])
-            plot_heatmap(
-                "JSDDM",
-                heatmap_data,
-                dataset,
-                batch_size,
-                batches_with_drift_list=drift_list,
-                change_points=None,
-            )
+            plot_heatmap("JSDDM", heatmap_data, dataset, batch_size, change_points=None)
 
         return plot_data["Detected Drift"]
