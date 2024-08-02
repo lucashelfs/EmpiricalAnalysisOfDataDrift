@@ -1,28 +1,41 @@
 import os
+import numpy as np
 import pandas as pd
 
+from typing import Tuple
+
 from codes.config import insects_datasets, load_insect_dataset
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from ucimlrepo import fetch_ucirepo
 
-from river_datasets import (
+from codes.config import project_path_root
+from codes.drift_config import drift_config
+from codes.drift_generation import (
+    apply_abrupt_drift,
+    apply_gradual_drift,
+    apply_incremental_drift,
+    calculate_index,
+)
+
+from codes.river_datasets import (
     sea_concept_drift_dataset,
     stagger_concept_drift_dataset,
     generate_dataset_from_river_generator,
     multi_sea_dataset,
     multi_stagger_dataset,
 )
-from river_config import drift_central_position, drift_width, dataset_size
+from codes.river_config import seed, drift_central_position, drift_width, dataset_size
 
-# TODO: change this file paths and set the new directory
+common_datasets_file_path_prefix = os.path.join(project_path_root, "data/")
+
 common_datasets = {
     "electricity": {
-        "filename": "~/Downloads/electricity-normalized.csv",
+        "filename": common_datasets_file_path_prefix + "electricity-normalized.csv",
         "class_column": "class",
         "change_point": [],
     },
     "magic": {
-        "filename": "~/Downloads/magic.csv",
+        "filename": common_datasets_file_path_prefix + "magic.csv",
         "class_column": "class",
         "change_point": [],
     },
@@ -38,58 +51,43 @@ common_datasets = {
             drift_central_position + drift_width // 2,
         ]
     },
-    "MULTISEA": {"change_point": [(i + 1) * dataset_size // 4 for i in range(4 - 1)]},
-    "MULTISTAGGER": {
-        "change_point": [(i + 1) * dataset_size // 3 for i in range(3 - 1)]
-    },
+    "MULTISEA": {"change_point": [(i + 1) * dataset_size // 4 for i in range(3)]},
+    "MULTISTAGGER": {"change_point": [(i + 1) * dataset_size // 3 for i in range(2)]},
 }
 
+datasets_with_added_drifts = [
+    f"{outer_key}_{inner_key}"
+    for outer_key, inner_dict in drift_config.items()
+    for inner_key in inner_dict.keys()
+]
 
-def define_batches(X, batch_size):
-    X["Batch"] = (X.index // batch_size) + 1
-    return X
 
-
-def load_magic_dataset_data(file_path="~/Downloads/magic.csv"):
-    # Expand the user path
+def load_magic_dataset_data(file_path=common_datasets_file_path_prefix + "magic.csv"):
     file_path = os.path.expanduser(file_path)
-
-    # Check if the file exists
     if os.path.exists(file_path):
-        # Load the dataset from the file
-        df = pd.read_csv(file_path)
+        return pd.read_csv(file_path)
 
-    else:
-        # Fetch the dataset from the API
-        magic_gamma_telescope = fetch_ucirepo(id=159)
-        X = magic_gamma_telescope.data.features
+    magic_gamma_telescope = fetch_ucirepo(id=159)
+    df = pd.DataFrame(
+        magic_gamma_telescope.data.features,
+        columns=magic_gamma_telescope.data.feature_names,
+    )
+    df["fConc1"] = df["fConc1"].sort_values().reset_index(drop=True)
 
-        # Convert to DataFrame to keep column names
-        df = pd.DataFrame(X, columns=magic_gamma_telescope.data.feature_names)
-        df["fConc1"] = df["fConc1"].sort_values().reset_index(drop=True)
-
-        # Apply MinMaxScaler
-        scaler = MinMaxScaler()
-        scaled_X = scaler.fit_transform(df)
-
-        # Convert back to DataFrame to retain column names
-        scaled_df = pd.DataFrame(scaled_X, columns=df.columns)
-
-        # Save the DataFrame to a CSV file
-        scaled_df.to_csv(file_path, index=False)
-
-        # Use the scaled DataFrame as the result
-        df = scaled_df
-
-    return df
+    scaler = MinMaxScaler()
+    scaled_df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    scaled_df.to_csv(file_path, index=False)
+    return scaled_df
 
 
 def load_magic_dataset_targets():
-    from ucimlrepo import fetch_ucirepo
+    file_path = os.path.expanduser(
+        common_datasets_file_path_prefix + "magic_targets.csv"
+    )
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path)
 
-    magic_gamma_telescope = fetch_ucirepo(id=159)
-    y = magic_gamma_telescope.data.targets
-    return y
+    return fetch_ucirepo(id=159).data.targets
 
 
 def load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size):
@@ -120,11 +118,26 @@ def load_multi_stagger(seed, dataset_size):
     return multi_stagger_df
 
 
-def load_and_prepare_dataset(dataset):
-    # Parameters
-    from river_config import seed, drift_central_position, drift_width, dataset_size
+#  Tested methods below
 
-    if dataset in insects_datasets.keys():
+
+def find_indexes(drifts_list: list) -> list:
+    """Fetch the indexes where drifts occur."""
+    return [index for index, value in enumerate(drifts_list) if value == "drift"]
+
+
+def define_batches(X: pd.DataFrame, batch_size: int) -> pd.DataFrame:
+    """Define batches on dataframe based on batch size."""
+    X["Batch"] = (X.index // batch_size) + 1
+    return X
+
+
+def load_and_prepare_dataset(
+    dataset: str,
+) -> Tuple[pd.DataFrame, np.ndarray, str]:
+    """Load the desired dataset."""
+
+    if dataset in insects_datasets:
         dataset_filename_str = (
             dataset.lower()
             .replace(".", "")
@@ -132,42 +145,104 @@ def load_and_prepare_dataset(dataset):
             .replace(")", "")
             .replace(" ", "_")
         )
-        X_insects = load_insect_dataset(insects_datasets[dataset]["filename"])
-        _ = X_insects.pop("class")
-        return X_insects, dataset_filename_str
+        df = load_insect_dataset(insects_datasets[dataset]["filename"])
+        Y_og = df.pop("class")
+        dataset_filename_str = dataset_filename_str
 
-    elif dataset == "electricity":
+    if dataset == "electricity":
         df = pd.read_csv(common_datasets[dataset]["filename"])
-        _ = df.pop("class")
-        return df, dataset
+        Y_og = df.pop("class")
+        dataset_filename_str = "electricity"
+        # return df, dataset
 
-    elif dataset == "magic":
-        return load_magic_dataset_data(), "magic"
+    if dataset == "magic":
+        df = load_magic_dataset_data()
+        Y_og = load_magic_dataset_targets().values.ravel()
+        dataset_filename_str = "magic"
 
-    # Synthetic datasets go here
-    elif dataset == "SEA":
+    if dataset == "SEA":
         df = load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size)
-        _ = df.pop("class")
-        return df, "SEA"
+        Y_og = df.pop("class")
+        dataset_filename_str = "SEA"
 
-    elif dataset == "MULTISEA":
+    if dataset == "MULTISEA":
         df = load_multi_sea(seed, dataset_size)
-        _ = df.pop("class")
-        return df, "MULTISEA"
+        Y_og = df.pop("class")
+        dataset_filename_str = "MULTISEA"
 
-    elif dataset == "STAGGER":
+    if dataset == "STAGGER":
         df = load_synthetic_stagger(
             seed, drift_central_position, drift_width, dataset_size
         )
-        _ = df.pop("class")
-        return df, "STAGGER"
+        Y_og = df.pop("class")
+        dataset_filename_str = "STAGGER"
 
-    elif dataset == "MULTISTAGGER":
+    if dataset == "MULTISTAGGER":
         df = load_multi_stagger(seed, dataset_size)
-        _ = df.pop("class")
-        return df, "MULTISTAGGER"
+        Y_og = df.pop("class")
+        dataset_filename_str = "MULTISTAGGER"
+
+    if dataset in datasets_with_added_drifts:
+        return load_and_prepare_dataset_with_drifts(dataset)
+
+    le = LabelEncoder()
+    Y = le.fit_transform(Y_og)
+
+    return df, Y, dataset_filename_str
 
 
-def find_indexes(my_list):
-    drift_indexes = [index for index, value in enumerate(my_list) if value == "drift"]
-    return drift_indexes
+def extract_drift_info(dataset_id_with_scenario: str):
+    """Extract drift information from the drift config."""
+    dataset_id_with_scenario = dataset_id_with_scenario.split("_")
+    dataset = dataset_id_with_scenario[0]
+    scenario = "_".join(dataset_id_with_scenario[1:])
+
+    if not drift_config.get(dataset, False):
+        raise ValueError("Dataset not found in drift config file.")
+
+    column = drift_config[dataset][scenario]["column"]
+    drifts = drift_config[dataset][scenario]["drifts"]
+    return dataset, column, drifts
+
+
+def apply_drifts(df: pd.DataFrame, column: str, drifts: dict) -> pd.DataFrame:
+    """Apply drifts to the dataframe based on the drift information."""
+    for drift_type in drifts:
+        if drift_type == "abrupt":
+            for drift in drifts[drift_type]:
+                start_index = calculate_index(df, drift[0])
+                end_index = calculate_index(df, drift[1])
+                change = df[column].mean() * 2
+                df = apply_abrupt_drift(
+                    df.copy(), column, start_index, end_index, change
+                )
+        elif drift_type == "gradual":
+            for drift in drifts[drift_type]:
+                start_index = calculate_index(df, drift[0])
+                end_index = calculate_index(df, drift[1])
+                change = df[column].mean() * 2
+                df = apply_gradual_drift(
+                    df.copy(), column, start_index, end_index, change
+                )
+        elif drift_type == "incremental":
+            for drift in drifts[drift_type]:
+                start_index = calculate_index(df, drift[0])
+                end_index = calculate_index(df, drift[1])
+                change = df[column].mean() * 2
+                step = change // (drift[1] - drift[0])
+                df = apply_incremental_drift(
+                    df.copy(), column, start_index, end_index, change, step=step
+                )
+        else:
+            raise ValueError("Invalid drift type.")
+    return df
+
+
+def load_and_prepare_dataset_with_drifts(
+    dataset_id_with_scenario: str,
+) -> Tuple[pd.DataFrame, np.ndarray, str]:
+    """Load and prepare a dataset with drifts."""
+    dataset, column, drifts = extract_drift_info(dataset_id_with_scenario)
+    df, Y, dataset_filename_str = load_and_prepare_dataset(dataset)
+    df = apply_drifts(df, column, drifts)
+    return df, Y, dataset_filename_str + "_" + dataset_id_with_scenario.split("_", 1)[1]

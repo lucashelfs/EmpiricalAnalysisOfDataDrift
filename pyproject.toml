@@ -23,6 +23,8 @@ imageio = "^2.34.0"
 numpy = "^1.26.4"
 xgboost = "^2.0.3"
 ucimlrepo = "^0.0.7"
+pytest = "^8.2.2"
+pre-commit = "^3.7.1"
 
 
 [build-system]
