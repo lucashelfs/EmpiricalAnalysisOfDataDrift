@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from codes.common import load_and_prepare_dataset, find_indexes
 from codes.config import comparisons_output_dir as output_dir
 
-from codes.ksddm_tester_dry import initialize_ksddm, process_batches
+from codes.KSDDM import initialize_ksddm, process_batches
 from codes.HDDDM import HDDDM, JSDDM
 
 
