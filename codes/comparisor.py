@@ -1,12 +1,11 @@
 import os
-from typing import List, Dict, Tuple, Optional, Union, Any
+from typing import List, Dict, Optional, Any
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import (
     accuracy_score,
@@ -30,42 +29,7 @@ from codes.common import (
     load_and_prepare_dataset,
 )
 from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
-from codes.drift_config import drift_config
-from codes.config import insects_datasets, load_insect_dataset
-
-
-# from river_config import seed, drift_central_position, drift_width, dataset_size
-# def load_dataset(dataset: str):
-#     """Loads the dataset based on the dataset name."""
-#     if dataset in insects_datasets:
-#         X = load_insect_dataset(insects_datasets[dataset]["filename"])
-#         Y_og = X.pop("class")
-#     elif dataset == "electricity":
-#         X = pd.read_csv(common_datasets[dataset]["filename"])
-#         Y_og = X.pop(common_datasets[dataset]["class_column"])
-#     elif dataset == "magic":
-#         X = load_magic_dataset_data()
-#         Y_og = load_magic_dataset_targets().values.ravel()
-#     elif dataset == "SEA":
-#         X = load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size)
-#         Y_og = X.pop("class")
-#     elif dataset == "MULTISEA":
-#         X = load_multi_sea(seed, dataset_size)
-#         Y_og = X.pop("class")
-#     elif dataset == "STAGGER":
-#         X = load_synthetic_stagger(
-#             seed, drift_central_position, drift_width, dataset_size
-#         )
-#         Y_og = X.pop("class")
-#     elif dataset == "MULTISTAGGER":
-#         X = load_multi_stagger(seed, dataset_size)
-#         Y_og = X.pop("class")
-#     else:
-#         raise ValueError("Wrong dataset configuration")
-#
-#     le = LabelEncoder()
-#     Y = le.fit_transform(Y_og)
-#     return X, Y
+from codes.config import insects_datasets
 
 
 def run_prequential_naive_bayes(
@@ -423,22 +387,17 @@ def fetch_dataset_change_points(dataset_name: str, batch_size: int):
 
 def run_full_experiment():
     """Run full experiment for all datasets."""
-    batch_sizes = [1000]
-    datasets = ["electricity"]
-    datasets_with_added_drifts = [
-        f"{outer_key}_{inner_key}"
-        for outer_key, inner_dict in drift_config.items()
-        for inner_key in inner_dict.keys()
-    ]
+    # batch_sizes = [1000]
+    # datasets = ["electricity"]
 
-    for dataset in datasets_with_added_drifts:
-        datasets.append(dataset)
+    batch_sizes = [1000, 1500, 2000, 2500]
+    datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
+    for dataset in insects_datasets.keys():
+        if dataset != "Out-of-control":
+            datasets.append(dataset)
 
-    # batch_sizes = [1000, 1500, 2000, 2500]
-    # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
-    # for dataset in insects_datasets.keys():
-    #     if dataset != "Out-of-control":
-    #         datasets.append(dataset)
+    # for dataset in datasets_with_added_drifts:
+    #     datasets.append(dataset)
 
     results = {dataset: {} for dataset in datasets}
     csv_file_paths = []
