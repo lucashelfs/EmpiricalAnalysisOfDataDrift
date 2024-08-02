@@ -8,7 +8,7 @@ from codes.config import insects_datasets, load_insect_dataset
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from ucimlrepo import fetch_ucirepo
 
-
+from codes.config import project_path_root
 from codes.drift_config import drift_config
 from codes.drift_generation import (
     apply_abrupt_drift,
@@ -26,16 +26,16 @@ from codes.river_datasets import (
 )
 from codes.river_config import seed, drift_central_position, drift_width, dataset_size
 
+common_datasets_file_path_prefix = os.path.join(project_path_root, "data/")
 
-# TODO: fix file paths
 common_datasets = {
     "electricity": {
-        "filename": "~/Downloads/electricity-normalized.csv",
+        "filename": common_datasets_file_path_prefix + "electricity-normalized.csv",
         "class_column": "class",
         "change_point": [],
     },
     "magic": {
-        "filename": "~/Downloads/magic.csv",
+        "filename": common_datasets_file_path_prefix + "magic.csv",
         "class_column": "class",
         "change_point": [],
     },
@@ -62,7 +62,7 @@ datasets_with_added_drifts = [
 ]
 
 
-def load_magic_dataset_data(file_path="~/Downloads/magic.csv"):
+def load_magic_dataset_data(file_path=common_datasets_file_path_prefix + "magic.csv"):
     file_path = os.path.expanduser(file_path)
     if os.path.exists(file_path):
         return pd.read_csv(file_path)
@@ -81,6 +81,12 @@ def load_magic_dataset_data(file_path="~/Downloads/magic.csv"):
 
 
 def load_magic_dataset_targets():
+    file_path = os.path.expanduser(
+        common_datasets_file_path_prefix + "magic_targets.csv"
+    )
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path)
+
     return fetch_ucirepo(id=159).data.targets
 
 
