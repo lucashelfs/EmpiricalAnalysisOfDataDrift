@@ -1,6 +1,9 @@
 import os
 import numpy as np
+
+import matplotlib.pyplot as plt
 import pandas as pd
+from codes.config import comparisons_output_dir as output_dir
 
 from typing import Tuple
 
@@ -205,8 +208,37 @@ def extract_drift_info(dataset_id_with_scenario: str):
     return dataset, column, drifts
 
 
-def apply_drifts(df: pd.DataFrame, column: str, drifts: dict) -> pd.DataFrame:
-    """Apply drifts to the dataframe based on the drift information."""
+def plot_data_streams_with_drifts(
+    df_original, df_drifted, column, output_dir, dataset_name
+):
+    """Plot data streams before and after applying drifts."""
+    # Plot the original data
+    plt.figure(figsize=(14, 7))
+    plt.plot(df_original.index, df_original[column], label="Original", color="blue")
+    plt.plot(df_drifted.index, df_drifted[column], label="With Drifts", color="red")
+    plt.xlabel("Index")
+    plt.ylabel(column)
+    plt.title(f"{dataset_name} - {column} Before and After Drifts")
+    plt.legend()
+    plt.grid(True)
+
+    # Ensure the output directory exists
+    dataset_output_dir = os.path.join(output_dir, dataset_name, "distributions")
+    os.makedirs(dataset_output_dir, exist_ok=True)
+
+    # Save the plot
+    plot_path = os.path.join(dataset_output_dir, f"{dataset_name}_{column}.png")
+    plt.savefig(plot_path)
+    plt.close()
+
+    print(f"Plot saved to {plot_path}")
+
+
+def apply_drifts(
+    df: pd.DataFrame, column: str, drifts: dict, output_dir: str, dataset_name: str
+) -> pd.DataFrame:
+    """Apply drifts to the dataframe based on the drift information and save plots."""
+    df_original = df.copy()
     for drift_type in drifts:
         if drift_type == "abrupt":
             for drift in drifts[drift_type]:
@@ -235,6 +267,8 @@ def apply_drifts(df: pd.DataFrame, column: str, drifts: dict) -> pd.DataFrame:
                 )
         else:
             raise ValueError("Invalid drift type.")
+
+    plot_data_streams_with_drifts(df_original, df, column, output_dir, dataset_name)
     return df
 
 
@@ -244,5 +278,5 @@ def load_and_prepare_dataset_with_drifts(
     """Load and prepare a dataset with drifts."""
     dataset, column, drifts = extract_drift_info(dataset_id_with_scenario)
     df, Y, dataset_filename_str = load_and_prepare_dataset(dataset)
-    df = apply_drifts(df, column, drifts)
+    df = apply_drifts(df, column, drifts, output_dir, dataset_id_with_scenario)
     return df, Y, dataset_filename_str + "_" + dataset_id_with_scenario.split("_", 1)[1]

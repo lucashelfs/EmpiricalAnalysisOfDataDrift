@@ -23,26 +23,35 @@ class CommonTesting(TestCase):
         self.assertEqual(drift_indexes, [2, 4])
 
     def test_load_prepare_insect_dataset(self):
-        df, dataset_id = load_and_prepare_dataset("Abrupt (imbal.)")
+        df, _, dataset_id = load_and_prepare_dataset("Abrupt (imbal.)")
         self.assertFalse(df.empty)
         self.assertEqual(dataset_id, "abrupt_imbal")
 
     def test_load_prepare_magic_dataset(self):
-        df, dataset_id = load_and_prepare_dataset("magic")
+        df, _, dataset_id = load_and_prepare_dataset("magic")
         self.assertFalse(df.empty)
         self.assertEqual(dataset_id, "magic")
 
     def test_load_prepare_electricity_dataset(self):
-        df, dataset_id = load_and_prepare_dataset("electricity")
+        df, _, dataset_id = load_and_prepare_dataset("electricity")
         self.assertFalse(df.empty)
         self.assertEqual(dataset_id, "electricity")
 
     def test_load_prepare_sea_dataset(self):
-        df, dataset_id = load_and_prepare_dataset("SEA")
+        df, _, dataset_id = load_and_prepare_dataset("SEA")
         self.assertFalse(df.empty)
         self.assertEqual(dataset_id, "SEA")
 
     def test_load_prepare_stagger_dataset(self):
-        df, dataset_id = load_and_prepare_dataset("STAGGER")
+        df, _, dataset_id = load_and_prepare_dataset("STAGGER")
         self.assertFalse(df.empty)
         self.assertEqual(dataset_id, "STAGGER")
+
+    # def test_load_synthetic_dataset(self):
+    #     params = {
+    #         "dataset_size": 3000,
+    #         "drift_kind": "abrupt",
+    #     }
+    #     df, dataset_id = load_and_prepare_dataset("synthetic", params)
+    #     self.assertFalse(df.empty)
+    #     self.assertEqual(dataset_id, "synthetic")

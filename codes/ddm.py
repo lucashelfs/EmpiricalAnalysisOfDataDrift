@@ -54,14 +54,14 @@ def plot_heatmap(
     )
 
     if change_points:
-        for i, cp in enumerate(change_points):
-            batch_number = cp // batch_size
+        for batch_number in change_points:
+            # batch_number = cp // batch_size
             ax.axvline(
                 x=batch_number + 0.5,
                 color="red",
                 linestyle="--",
                 linewidth=1.5,
-                label="Change Point" if i == 0 else "",
+                label="Detected drift",
             )
 
     ax.set_title(
@@ -160,8 +160,15 @@ def fetch_ksddm_drifts(
 
     if plot_heatmaps:
         drift_list = find_indexes(plot_data["Detected Drift"])
-        plot_heatmap(text, heatmap_data, dataset, batch_size)
-        plot_heatmap(text, heatmap_data, dataset, batch_size, suffix="Chunked")
+        plot_heatmap(text, heatmap_data, dataset, batch_size, change_points=drift_list)
+        plot_heatmap(
+            text,
+            heatmap_data,
+            dataset,
+            batch_size,
+            change_points=drift_list,
+            suffix="Chunked",
+        )
 
     return plot_data["Detected Drift"]
 
@@ -199,7 +206,9 @@ def fetch_hdddm_drifts(
 
         if plot_heatmaps:
             drift_list = find_indexes(plot_data["Detected Drift"])
-            plot_heatmap("HDDDM", heatmap_data, dataset, batch_size, change_points=None)
+            plot_heatmap(
+                "HDDDM", heatmap_data, dataset, batch_size, change_points=drift_list
+            )
 
         return plot_data["Detected Drift"]
 
@@ -237,6 +246,8 @@ def fetch_jsddm_drifts(
 
         if plot_heatmaps:
             drift_list = find_indexes(plot_data["Detected Drift"])
-            plot_heatmap("JSDDM", heatmap_data, dataset, batch_size, change_points=None)
+            plot_heatmap(
+                "JSDDM", heatmap_data, dataset, batch_size, change_points=drift_list
+            )
 
         return plot_data["Detected Drift"]

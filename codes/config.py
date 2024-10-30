@@ -2,12 +2,9 @@ import os
 import pandas as pd
 from scipy.io.arff import loadarff
 
-# TODO: refactor the project path root
-project_path_root = (
-    "/Users/lucashelfstein/Documents/Masters/EmpiricalAnalysisOfDataDrift"
-)
-
-
+# Get the absolute path of the current file
+file_path = os.path.abspath(__file__)
+project_path_root = os.path.dirname(os.path.dirname(file_path))
 comparisons_output_dir = os.path.join(project_path_root, "comparison_results")
 file_path_prefix = os.path.join(project_path_root, "data/usp-stream-data/")
 

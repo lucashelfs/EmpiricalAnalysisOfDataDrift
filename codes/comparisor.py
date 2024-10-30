@@ -385,19 +385,81 @@ def fetch_dataset_change_points(dataset_name: str, batch_size: int):
     return batches_with_change_points
 
 
+def plot_all_features(df: pd.DataFrame, dataset_name: str):
+    """Plot all feature columns for a given dataset in individual subplots and save them."""
+    # Exclude class column
+    feature_columns = [col for col in df.columns if col != "class"]
+
+    # Create a directory for the plots
+    dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    os.makedirs(dataset_output_dir, exist_ok=True)
+
+    # Create subplots for each feature column in a single file
+    num_features = len(feature_columns)
+    fig, axes = plt.subplots(num_features, 1, figsize=(14, 7 * num_features))
+
+    if num_features == 1:
+        axes = [axes]
+
+    for ax, column in zip(axes, feature_columns):
+        ax.plot(df.index, df[column], label=column)
+        ax.set_xlabel("Index")
+        ax.set_ylabel(column)
+        ax.set_title(f"{dataset_name} - {column}")
+        ax.legend()
+        ax.grid(True)
+
+    # Save the combined plot
+    combined_plot_path = os.path.join(
+        dataset_output_dir, f"{dataset_name}_all_features.png"
+    )
+    plt.tight_layout()
+    plt.savefig(combined_plot_path)
+    plt.close()
+
+    print(f"Combined feature plots saved to {combined_plot_path}")
+
+    # Save each feature plot in a separate file
+    for column in feature_columns:
+        plt.figure(figsize=(14, 7))
+        plt.plot(df.index, df[column], label=column)
+        plt.xlabel("Index")
+        plt.ylabel(column)
+        plt.title(f"{dataset_name} - {column}")
+        plt.legend()
+        plt.grid(True)
+
+        feature_plot_path = os.path.join(
+            dataset_output_dir, f"{dataset_name}_{column}.png"
+        )
+        plt.savefig(feature_plot_path)
+        plt.close()
+
+        print(f"Feature plot for {column} saved to {feature_plot_path}")
+
+
 def run_full_experiment():
     """Run full experiment for all datasets."""
-    # batch_sizes = [1000]
+    datasets = []
+
+    batch_sizes = [1000]
+    datasets = ["MULTISTAGGER", "MULTISEA"]
+
     # datasets = ["electricity"]
 
-    batch_sizes = [1000, 1500, 2000, 2500]
-    datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
-    for dataset in insects_datasets.keys():
-        if dataset != "Out-of-control":
-            datasets.append(dataset)
+    # batch_sizes = [1000, 1500, 2000, 2500]
 
-    # for dataset in datasets_with_added_drifts:
-    #     datasets.append(dataset)
+    # "magic" --> fix the issue with connection and save the file on path
+    # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
+
+    # for dataset in insects_datasets.keys():
+    #     if dataset != "Out-of-control":
+    #         datasets.append(dataset)
+
+    datasets.append("Incremental (bal.)")
+
+    for dataset in datasets_with_added_drifts:
+        datasets.append(dataset)
 
     results = {dataset: {} for dataset in datasets}
     csv_file_paths = []
@@ -435,6 +497,10 @@ def run_full_experiment():
         results[dataset] = dataset_results
         plot_results(dataset_results, dataset, batch_sizes)
         csv_file_paths.append(csv_file_path)
+
+        # Load the dataset and plot all features
+        df, _, _ = load_and_prepare_dataset(dataset)
+        plot_all_features(df, dataset)
 
     # Consolidate all CSV files into a single CSV file
     target_csv_file = os.path.join(output_dir, "consolidated_results.csv")
