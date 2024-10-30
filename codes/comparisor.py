@@ -404,13 +404,15 @@ def fetch_change_points(dataset_name: str, df: pd.DataFrame) -> list:
     return change_points
 
 
-def plot_all_features(df: pd.DataFrame, dataset_name: str):
+def plot_all_features(
+    df: pd.DataFrame,
+    dataset_name: str,
+    drift_points: List[int] = None,
+    suffix: str = "",
+):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
     # Exclude class column
     feature_columns = [col for col in df.columns if col != "class"]
-
-    # Fetch change points
-    change_points = fetch_change_points(dataset_name, df)
 
     # Create a directory for the plots
     dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
@@ -425,10 +427,15 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
 
     for ax, column in zip(axes, feature_columns):
         ax.plot(df.index, df[column], label=column)
-        for cp in change_points:
-            ax.axvline(
-                x=cp, color="red", linestyle="--", linewidth=1.5, label="Change point"
-            )
+        if drift_points:
+            for cp in drift_points:
+                ax.axvline(
+                    x=cp,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label="Drift point",
+                )
         ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
@@ -437,7 +444,7 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
 
     # Save the combined plot
     combined_plot_path = os.path.join(
-        dataset_output_dir, f"{dataset_name}_all_features.png"
+        dataset_output_dir, f"{dataset_name}_all_features{suffix}.png"
     )
     plt.tight_layout()
     plt.savefig(combined_plot_path)
@@ -449,10 +456,15 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
     for column in feature_columns:
         plt.figure(figsize=(14, 7))
         plt.plot(df.index, df[column], label=column)
-        for cp in change_points:
-            plt.axvline(
-                x=cp, color="red", linestyle="--", linewidth=1.5, label="Change point"
-            )
+        if drift_points:
+            for cp in drift_points:
+                plt.axvline(
+                    x=cp,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label="Drift point",
+                )
         plt.xlabel("Index")
         plt.ylabel(column)
         plt.title(f"{dataset_name} - {column}")
@@ -460,10 +472,38 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
         plt.grid(True)
 
         feature_plot_path = os.path.join(
-            dataset_output_dir, f"{dataset_name}_{column}.png"
+            dataset_output_dir, f"{dataset_name}_{column}{suffix}.png"
         )
         plt.savefig(feature_plot_path)
         plt.close()
+
+
+from codes.drift_generation import create_synthetic_dataframe, save_synthetic_dataset
+
+# Generate synthetic dataset without drifts
+dataframe_size = 30000
+synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
+
+# Save the synthetic dataset without drifts
+save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
+
+from codes.drift_generation import generate_synthetic_dataset_with_drifts
+
+# Generate synthetic dataset with drifts
+synthetic_df_with_drifts, drift_points = generate_synthetic_dataset_with_drifts(
+    dataframe_size
+)
+
+# Save the synthetic dataset with drifts
+save_synthetic_dataset(synthetic_df_with_drifts, "synthetic_dataset_with_drifts")
+
+# Plot all features with drift points
+plot_all_features(
+    synthetic_df_with_drifts,
+    "synthetic_dataset_with_drifts",
+    drift_points,
+    suffix="_with_drifts",
+)
 
 
 def run_full_experiment():
@@ -484,11 +524,14 @@ def run_full_experiment():
     #     if dataset != "Out-of-control":
     #         datasets.append(dataset)
 
-    datasets.append("Incremental (bal.)")
-    datasets.append("Abrupt (imbal.)")
+    # datasets.append("Incremental (bal.)")
+    # datasets.append("Abrupt (imbal.)")
+    #
+    # for dataset in datasets_with_added_drifts:
+    #     datasets.append(dataset)
 
-    for dataset in datasets_with_added_drifts:
-        datasets.append(dataset)
+    datasets = ["synthetic_dataset_no_drifts", "synthetic_dataset_with_drifts"]
+    batch_sizes = [1000, 2500]
 
     results = {dataset: {} for dataset in datasets}
     csv_file_paths = []

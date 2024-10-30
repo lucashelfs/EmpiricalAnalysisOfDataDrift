@@ -14,9 +14,9 @@ from ucimlrepo import fetch_ucirepo
 from codes.config import project_path_root
 from codes.drift_config import drift_config
 from codes.drift_generation import (
-    apply_abrupt_drift,
-    apply_gradual_drift,
-    apply_incremental_drift,
+    add_abrupt_drift,
+    add_gradual_drift,
+    add_incremental_drift,
     calculate_index,
 )
 
@@ -135,9 +135,7 @@ def define_batches(X: pd.DataFrame, batch_size: int) -> pd.DataFrame:
     return X
 
 
-def load_and_prepare_dataset(
-    dataset: str,
-) -> Tuple[pd.DataFrame, np.ndarray, str]:
+def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, str]:
     """Load the desired dataset."""
 
     if dataset in insects_datasets:
@@ -152,41 +150,65 @@ def load_and_prepare_dataset(
         Y_og = df.pop("class")
         dataset_filename_str = dataset_filename_str
 
-    if dataset == "electricity":
+    elif dataset == "electricity":
         df = pd.read_csv(common_datasets[dataset]["filename"])
         Y_og = df.pop("class")
         dataset_filename_str = "electricity"
-        # return df, dataset
 
-    if dataset == "magic":
+    elif dataset == "magic":
         df = load_magic_dataset_data()
         Y_og = load_magic_dataset_targets().values.ravel()
         dataset_filename_str = "magic"
 
-    if dataset == "SEA":
+    elif dataset == "SEA":
         df = load_synthetic_sea(seed, drift_central_position, drift_width, dataset_size)
         Y_og = df.pop("class")
         dataset_filename_str = "SEA"
 
-    if dataset == "MULTISEA":
+    elif dataset == "MULTISEA":
         df = load_multi_sea(seed, dataset_size)
         Y_og = df.pop("class")
         dataset_filename_str = "MULTISEA"
 
-    if dataset == "STAGGER":
+    elif dataset == "STAGGER":
         df = load_synthetic_stagger(
             seed, drift_central_position, drift_width, dataset_size
         )
         Y_og = df.pop("class")
         dataset_filename_str = "STAGGER"
 
-    if dataset == "MULTISTAGGER":
+    elif dataset == "MULTISTAGGER":
         df = load_multi_stagger(seed, dataset_size)
         Y_og = df.pop("class")
         dataset_filename_str = "MULTISTAGGER"
 
-    if dataset in datasets_with_added_drifts:
+    elif dataset in datasets_with_added_drifts:
         return load_and_prepare_dataset_with_drifts(dataset)
+
+    elif dataset == "synthetic_dataset_no_drifts":
+        df = pd.read_csv(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_no_drifts",
+                "synthetic_dataset_no_drifts.csv",
+            )
+        )
+        Y_og = df.pop("class")
+        dataset_filename_str = "synthetic_dataset_no_drifts"
+
+    elif dataset == "synthetic_dataset_with_drifts":
+        df = pd.read_csv(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_with_drifts",
+                "synthetic_dataset_with_drifts.csv",
+            )
+        )
+        Y_og = df.pop("class")
+        dataset_filename_str = "synthetic_dataset_with_drifts"
+
+    else:
+        raise ValueError(f"Dataset {dataset} not recognized.")
 
     le = LabelEncoder()
     Y = le.fit_transform(Y_og)
