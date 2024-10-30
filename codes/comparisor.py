@@ -16,9 +16,6 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from codes.config import comparisons_output_dir as output_dir
-
-
 from codes.common import (
     common_datasets,
     calculate_index,
@@ -29,7 +26,11 @@ from codes.common import (
     load_and_prepare_dataset,
 )
 from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
-from codes.config import insects_datasets
+
+
+from codes.config import comparisons_output_dir as output_dir, insects_datasets
+from drift_config import drift_config
+from codes.common import calculate_index, extract_drift_info
 
 
 def run_prequential_naive_bayes(
@@ -385,10 +386,31 @@ def fetch_dataset_change_points(dataset_name: str, batch_size: int):
     return batches_with_change_points
 
 
+def fetch_change_points(dataset_name: str, df: pd.DataFrame) -> list:
+    """Fetch change points for the given dataset."""
+    change_points = []
+
+    if dataset_name in insects_datasets:
+        change_points = insects_datasets[dataset_name]["change_point"]
+
+    if dataset_name in drift_config:
+        _, column, drifts = extract_drift_info(dataset_name)
+        for drift_type in drifts:
+            for drift in drifts[drift_type]:
+                start_index = calculate_index(df, drift[0])
+                end_index = calculate_index(df, drift[1])
+                change_points.extend([start_index, end_index])
+
+    return change_points
+
+
 def plot_all_features(df: pd.DataFrame, dataset_name: str):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
     # Exclude class column
     feature_columns = [col for col in df.columns if col != "class"]
+
+    # Fetch change points
+    change_points = fetch_change_points(dataset_name, df)
 
     # Create a directory for the plots
     dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
@@ -403,6 +425,10 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
 
     for ax, column in zip(axes, feature_columns):
         ax.plot(df.index, df[column], label=column)
+        for cp in change_points:
+            ax.axvline(
+                x=cp, color="red", linestyle="--", linewidth=1.5, label="Change point"
+            )
         ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
@@ -423,6 +449,10 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
     for column in feature_columns:
         plt.figure(figsize=(14, 7))
         plt.plot(df.index, df[column], label=column)
+        for cp in change_points:
+            plt.axvline(
+                x=cp, color="red", linestyle="--", linewidth=1.5, label="Change point"
+            )
         plt.xlabel("Index")
         plt.ylabel(column)
         plt.title(f"{dataset_name} - {column}")
@@ -435,15 +465,13 @@ def plot_all_features(df: pd.DataFrame, dataset_name: str):
         plt.savefig(feature_plot_path)
         plt.close()
 
-        print(f"Feature plot for {column} saved to {feature_plot_path}")
-
 
 def run_full_experiment():
     """Run full experiment for all datasets."""
     datasets = []
 
     batch_sizes = [1000]
-    datasets = ["MULTISTAGGER", "MULTISEA"]
+    # datasets = ["MULTISTAGGER", "MULTISEA"]
 
     # datasets = ["electricity"]
 
@@ -457,6 +485,7 @@ def run_full_experiment():
     #         datasets.append(dataset)
 
     datasets.append("Incremental (bal.)")
+    datasets.append("Abrupt (imbal.)")
 
     for dataset in datasets_with_added_drifts:
         datasets.append(dataset)
