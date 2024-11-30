@@ -33,6 +33,26 @@ from drift_config import drift_config
 from codes.common import calculate_index, extract_drift_info
 
 
+####
+
+import matplotlib.pyplot as plt
+
+# Set global style parameters
+plt.rcParams["figure.facecolor"] = "#EAEAF2"  # Set the background color to grey
+plt.rcParams["axes.facecolor"] = "#EAEAF2"  # Set the axes background color to grey
+plt.rcParams[
+    "savefig.facecolor"
+] = "#EAEAF2"  # Set the saved figure background color to grey
+plt.rcParams["grid.color"] = "white"  # Set the grid color to white
+plt.rcParams["axes.grid"] = True  # Enable grid by default
+plt.rcParams["legend.frameon"] = True  # Enable legend frame
+plt.rcParams["legend.framealpha"] = 0.9  # Set legend frame transparency
+plt.rcParams["legend.facecolor"] = "white"  # Set legend background color
+plt.rcParams["legend.edgecolor"] = "black"  # Set legend edge color
+
+###
+
+
 def run_prequential_naive_bayes(
     dataset: str,
     batch_size: int = 1000,
@@ -418,9 +438,15 @@ def plot_all_features(
     dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
+    # Filter out drift points at index 0 and at the index with the size of the dataframe
+    if drift_points:
+        drift_points = [dp for dp in drift_points if dp != 0 and dp != len(df)]
+
     # Create subplots for each feature column in a single file
     num_features = len(feature_columns)
-    fig, axes = plt.subplots(num_features, 1, figsize=(14, 7 * num_features))
+    fig, axes = plt.subplots(
+        num_features, 1, figsize=(14, 7 * num_features), facecolor="white"
+    )
 
     if num_features == 1:
         axes = [axes]
@@ -428,14 +454,17 @@ def plot_all_features(
     for ax, column in zip(axes, feature_columns):
         ax.plot(df.index, df[column], label=column)
         if drift_points:
-            for cp in drift_points:
-                ax.axvline(
-                    x=cp,
-                    color="red",
-                    linestyle="--",
-                    linewidth=1.5,
-                    label="Drift point",
-                )
+            for i, cp in enumerate(drift_points):
+                if i == 0:
+                    ax.axvline(
+                        x=cp,
+                        color="red",
+                        linestyle="--",
+                        linewidth=1.5,
+                        label="Drift point",
+                    )
+                else:
+                    ax.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
         ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
@@ -447,24 +476,27 @@ def plot_all_features(
         dataset_output_dir, f"{dataset_name}_all_features{suffix}.png"
     )
     plt.tight_layout()
-    plt.savefig(combined_plot_path)
+    plt.savefig(combined_plot_path, facecolor=fig.get_facecolor())
     plt.close()
 
     print(f"Combined feature plots saved to {combined_plot_path}")
 
     # Save each feature plot in a separate file
     for column in feature_columns:
-        plt.figure(figsize=(14, 7))
+        plt.figure(figsize=(14, 7), facecolor="white")
         plt.plot(df.index, df[column], label=column)
         if drift_points:
-            for cp in drift_points:
-                plt.axvline(
-                    x=cp,
-                    color="red",
-                    linestyle="--",
-                    linewidth=1.5,
-                    label="Drift point",
-                )
+            for i, cp in enumerate(drift_points):
+                if i == 0:
+                    plt.axvline(
+                        x=cp,
+                        color="red",
+                        linestyle="--",
+                        linewidth=1.5,
+                        label="Drift point",
+                    )
+                else:
+                    plt.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
         plt.xlabel("Index")
         plt.ylabel(column)
         plt.title(f"{dataset_name} - {column}")
@@ -474,14 +506,14 @@ def plot_all_features(
         feature_plot_path = os.path.join(
             dataset_output_dir, f"{dataset_name}_{column}{suffix}.png"
         )
-        plt.savefig(feature_plot_path)
+        plt.savefig(feature_plot_path, facecolor="white")
         plt.close()
 
 
 from codes.drift_generation import create_synthetic_dataframe, save_synthetic_dataset
 
 # Generate synthetic dataset without drifts
-dataframe_size = 30000
+dataframe_size = 80000
 synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
 
 # Save the synthetic dataset without drifts
@@ -491,7 +523,9 @@ from codes.drift_generation import generate_synthetic_dataset_with_drifts
 
 # Generate synthetic dataset with drifts
 synthetic_df_with_drifts, drift_points = generate_synthetic_dataset_with_drifts(
-    dataframe_size
+    dataframe_size,
+    features_with_drifts=["feature1", "feature3", "feature5"],
+    num_features=5,
 )
 
 # Save the synthetic dataset with drifts
@@ -510,12 +544,12 @@ def run_full_experiment():
     """Run full experiment for all datasets."""
     datasets = []
 
-    batch_sizes = [1000]
+    # batch_sizes = [1000]
     # datasets = ["MULTISTAGGER", "MULTISEA"]
 
     # datasets = ["electricity"]
 
-    # batch_sizes = [1000, 1500, 2000, 2500]
+    batch_sizes = [1000, 1500, 2000, 2500]
 
     # "magic" --> fix the issue with connection and save the file on path
     # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
@@ -531,7 +565,7 @@ def run_full_experiment():
     #     datasets.append(dataset)
 
     datasets = ["synthetic_dataset_no_drifts", "synthetic_dataset_with_drifts"]
-    batch_sizes = [1000, 2500]
+    # batch_sizes = [1000, 2500]
 
     results = {dataset: {} for dataset in datasets}
     csv_file_paths = []

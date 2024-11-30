@@ -20,20 +20,29 @@ def create_simple_dataframe(dataframe_size: int) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-def create_synthetic_dataframe(dataframe_size: int, seed: int = 42) -> pd.DataFrame:
-    """Create a synthetic dataframe with non-negative data and a class column."""
+def create_synthetic_dataframe(
+    dataframe_size: int,
+    num_features: int = 5,
+    loc: float = 10,
+    scale: float = 1,
+    seed: int = 42,
+) -> pd.DataFrame:
+    """Create a synthetic dataframe with a specified number of features and a class column."""
     np.random.seed(seed)
 
-    # Generate features with means far from zero
-    feature1 = np.random.normal(loc=10, scale=1, size=dataframe_size)
-    feature2 = np.random.normal(loc=15, scale=2, size=dataframe_size)
+    # Generate features with the same loc and scale
+    features = {
+        f"feature{i+1}": np.random.normal(loc=loc, scale=scale, size=dataframe_size)
+        for i in range(num_features)
+    }
 
-    # Generate class labels based on a simple rule
-    class_labels = np.where(feature1 + feature2 > 25, 1, 0)
+    # Generate class labels based on the sum of all features
+    class_labels = np.where(sum(features.values()) > num_features * loc, 1, 0)
 
-    data = {"feature1": feature1, "feature2": feature2, "class": class_labels}
+    # Add class labels to the features dictionary
+    features["class"] = class_labels
 
-    return pd.DataFrame(data)
+    return pd.DataFrame(features)
 
 
 def add_abrupt_drift(
@@ -156,20 +165,10 @@ def plot_data_disturbance():
     DF_SIZE = 3000
     df = create_simple_dataframe(dataframe_size=DF_SIZE)
 
-    # Apply sudden drift
-    df_sudden = df.copy()
-    df_sudden = add_abrupt_drift(
-        df_sudden,
-        "feature1",
-        start_index=(DF_SIZE // 2),
-        end_index=(DF_SIZE // 2 + DF_SIZE // 4),
-        change=5,
-    )
-
     # Apply gradual drift
     df_gradual = df.copy()
     df_gradual = add_gradual_drift(
-        df_gradual, "feature1", start_index=0, end_index=DF_SIZE, max_change=5
+        df_gradual, "feature1", start_index=0, end_index=(DF_SIZE // 4), max_change=5
     )
 
     # Apply incremental drift
@@ -181,6 +180,16 @@ def plot_data_disturbance():
         end_index=(DF_SIZE // 2),
         change=0.1,
         step=0.1,
+    )
+
+    # Apply sudden drift
+    df_sudden = df.copy()
+    df_sudden = add_abrupt_drift(
+        df_sudden,
+        "feature1",
+        start_index=(DF_SIZE // 2),
+        end_index=(DF_SIZE // 2 + DF_SIZE // 4),
+        change=5,
     )
 
     # Plot the original and drifted data
@@ -222,38 +231,50 @@ def plot_data_disturbance():
     plt.show()
 
 
+import pandas as pd
+import numpy as np
+from typing import Tuple, List
+
+
 def generate_synthetic_dataset_with_drifts(
     dataframe_size: int,
+    features_with_drifts: List[str],
+    num_features: int = 5,
+    loc: float = 10,
+    scale: float = 1,
+    seed: int = 42,
 ) -> Tuple[pd.DataFrame, List[int]]:
-    """Generate a synthetic dataset and add disturbances."""
-    df = create_synthetic_dataframe(dataframe_size)
-
-    # Calculate standard deviation of the feature
-    std_dev = df["feature1"].std()
-
-    # Set change and step based on standard deviation
-    change = std_dev * 0.5
-    step = change / (dataframe_size // 4)
+    """Generate a synthetic dataset and add disturbances to specified features."""
+    np.random.seed(seed)
+    df = create_synthetic_dataframe(dataframe_size, num_features, loc, scale, seed)
 
     drift_points = []
 
-    # Add abrupt drift
-    start_index = dataframe_size // 2
-    end_index = dataframe_size // 2 + dataframe_size // 4
-    df = add_abrupt_drift(df, "feature1", start_index, end_index, change)
-    drift_points.extend([start_index, end_index])
+    for feature in features_with_drifts:
+        # Calculate standard deviation of the feature
+        std_dev = df[feature].std()
 
-    # Add gradual drift
-    start_index = 0
-    end_index = dataframe_size
-    df = add_gradual_drift(df, "feature1", start_index, end_index, max_change=change)
-    drift_points.extend([start_index, end_index])
+        # Set change and step based on standard deviation
+        change = std_dev * 0.5
+        step = change / (dataframe_size // 4)
 
-    # Add incremental drift
-    start_index = dataframe_size // 4
-    end_index = dataframe_size // 2
-    df = add_incremental_drift(df, "feature1", start_index, end_index, change, step)
-    drift_points.extend([start_index, end_index])
+        # Add abrupt drift
+        start_index = dataframe_size // 2
+        end_index = dataframe_size // 2 + dataframe_size // 4
+        df = add_abrupt_drift(df, feature, start_index, end_index, change)
+        drift_points.extend([start_index, end_index])
+
+        # Add gradual drift
+        start_index = 0
+        end_index = dataframe_size
+        df = add_gradual_drift(df, feature, start_index, end_index, max_change=change)
+        drift_points.extend([start_index, end_index])
+
+        # Add incremental drift
+        start_index = dataframe_size // 4
+        end_index = dataframe_size // 2
+        df = add_incremental_drift(df, feature, start_index, end_index, change, step)
+        drift_points.extend([start_index, end_index])
 
     return df, drift_points
 
