@@ -1,8 +1,10 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import os
 from typing import Tuple, List, Dict
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 from codes.config import comparisons_output_dir as output_dir
 
 # For reproducibility

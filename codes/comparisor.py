@@ -1,12 +1,10 @@
 import os
 from typing import List, Dict, Optional, Any
 
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-
-from sklearn.naive_bayes import MultinomialNB
+import numpy as np
+import pandas as pd
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -15,20 +13,19 @@ from sklearn.metrics import (
     auc,
     f1_score,
 )
+from sklearn.naive_bayes import MultinomialNB
 
 from codes.common import (
     common_datasets,
-    calculate_index,
     define_batches,
-    extract_drift_info,
     datasets_with_added_drifts,
     find_indexes,
     load_and_prepare_dataset,
 )
-from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
-
-
 from codes.config import comparisons_output_dir as output_dir, insects_datasets
+from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
+from codes.drift_generation import create_synthetic_dataframe, save_synthetic_dataset
+from codes.drift_generation import generate_synthetic_dataset_with_drifts
 from drift_config import drift_config
 from codes.common import calculate_index, extract_drift_info
 
@@ -506,8 +503,6 @@ def plot_all_features(
         plt.close()
 
 
-from codes.drift_generation import create_synthetic_dataframe, save_synthetic_dataset
-
 # Generate synthetic dataset without drifts
 dataframe_size = 80000
 synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
@@ -515,7 +510,6 @@ synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
 # Save the synthetic dataset without drifts
 save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
 
-from codes.drift_generation import generate_synthetic_dataset_with_drifts
 
 # Generate synthetic dataset with parallel drifts
 (
