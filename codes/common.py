@@ -1,17 +1,18 @@
 import os
-import numpy as np
-
-import matplotlib.pyplot as plt
-import pandas as pd
-from codes.config import comparisons_output_dir as output_dir
-
 from typing import Tuple
 
-from codes.config import insects_datasets, load_insect_dataset
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 from ucimlrepo import fetch_ucirepo
 
-from codes.config import project_path_root
+from codes.config import (
+    comparisons_output_dir as output_dir,
+    insects_datasets,
+    load_insect_dataset,
+    project_path_root,
+)
 from codes.drift_config import drift_config
 from codes.drift_generation import (
     add_abrupt_drift,
@@ -19,15 +20,15 @@ from codes.drift_generation import (
     add_incremental_drift,
     calculate_index,
 )
-
+from codes.river_config import drift_central_position, drift_width, dataset_size, seed
 from codes.river_datasets import (
-    sea_concept_drift_dataset,
-    stagger_concept_drift_dataset,
     generate_dataset_from_river_generator,
     multi_sea_dataset,
     multi_stagger_dataset,
+    sea_concept_drift_dataset,
+    stagger_concept_drift_dataset,
 )
-from codes.river_config import seed, drift_central_position, drift_width, dataset_size
+from codes.utils import encode_labels, load_csv_dataset
 
 common_datasets_file_path_prefix = os.path.join(project_path_root, "data/")
 
@@ -151,8 +152,7 @@ def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, st
         dataset_filename_str = dataset_filename_str
 
     elif dataset == "electricity":
-        df = pd.read_csv(common_datasets[dataset]["filename"])
-        Y_og = df.pop("class")
+        df, Y_og = load_csv_dataset(common_datasets[dataset]["filename"], "class")
         dataset_filename_str = "electricity"
 
     elif dataset == "magic":
@@ -186,55 +186,53 @@ def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, st
         return load_and_prepare_dataset_with_drifts(dataset)
 
     elif dataset == "synthetic_dataset_no_drifts":
-        df = pd.read_csv(
+        df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
                 "synthetic_dataset_no_drifts",
                 "synthetic_dataset_no_drifts.csv",
-            )
+            ),
+            "class",
         )
-        Y_og = df.pop("class")
         dataset_filename_str = "synthetic_dataset_no_drifts"
 
     elif dataset == "synthetic_dataset_with_drifts":
-        df = pd.read_csv(
+        df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
                 "synthetic_dataset_with_drifts",
                 "synthetic_dataset_with_drifts.csv",
-            )
+            ),
+            "class",
         )
-        Y_og = df.pop("class")
         dataset_filename_str = "synthetic_dataset_with_drifts"
 
     elif dataset == "synthetic_dataset_with_parallel_drifts":
-        df = pd.read_csv(
+        df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
                 "synthetic_dataset_with_parallel_drifts",
                 "synthetic_dataset_with_parallel_drifts.csv",
-            )
+            ),
+            "class",
         )
-        Y_og = df.pop("class")
         dataset_filename_str = "synthetic_dataset_with_parallel_drifts"
 
     elif dataset == "synthetic_dataset_with_switching_drifts":
-        df = pd.read_csv(
+        df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
                 "synthetic_dataset_with_switching_drifts",
                 "synthetic_dataset_with_switching_drifts.csv",
-            )
+            ),
+            "class",
         )
-        Y_og = df.pop("class")
         dataset_filename_str = "synthetic_dataset_with_switching_drifts"
 
     else:
         raise ValueError(f"Dataset {dataset} not recognized.")
 
-    le = LabelEncoder()
-    Y = le.fit_transform(Y_og)
-
+    Y = encode_labels(Y_og)
     return df, Y, dataset_filename_str
 
 
