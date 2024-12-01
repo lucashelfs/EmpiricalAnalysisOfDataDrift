@@ -207,6 +207,28 @@ def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, st
         Y_og = df.pop("class")
         dataset_filename_str = "synthetic_dataset_with_drifts"
 
+    elif dataset == "synthetic_dataset_with_parallel_drifts":
+        df = pd.read_csv(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_with_parallel_drifts",
+                "synthetic_dataset_with_parallel_drifts.csv",
+            )
+        )
+        Y_og = df.pop("class")
+        dataset_filename_str = "synthetic_dataset_with_parallel_drifts"
+
+    elif dataset == "synthetic_dataset_with_switching_drifts":
+        df = pd.read_csv(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_with_switching_drifts",
+                "synthetic_dataset_with_switching_drifts.csv",
+            )
+        )
+        Y_og = df.pop("class")
+        dataset_filename_str = "synthetic_dataset_with_switching_drifts"
+
     else:
         raise ValueError(f"Dataset {dataset} not recognized.")
 
@@ -267,15 +289,13 @@ def apply_drifts(
                 start_index = calculate_index(df, drift[0])
                 end_index = calculate_index(df, drift[1])
                 change = df[column].mean() * 2
-                df = apply_abrupt_drift(
-                    df.copy(), column, start_index, end_index, change
-                )
+                df = add_abrupt_drift(df.copy(), column, start_index, end_index, change)
         elif drift_type == "gradual":
             for drift in drifts[drift_type]:
                 start_index = calculate_index(df, drift[0])
                 end_index = calculate_index(df, drift[1])
                 change = df[column].mean() * 2
-                df = apply_gradual_drift(
+                df = add_gradual_drift(
                     df.copy(), column, start_index, end_index, change
                 )
         elif drift_type == "incremental":
@@ -284,7 +304,7 @@ def apply_drifts(
                 end_index = calculate_index(df, drift[1])
                 change = df[column].mean() * 2
                 step = change // (drift[1] - drift[0])
-                df = apply_incremental_drift(
+                df = add_incremental_drift(
                     df.copy(), column, start_index, end_index, change, step=step
                 )
         else:

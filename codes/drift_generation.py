@@ -1,18 +1,16 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-
 import os
+from typing import Tuple, List, Dict
 from codes.config import comparisons_output_dir as output_dir
-
-from typing import Tuple, List
 
 # For reproducibility
 np.random.seed(42)
 
 
 def create_simple_dataframe(dataframe_size: int) -> pd.DataFrame:
-    """ "Create a simple default dataframe."""
+    """Create a simple default dataframe."""
     data = {
         "feature1": np.random.normal(loc=0, scale=1, size=dataframe_size),
         "feature2": np.random.normal(loc=5, scale=2, size=dataframe_size),
@@ -231,9 +229,22 @@ def plot_data_disturbance():
     plt.show()
 
 
-import pandas as pd
-import numpy as np
-from typing import Tuple, List
+def determine_drift_points(
+    dataframe_size: int, num_features: int, scenario: str
+) -> Dict[str, List[Tuple[int, int]]]:
+    drift_points = {}
+    if scenario == "parallel":
+        start_index = dataframe_size // 2
+        end_index = dataframe_size // 2 + dataframe_size // 4
+        for i in range(num_features):
+            drift_points[f"feature{i+1}"] = [(start_index, end_index)]
+    elif scenario == "switching":
+        period = dataframe_size // num_features
+        for i in range(num_features):
+            start_index = i * period
+            end_index = (i + 1) * period
+            drift_points[f"feature{i+1}"] = [(start_index, end_index)]
+    return drift_points
 
 
 def generate_synthetic_dataset_with_drifts(
@@ -243,40 +254,36 @@ def generate_synthetic_dataset_with_drifts(
     loc: float = 10,
     scale: float = 1,
     seed: int = 42,
+    scenario: str = "parallel",
 ) -> Tuple[pd.DataFrame, List[int]]:
     """Generate a synthetic dataset and add disturbances to specified features."""
     np.random.seed(seed)
     df = create_synthetic_dataframe(dataframe_size, num_features, loc, scale, seed)
 
-    drift_points = []
+    drift_points = determine_drift_points(dataframe_size, num_features, scenario)
+    all_drift_points = []
 
     for feature in features_with_drifts:
-        # Calculate standard deviation of the feature
-        std_dev = df[feature].std()
+        if feature in drift_points:
+            for start_index, end_index in drift_points[feature]:
+                std_dev = df[feature].std()
+                change = std_dev * 0.5
+                step = change / (dataframe_size // 4)
 
-        # Set change and step based on standard deviation
-        change = std_dev * 0.5
-        step = change / (dataframe_size // 4)
+                df = add_abrupt_drift(df, feature, start_index, end_index, change)
+                all_drift_points.extend([start_index, end_index])
 
-        # Add abrupt drift
-        start_index = dataframe_size // 2
-        end_index = dataframe_size // 2 + dataframe_size // 4
-        df = add_abrupt_drift(df, feature, start_index, end_index, change)
-        drift_points.extend([start_index, end_index])
+                df = add_gradual_drift(
+                    df, feature, start_index, end_index, max_change=change
+                )
+                all_drift_points.extend([start_index, end_index])
 
-        # Add gradual drift
-        start_index = 0
-        end_index = dataframe_size
-        df = add_gradual_drift(df, feature, start_index, end_index, max_change=change)
-        drift_points.extend([start_index, end_index])
+                df = add_incremental_drift(
+                    df, feature, start_index, end_index, change, step
+                )
+                all_drift_points.extend([start_index, end_index])
 
-        # Add incremental drift
-        start_index = dataframe_size // 4
-        end_index = dataframe_size // 2
-        df = add_incremental_drift(df, feature, start_index, end_index, change, step)
-        drift_points.extend([start_index, end_index])
-
-    return df, drift_points
+    return df, all_drift_points
 
 
 def save_synthetic_dataset(df: pd.DataFrame, dataset_name: str):

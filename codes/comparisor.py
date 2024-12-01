@@ -33,10 +33,6 @@ from drift_config import drift_config
 from codes.common import calculate_index, extract_drift_info
 
 
-####
-
-import matplotlib.pyplot as plt
-
 # Set global style parameters
 plt.rcParams["figure.facecolor"] = "#EAEAF2"  # Set the background color to grey
 plt.rcParams["axes.facecolor"] = "#EAEAF2"  # Set the axes background color to grey
@@ -521,22 +517,58 @@ save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
 
 from codes.drift_generation import generate_synthetic_dataset_with_drifts
 
-# Generate synthetic dataset with drifts
-synthetic_df_with_drifts, drift_points = generate_synthetic_dataset_with_drifts(
-    dataframe_size,
+# Generate synthetic dataset with parallel drifts
+(
+    synthetic_df_with_parallel_drifts,
+    parallel_drift_points,
+) = generate_synthetic_dataset_with_drifts(
+    dataframe_size=80000,
     features_with_drifts=["feature1", "feature3", "feature5"],
     num_features=5,
+    loc=10,
+    scale=1,
+    seed=42,
+    scenario="parallel",
 )
 
-# Save the synthetic dataset with drifts
-save_synthetic_dataset(synthetic_df_with_drifts, "synthetic_dataset_with_drifts")
+# Save the synthetic dataset with parallel drifts
+save_synthetic_dataset(
+    synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
+)
 
-# Plot all features with drift points
+# Generate synthetic dataset with switching drifts
+(
+    synthetic_df_with_switching_drifts,
+    switching_drift_points,
+) = generate_synthetic_dataset_with_drifts(
+    dataframe_size=80000,
+    features_with_drifts=["feature1", "feature3", "feature5"],
+    num_features=5,
+    loc=10,
+    scale=1,
+    seed=42,
+    scenario="switching",
+)
+
+# Save the synthetic dataset with switching drifts
+save_synthetic_dataset(
+    synthetic_df_with_switching_drifts, "synthetic_dataset_with_switching_drifts"
+)
+
+# Plot all features with parallel drift points
 plot_all_features(
-    synthetic_df_with_drifts,
-    "synthetic_dataset_with_drifts",
-    drift_points,
-    suffix="_with_drifts",
+    synthetic_df_with_parallel_drifts,
+    "synthetic_dataset_with_parallel_drifts",
+    parallel_drift_points,
+    suffix="_with_parallel_drifts",
+)
+
+# Plot all features with switching drift points
+plot_all_features(
+    synthetic_df_with_switching_drifts,
+    "synthetic_dataset_with_switching_drifts",
+    switching_drift_points,
+    suffix="_with_switching_drifts",
 )
 
 
@@ -564,7 +596,11 @@ def run_full_experiment():
     # for dataset in datasets_with_added_drifts:
     #     datasets.append(dataset)
 
-    datasets = ["synthetic_dataset_no_drifts", "synthetic_dataset_with_drifts"]
+    datasets = [
+        "synthetic_dataset_no_drifts",
+        "synthetic_dataset_with_parallel_drifts",
+        "synthetic_dataset_with_switching_drifts",
+    ]
     # batch_sizes = [1000, 2500]
 
     results = {dataset: {} for dataset in datasets}
