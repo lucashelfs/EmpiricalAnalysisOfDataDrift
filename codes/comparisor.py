@@ -515,6 +515,7 @@ save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
 (
     synthetic_df_with_parallel_drifts,
     parallel_drift_points,
+    parallel_drift_info,
 ) = generate_synthetic_dataset_with_drifts(
     dataframe_size=80000,
     features_with_drifts=["feature1", "feature3", "feature5"],
@@ -534,6 +535,7 @@ save_synthetic_dataset(
 (
     synthetic_df_with_switching_drifts,
     switching_drift_points,
+    switching_drift_info,
 ) = generate_synthetic_dataset_with_drifts(
     dataframe_size=80000,
     features_with_drifts=["feature1", "feature3", "feature5"],

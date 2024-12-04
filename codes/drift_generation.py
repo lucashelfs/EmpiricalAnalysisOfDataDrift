@@ -1,4 +1,5 @@
 import os
+import random
 from typing import Tuple, List, Dict
 
 import matplotlib.pyplot as plt
@@ -257,35 +258,40 @@ def generate_synthetic_dataset_with_drifts(
     scale: float = 1,
     seed: int = 42,
     scenario: str = "parallel",
-) -> Tuple[pd.DataFrame, List[int]]:
+) -> Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]]]:
     """Generate a synthetic dataset and add disturbances to specified features."""
     np.random.seed(seed)
+    random.seed(seed)
     df = create_synthetic_dataframe(dataframe_size, num_features, loc, scale, seed)
 
     drift_points = determine_drift_points(dataframe_size, num_features, scenario)
     all_drift_points = []
+    drift_info = {feature: [] for feature in features_with_drifts}
 
-    for feature in features_with_drifts:
+    drift_types = ["abrupt", "gradual", "incremental"]
+
+    for i, feature in enumerate(features_with_drifts):
         if feature in drift_points:
             for start_index, end_index in drift_points[feature]:
                 std_dev = df[feature].std()
                 change = std_dev * 0.5
                 step = change / (dataframe_size // 4)
 
-                df = add_abrupt_drift(df, feature, start_index, end_index, change)
-                all_drift_points.extend([start_index, end_index])
+                drift_type = drift_types[i % len(drift_types)]
 
-                df = add_gradual_drift(
-                    df, feature, start_index, end_index, max_change=change
-                )
-                all_drift_points.extend([start_index, end_index])
+                if drift_type == "abrupt":
+                    df = add_abrupt_drift(df, feature, start_index, end_index, change)
+                elif drift_type == "gradual":
+                    df = add_gradual_drift(df, feature, start_index, end_index, change)
+                elif drift_type == "incremental":
+                    df = add_incremental_drift(
+                        df, feature, start_index, end_index, change, step
+                    )
 
-                df = add_incremental_drift(
-                    df, feature, start_index, end_index, change, step
-                )
                 all_drift_points.extend([start_index, end_index])
+                drift_info[feature].append((drift_type, start_index, end_index))
 
-    return df, all_drift_points
+    return df, all_drift_points, drift_info
 
 
 def save_synthetic_dataset(df: pd.DataFrame, dataset_name: str):
