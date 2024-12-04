@@ -233,19 +233,32 @@ def plot_data_disturbance():
 
 
 def determine_drift_points(
-    dataframe_size: int, num_features: int, scenario: str
+    dataframe_size: int, num_features: int, scenario: str, min_index: int
 ) -> Dict[str, List[Tuple[int, int]]]:
+    """
+    Determine the drift points for a synthetic dataset. The drift points occur only after the min_index.
+
+    Parameters:
+    dataframe_size (int): The size of the dataframe.
+    num_features (int): The number of features in the dataframe.
+    scenario (str): The scenario type ('parallel' or 'switching').
+    min_index (int): The minimum index where drifts can start.
+
+    Returns:
+    Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
+                                      representing the start and end indexes of the drifts.
+    """
     drift_points = {}
     if scenario == "parallel":
-        start_index = dataframe_size // 2
-        end_index = dataframe_size // 2 + dataframe_size // 4
+        start_index = max(dataframe_size // 2, min_index)
+        end_index = start_index + dataframe_size // 4
         for i in range(num_features):
             drift_points[f"feature{i+1}"] = [(start_index, end_index)]
     elif scenario == "switching":
         period = dataframe_size // num_features
         for i in range(num_features):
-            start_index = i * period
-            end_index = (i + 1) * period
+            start_index = max(i * period, min_index)
+            end_index = start_index + period
             drift_points[f"feature{i+1}"] = [(start_index, end_index)]
     return drift_points
 
@@ -253,18 +266,40 @@ def determine_drift_points(
 def generate_synthetic_dataset_with_drifts(
     dataframe_size: int,
     features_with_drifts: List[str],
+    batch_size: int,
     num_features: int = 5,
     loc: float = 10,
     scale: float = 1,
     seed: int = 42,
     scenario: str = "parallel",
 ) -> Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]]]:
-    """Generate a synthetic dataset and add disturbances to specified features."""
+    """
+    Generate a synthetic dataset and add disturbances to specified features.
+
+
+    Parameters:
+    dataframe_size (int): The size of the dataframe.
+    features_with_drifts (List[str]): The list of features to which drifts will be added.
+    batch_size (int): The batch size used to determine the minimum index for drift occurence.
+    num_features (int): The number of features in the dataframe (default is 5).
+    loc (float): The mean of the normal distribution used to generate the features (default is 10).
+    scale (float): The standard deviation of the normal distribution used to generate the features (default is 1).
+    seed (int): The random seed for reproducibility (default is 42).
+    scenario (str): The scenario type ('parallel' or 'switching').
+
+    Returns:
+    Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]]]: A tuple containing the dataframe with drifts,
+                                                                          a list of all drift points, and a dictionary
+                                                                          with drift information for each feature.
+    """
     np.random.seed(seed)
     random.seed(seed)
     df = create_synthetic_dataframe(dataframe_size, num_features, loc, scale, seed)
 
-    drift_points = determine_drift_points(dataframe_size, num_features, scenario)
+    min_index = 2 * batch_size
+    drift_points = determine_drift_points(
+        dataframe_size, num_features, scenario, min_index
+    )
     all_drift_points = []
     drift_info = {feature: [] for feature in features_with_drifts}
 

@@ -504,71 +504,94 @@ def plot_all_features(
 
 
 # Generate synthetic dataset without drifts
-dataframe_size = 80000
-synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
-
-# Save the synthetic dataset without drifts
-save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
-
-
-# Generate synthetic dataset with parallel drifts
-(
-    synthetic_df_with_parallel_drifts,
-    parallel_drift_points,
-    parallel_drift_info,
-) = generate_synthetic_dataset_with_drifts(
-    dataframe_size=80000,
-    features_with_drifts=["feature1", "feature3", "feature5"],
-    num_features=5,
-    loc=10,
-    scale=1,
-    seed=42,
-    scenario="parallel",
-)
-
-# Save the synthetic dataset with parallel drifts
-save_synthetic_dataset(
-    synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
-)
-
-# Generate synthetic dataset with switching drifts
-(
-    synthetic_df_with_switching_drifts,
-    switching_drift_points,
-    switching_drift_info,
-) = generate_synthetic_dataset_with_drifts(
-    dataframe_size=80000,
-    features_with_drifts=["feature1", "feature3", "feature5"],
-    num_features=5,
-    loc=10,
-    scale=1,
-    seed=42,
-    scenario="switching",
-)
-
-# Save the synthetic dataset with switching drifts
-save_synthetic_dataset(
-    synthetic_df_with_switching_drifts, "synthetic_dataset_with_switching_drifts"
-)
-
-# Plot all features with parallel drift points
-plot_all_features(
-    synthetic_df_with_parallel_drifts,
-    "synthetic_dataset_with_parallel_drifts",
-    parallel_drift_points,
-    suffix="_with_parallel_drifts",
-)
-
-# Plot all features with switching drift points
-plot_all_features(
-    synthetic_df_with_switching_drifts,
-    "synthetic_dataset_with_switching_drifts",
-    switching_drift_points,
-    suffix="_with_switching_drifts",
-)
+# dataframe_size = 80000
+# synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
+#
+# # Save the synthetic dataset without drifts
+# save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
+#
+#
+# # Generate synthetic dataset with parallel drifts
+# (
+#     synthetic_df_with_parallel_drifts,
+#     parallel_drift_points,
+#     parallel_drift_info,
+# ) = generate_synthetic_dataset_with_drifts(
+#     dataframe_size=80000,
+#     features_with_drifts=["feature1", "feature3", "feature5"],
+#     num_features=5,
+#     loc=10,
+#     scale=1,
+#     seed=42,
+#     scenario="parallel",
+# )
+#
+# # Save the synthetic dataset with parallel drifts
+# save_synthetic_dataset(
+#     synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
+# )
 
 
-def run_full_experiment():
+def generate_synthetic_datasets():
+    """Generate and save synthetic datasets with and without drifts."""
+    dataframe_size = 80000
+
+    # Generate synthetic dataset without drifts
+    synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
+    save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
+
+    # Generate synthetic dataset with parallel drifts
+    (
+        synthetic_df_with_parallel_drifts,
+        parallel_drift_points,
+        parallel_drift_info,
+    ) = generate_synthetic_dataset_with_drifts(
+        dataframe_size=dataframe_size,
+        features_with_drifts=["feature1", "feature3", "feature5"],
+        batch_size=1000,  # Example batch size, adjust as needed
+        num_features=5,
+        loc=10,
+        scale=1,
+        seed=42,
+        scenario="parallel",
+    )
+    save_synthetic_dataset(
+        synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
+    )
+    plot_all_features(
+        synthetic_df_with_parallel_drifts,
+        "synthetic_dataset_with_parallel_drifts",
+        parallel_drift_points,
+        suffix="_with_parallel_drifts",
+    )
+
+    # Generate synthetic dataset with switching drifts
+    (
+        synthetic_df_with_switching_drifts,
+        switching_drift_points,
+        switching_drift_info,
+    ) = generate_synthetic_dataset_with_drifts(
+        dataframe_size=dataframe_size,
+        features_with_drifts=["feature1", "feature3", "feature5"],
+        batch_size=1000,  # Example batch size, adjust as needed
+        num_features=5,
+        loc=10,
+        scale=1,
+        seed=42,
+        scenario="switching",
+    )
+    save_synthetic_dataset(
+        synthetic_df_with_switching_drifts, "synthetic_dataset_with_switching_drifts"
+    )
+    plot_all_features(
+        synthetic_df_with_switching_drifts,
+        "synthetic_dataset_with_switching_drifts",
+        switching_drift_points,
+        suffix="_with_switching_drifts",
+    )
+
+
+def run_full_experiment(max_batch_size: int):
     """Run full experiment for all datasets."""
     datasets = []
 
@@ -613,6 +636,58 @@ def run_full_experiment():
             os.remove(csv_file_path)
 
         for batch_size in batch_sizes:
+            if dataset == "synthetic_dataset_with_parallel_drifts":
+                (
+                    synthetic_df_with_parallel_drifts,
+                    parallel_drift_points,
+                    parallel_drift_info,
+                ) = generate_synthetic_dataset_with_drifts(
+                    dataframe_size=80000,
+                    features_with_drifts=["feature1", "feature3", "feature5"],
+                    batch_size=max_batch_size,
+                    num_features=5,
+                    loc=10,
+                    scale=1,
+                    seed=42,
+                    scenario="parallel",
+                )
+                save_synthetic_dataset(
+                    synthetic_df_with_parallel_drifts,
+                    "synthetic_dataset_with_parallel_drifts",
+                )
+                plot_all_features(
+                    synthetic_df_with_parallel_drifts,
+                    "synthetic_dataset_with_parallel_drifts",
+                    parallel_drift_points,
+                    suffix="_with_parallel_drifts",
+                )
+
+            elif dataset == "synthetic_dataset_with_switching_drifts":
+                (
+                    synthetic_df_with_switching_drifts,
+                    switching_drift_points,
+                    switching_drift_info,
+                ) = generate_synthetic_dataset_with_drifts(
+                    dataframe_size=80000,
+                    features_with_drifts=["feature1", "feature3", "feature5"],
+                    batch_size=max_batch_size,
+                    num_features=5,
+                    loc=10,
+                    scale=1,
+                    seed=42,
+                    scenario="switching",
+                )
+                save_synthetic_dataset(
+                    synthetic_df_with_switching_drifts,
+                    "synthetic_dataset_with_switching_drifts",
+                )
+                plot_all_features(
+                    synthetic_df_with_switching_drifts,
+                    "synthetic_dataset_with_switching_drifts",
+                    switching_drift_points,
+                    suffix="_with_switching_drifts",
+                )
+
             print(f"{dataset} - {batch_size}")
             drift_results, test_results, X_shape = run_test(
                 dataset=dataset,
@@ -647,4 +722,5 @@ def run_full_experiment():
 
 
 if __name__ == "__main__":
-    run_full_experiment()
+    max_batch_size = 2500  # Set the maximum batch size
+    run_full_experiment(max_batch_size)
