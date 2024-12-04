@@ -1,8 +1,10 @@
 import os
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Tuple, Any
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import matplotlib.patches as patches
+
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
@@ -421,6 +423,7 @@ def plot_all_features(
     df: pd.DataFrame,
     dataset_name: str,
     drift_points: List[int] = None,
+    drift_info: Dict[str, List[Tuple[str, int, int]]] = None,
     suffix: str = "",
 ):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
@@ -458,6 +461,28 @@ def plot_all_features(
                     )
                 else:
                     ax.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
+        if drift_info and column in drift_info:
+            for drift_type, start_index, end_index in drift_info[column]:
+                ax.add_patch(
+                    patches.Rectangle(
+                        (start_index, ax.get_ylim()[0]),
+                        end_index - start_index,
+                        ax.get_ylim()[1] - ax.get_ylim()[0],
+                        color="yellow",
+                        alpha=0.3,
+                        label=f"{drift_type} drift",
+                    )
+                )
+                ax.text(
+                    (start_index + end_index) / 2,
+                    ax.get_ylim()[1],
+                    f"{drift_type} drift",
+                    horizontalalignment="center",
+                    verticalalignment="top",
+                    fontsize=10,
+                    color="black",
+                    bbox=dict(facecolor="yellow", alpha=0.5),
+                )
         ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
@@ -490,6 +515,28 @@ def plot_all_features(
                     )
                 else:
                     plt.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
+        if drift_info and column in drift_info:
+            for drift_type, start_index, end_index in drift_info[column]:
+                plt.gca().add_patch(
+                    patches.Rectangle(
+                        (start_index, plt.gca().get_ylim()[0]),
+                        end_index - start_index,
+                        plt.gca().get_ylim()[1] - plt.gca().get_ylim()[0],
+                        color="yellow",
+                        alpha=0.3,
+                        label=f"{drift_type} drift",
+                    )
+                )
+                plt.text(
+                    (start_index + end_index) / 2,
+                    plt.gca().get_ylim()[1],
+                    f"{drift_type} drift",
+                    horizontalalignment="center",
+                    verticalalignment="top",
+                    fontsize=10,
+                    color="black",
+                    bbox=dict(facecolor="yellow", alpha=0.5),
+                )
         plt.xlabel("Index")
         plt.ylabel(column)
         plt.title(f"{dataset_name} - {column}")
@@ -501,35 +548,6 @@ def plot_all_features(
         )
         plt.savefig(feature_plot_path, facecolor="white")
         plt.close()
-
-
-# Generate synthetic dataset without drifts
-# dataframe_size = 80000
-# synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
-#
-# # Save the synthetic dataset without drifts
-# save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
-#
-#
-# # Generate synthetic dataset with parallel drifts
-# (
-#     synthetic_df_with_parallel_drifts,
-#     parallel_drift_points,
-#     parallel_drift_info,
-# ) = generate_synthetic_dataset_with_drifts(
-#     dataframe_size=80000,
-#     features_with_drifts=["feature1", "feature3", "feature5"],
-#     num_features=5,
-#     loc=10,
-#     scale=1,
-#     seed=42,
-#     scenario="parallel",
-# )
-#
-# # Save the synthetic dataset with parallel drifts
-# save_synthetic_dataset(
-#     synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
-# )
 
 
 def generate_synthetic_datasets():
@@ -563,6 +581,7 @@ def generate_synthetic_datasets():
         "synthetic_dataset_with_parallel_drifts",
         parallel_drift_points,
         suffix="_with_parallel_drifts",
+        drift_info=parallel_drift_info,
     )
 
     # Generate synthetic dataset with switching drifts
@@ -588,6 +607,7 @@ def generate_synthetic_datasets():
         "synthetic_dataset_with_switching_drifts",
         switching_drift_points,
         suffix="_with_switching_drifts",
+        drift_info=switching_drift_info,
     )
 
 
@@ -660,6 +680,7 @@ def run_full_experiment(max_batch_size: int):
                     "synthetic_dataset_with_parallel_drifts",
                     parallel_drift_points,
                     suffix="_with_parallel_drifts",
+                    drift_info=parallel_drift_info,
                 )
 
             elif dataset == "synthetic_dataset_with_switching_drifts":
@@ -686,6 +707,7 @@ def run_full_experiment(max_batch_size: int):
                     "synthetic_dataset_with_switching_drifts",
                     switching_drift_points,
                     suffix="_with_switching_drifts",
+                    drift_info=switching_drift_info,
                 )
 
             print(f"{dataset} - {batch_size}")
