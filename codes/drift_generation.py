@@ -250,8 +250,10 @@ def determine_drift_points(
     """
     drift_points = {}
     if scenario == "parallel":
-        start_index = max(dataframe_size // 2, min_index)
-        end_index = start_index + dataframe_size // 4
+        drift_size = dataframe_size // 4
+        center_index = dataframe_size // 2
+        start_index = max(center_index - drift_size // 2, min_index)
+        end_index = start_index + drift_size
         for i in range(num_features):
             drift_points[f"feature{i+1}"] = [(start_index, end_index)]
     elif scenario == "switching":
