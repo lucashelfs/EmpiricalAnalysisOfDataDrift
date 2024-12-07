@@ -233,7 +233,11 @@ def plot_data_disturbance():
 
 
 def determine_drift_points(
-    dataframe_size: int, num_features: int, scenario: str, min_index: int
+    dataframe_size: int,
+    num_features: int,
+    scenario: str,
+    min_index: int,
+    num_drifts: int = 1,
 ) -> Dict[str, List[Tuple[int, int]]]:
     """
     Determine the drift points for a synthetic dataset. The drift points occur only after the min_index.
@@ -243,6 +247,7 @@ def determine_drift_points(
     num_features (int): The number of features in the dataframe.
     scenario (str): The scenario type ('parallel' or 'switching').
     min_index (int): The minimum index where drifts can start.
+    num_drifts (int): The number of parallel drifts to generate (default is 1).
 
     Returns:
     Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
@@ -250,12 +255,18 @@ def determine_drift_points(
     """
     drift_points = {}
     if scenario == "parallel":
-        drift_size = dataframe_size // 4
+        drift_size = dataframe_size // (4 * num_drifts)
         center_index = dataframe_size // 2
-        start_index = max(center_index - drift_size // 2, min_index)
-        end_index = start_index + drift_size
-        for i in range(num_features):
-            drift_points[f"feature{i+1}"] = [(start_index, end_index)]
+        for drift_num in range(num_drifts):
+            start_index = max(
+                center_index - (drift_size * num_drifts) // 2 + drift_num * drift_size,
+                min_index,
+            )
+            end_index = start_index + drift_size
+            for i in range(num_features):
+                if f"feature{i+1}" not in drift_points:
+                    drift_points[f"feature{i+1}"] = []
+                drift_points[f"feature{i+1}"].append((start_index, end_index))
     elif scenario == "switching":
         period = dataframe_size // num_features
         for i in range(num_features):
