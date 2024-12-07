@@ -434,10 +434,6 @@ def plot_all_features(
     dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
-    # Filter out drift points at index 0 and at the index with the size of the dataframe
-    if drift_points:
-        drift_points = [dp for dp in drift_points if dp != 0 and dp != len(df)]
-
     # Create subplots for each feature column in a single file
     num_features = len(feature_columns)
     fig, axes = plt.subplots(
@@ -449,20 +445,10 @@ def plot_all_features(
 
     for ax, column in zip(axes, feature_columns):
         ax.plot(df.index, df[column], label=column)
-        if drift_points:
-            for i, cp in enumerate(drift_points):
-                if i == 0:
-                    ax.axvline(
-                        x=cp,
-                        color="red",
-                        linestyle="--",
-                        linewidth=1.5,
-                        label="Drift point",
-                    )
-                else:
-                    ax.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
         if drift_info and column in drift_info:
             for drift_type, start_index, end_index in drift_info[column]:
+                ax.axvline(x=start_index, color="red", linestyle="--", linewidth=1.5)
+                ax.axvline(x=end_index, color="red", linestyle="--", linewidth=1.5)
                 ax.add_patch(
                     patches.Rectangle(
                         (start_index, ax.get_ylim()[0]),
@@ -503,20 +489,10 @@ def plot_all_features(
     for column in feature_columns:
         plt.figure(figsize=(14, 7), facecolor="white")
         plt.plot(df.index, df[column], label=column)
-        if drift_points:
-            for i, cp in enumerate(drift_points):
-                if i == 0:
-                    plt.axvline(
-                        x=cp,
-                        color="red",
-                        linestyle="--",
-                        linewidth=1.5,
-                        label="Drift point",
-                    )
-                else:
-                    plt.axvline(x=cp, color="red", linestyle="--", linewidth=1.5)
         if drift_info and column in drift_info:
             for drift_type, start_index, end_index in drift_info[column]:
+                plt.axvline(x=start_index, color="red", linestyle="--", linewidth=1.5)
+                plt.axvline(x=end_index, color="red", linestyle="--", linewidth=1.5)
                 plt.gca().add_patch(
                     patches.Rectangle(
                         (start_index, plt.gca().get_ylim()[0]),
