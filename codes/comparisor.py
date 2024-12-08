@@ -27,7 +27,10 @@ from codes.common import (
 from codes.config import comparisons_output_dir as output_dir, insects_datasets
 from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
 from codes.drift_generation import create_synthetic_dataframe, save_synthetic_dataset
-from codes.drift_generation import generate_synthetic_dataset_with_drifts
+from codes.drift_generation import (
+    generate_synthetic_dataset_with_drifts,
+    plot_accumulated_differences,
+)
 from drift_config import drift_config
 from codes.common import calculate_index, extract_drift_info
 
@@ -528,10 +531,10 @@ def plot_all_features(
 
 def generate_synthetic_datasets():
     """Generate and save synthetic datasets with and without drifts."""
-    dataframe_size = 80000
-
     # Generate synthetic dataset without drifts
-    synthetic_df_no_drifts = create_synthetic_dataframe(dataframe_size)
+    synthetic_df_no_drifts = create_synthetic_dataframe(
+        dataframe_size=80000, num_features=5, loc=10, scale=1, seed=42
+    )
     save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
 
     # Generate synthetic dataset with parallel drifts
@@ -539,10 +542,12 @@ def generate_synthetic_datasets():
         synthetic_df_with_parallel_drifts,
         parallel_drift_points,
         parallel_drift_info,
+        accumulated_differences_parallel,
+        features_with_drifts_parallel,
     ) = generate_synthetic_dataset_with_drifts(
-        dataframe_size=dataframe_size,
+        dataframe_size=80000,
         features_with_drifts=["feature1", "feature3", "feature5"],
-        batch_size=1000,  # Example batch size, adjust as needed
+        batch_size=2500,
         num_features=5,
         loc=10,
         scale=1,
@@ -565,10 +570,12 @@ def generate_synthetic_datasets():
         synthetic_df_with_switching_drifts,
         switching_drift_points,
         switching_drift_info,
+        accumulated_differences_switching,
+        features_with_drifts_switching,
     ) = generate_synthetic_dataset_with_drifts(
-        dataframe_size=dataframe_size,
+        dataframe_size=80000,
         features_with_drifts=["feature1", "feature3", "feature5"],
-        batch_size=1000,  # Example batch size, adjust as needed
+        batch_size=2500,
         num_features=5,
         loc=10,
         scale=1,
@@ -618,7 +625,6 @@ def run_full_experiment(max_batch_size: int):
         "synthetic_dataset_with_parallel_drifts",
         "synthetic_dataset_with_switching_drifts",
     ]
-    # batch_sizes = [1000, 2500]
 
     results = {dataset: {} for dataset in datasets}
     csv_file_paths = []
@@ -639,6 +645,8 @@ def run_full_experiment(max_batch_size: int):
                     synthetic_df_with_parallel_drifts,
                     parallel_drift_points,
                     parallel_drift_info,
+                    accumulated_differences,
+                    features_with_drifts,
                 ) = generate_synthetic_dataset_with_drifts(
                     dataframe_size=80000,
                     features_with_drifts=["feature1", "feature3", "feature5"],
@@ -660,12 +668,19 @@ def run_full_experiment(max_batch_size: int):
                     suffix="_with_parallel_drifts",
                     drift_info=parallel_drift_info,
                 )
+                plot_accumulated_differences(
+                    accumulated_differences,
+                    features_with_drifts,
+                    "synthetic_dataset_with_parallel_drifts",
+                )
 
             elif dataset == "synthetic_dataset_with_switching_drifts":
                 (
                     synthetic_df_with_switching_drifts,
                     switching_drift_points,
                     switching_drift_info,
+                    accumulated_differences,
+                    features_with_drifts,
                 ) = generate_synthetic_dataset_with_drifts(
                     dataframe_size=80000,
                     features_with_drifts=["feature1", "feature3", "feature5"],
@@ -686,6 +701,11 @@ def run_full_experiment(max_batch_size: int):
                     switching_drift_points,
                     suffix="_with_switching_drifts",
                     drift_info=switching_drift_info,
+                )
+                plot_accumulated_differences(
+                    accumulated_differences,
+                    features_with_drifts,
+                    "synthetic_dataset_with_switching_drifts",
                 )
 
             print(f"{dataset} - {batch_size}")

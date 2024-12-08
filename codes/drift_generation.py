@@ -1,12 +1,10 @@
-import os
-import random
 from typing import Tuple, List, Dict, Optional
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from codes.config import comparisons_output_dir as output_dir
+from codes.drift_measures import DataFrameComparator
 
 # For reproducibility
 np.random.seed(42)
@@ -291,6 +289,68 @@ def determine_drift_points(
     return drift_points
 
 
+import os
+import matplotlib.pyplot as plt
+
+
+def plot_accumulated_differences(
+    accumulated_differences: pd.DataFrame,
+    features_with_drifts: List[str],
+    dataset_name: str,
+):
+    """
+    Plot the accumulated differences for the whole dataset and for each specified feature.
+
+    Parameters:
+    accumulated_differences (pd.DataFrame): DataFrame containing the accumulated differences for each feature.
+    features_with_drifts (List[str]): List of features to plot.
+    dataset_name (str): Name of the dataset for saving the plots.
+    """
+
+    from codes.config import comparisons_output_dir as output_dir
+
+    num_features = len(features_with_drifts)
+    fig, axes = plt.subplots(
+        num_features + 1, 1, figsize=(14, 7 * (num_features + 1)), sharex=True
+    )
+
+    # Plot the accumulated dataset difference
+    axes[0].plot(
+        accumulated_differences.index,
+        accumulated_differences.sum(axis=1),
+        label="Total Difference",
+        color="black",
+    )
+    axes[0].set_ylabel("Total Accumulated Difference")
+    axes[0].set_title("Total Accumulated Differences for Dataset")
+    axes[0].legend()
+    axes[0].grid(True)
+
+    # Plot the accumulated differences for each feature
+    for i, feature in enumerate(features_with_drifts, start=1):
+        axes[i].plot(
+            accumulated_differences.index,
+            accumulated_differences[feature],
+            label=feature,
+        )
+        axes[i].set_ylabel(f"Accumulated Difference")
+        axes[i].set_title(f"Accumulated Differences for {feature}")
+        axes[i].legend()
+        axes[i].grid(True)
+
+    axes[-1].set_xlabel("Index")
+    plt.tight_layout()
+
+    # Save the plot
+    output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    os.makedirs(output_dir, exist_ok=True)
+    plot_path = os.path.join(output_dir, f"{dataset_name}_accumulated_differences.png")
+    plt.savefig(plot_path)
+    plt.close()
+
+    print(f"Accumulated differences plot saved to {plot_path}")
+
+
 def generate_synthetic_dataset_with_drifts(
     dataframe_size: int,
     features_with_drifts: List[str],
@@ -300,61 +360,76 @@ def generate_synthetic_dataset_with_drifts(
     scale: float = 1,
     seed: int = 42,
     scenario: str = "parallel",
-) -> Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]]]:
+) -> Tuple[
+    pd.DataFrame,
+    List[int],
+    Dict[str, List[Tuple[str, int, int]]],
+    pd.DataFrame,
+    List[str],
+]:
     """
-    Generate a synthetic dataset and add disturbances to specified features.
-
+    Generate a synthetic dataset with specified drifts.
 
     Parameters:
     dataframe_size (int): The size of the dataframe.
-    features_with_drifts (List[str]): The list of features to which drifts will be added.
-    batch_size (int): The batch size used to determine the minimum index for drift occurence.
-    num_features (int): The number of features in the dataframe (default is 5).
-    loc (float): The mean of the normal distribution used to generate the features (default is 10).
-    scale (float): The standard deviation of the normal distribution used to generate the features (default is 1).
-    seed (int): The random seed for reproducibility (default is 42).
+    features_with_drifts (List[str]): The list of features to which drifts will be applied.
+    batch_size (int): The size of each batch.
+    num_features (int): The number of features in the dataframe.
+    loc (float): The mean of the normal distribution for generating data.
+    scale (float): The standard deviation of the normal distribution for generating data.
+    seed (int): The random seed for reproducibility.
     scenario (str): The scenario type ('parallel' or 'switching').
 
     Returns:
-    Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]]]: A tuple containing the dataframe with drifts,
-                                                                          a list of all drift points, and a dictionary
-                                                                          with drift information for each feature.
+    Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]], pd.DataFrame, List[str]]: The synthetic dataframe with drifts,
+                                                                                                    the list of drift points,
+                                                                                                    the drift information,
+                                                                                                    the accumulated differences,
+                                                                                                    and the features with drifts.
     """
     np.random.seed(seed)
-    random.seed(seed)
-    df = create_synthetic_dataframe(dataframe_size, num_features, loc, scale, seed)
 
-    min_index = 2 * batch_size
-    drift_points = determine_drift_points(
-        dataframe_size, num_features, scenario, min_index, drift_length=5 * batch_size
+    # Generate the original synthetic dataframe
+    original_df = create_synthetic_dataframe(
+        dataframe_size, num_features, loc, scale, seed
     )
-    all_drift_points = []
-    drift_info = {feature: [] for feature in features_with_drifts}
 
-    drift_types = ["abrupt", "gradual", "incremental"]
+    # Determine drift points
+    drift_points = determine_drift_points(
+        dataframe_size,
+        num_features,
+        scenario,
+        min_index=0,
+        num_drifts=len(features_with_drifts),
+    )
 
-    for i, feature in enumerate(features_with_drifts):
-        if feature in drift_points:
-            for start_index, end_index in drift_points[feature]:
-                std_dev = df[feature].std()
-                change = std_dev * 0.5
-                step = change / (dataframe_size // 4)
+    # Apply abrupt drifts to the dataframe
+    drifted_df = original_df.copy()
+    drift_info = {}
+    for feature in features_with_drifts:
+        drift_info[feature] = []
+        for start_index, end_index in drift_points[feature]:
+            drifted_df = add_abrupt_drift(
+                drifted_df, feature, start_index, end_index, change=5
+            )
+            drift_info[feature].append(("abrupt", start_index, end_index))
 
-                drift_type = drift_types[i % len(drift_types)]
+    # Use DataFrameComparator to measure differences
+    comparator = DataFrameComparator(original_df, drifted_df)
+    accumulated_differences = pd.DataFrame()
+    for feature in features_with_drifts:
+        differences = comparator.measure_feature_difference(
+            feature, 0, dataframe_size - 1
+        )
+        accumulated_differences[feature] = differences.cumsum()
 
-                if drift_type == "abrupt":
-                    df = add_abrupt_drift(df, feature, start_index, end_index, change)
-                elif drift_type == "gradual":
-                    df = add_gradual_drift(df, feature, start_index, end_index, change)
-                elif drift_type == "incremental":
-                    df = add_incremental_drift(
-                        df, feature, start_index, end_index, change, step
-                    )
-
-                all_drift_points.extend([start_index, end_index])
-                drift_info[feature].append((drift_type, start_index, end_index))
-
-    return df, all_drift_points, drift_info
+    return (
+        drifted_df,
+        drift_points,
+        drift_info,
+        accumulated_differences,
+        features_with_drifts,
+    )
 
 
 def save_synthetic_dataset(df: pd.DataFrame, dataset_name: str):
