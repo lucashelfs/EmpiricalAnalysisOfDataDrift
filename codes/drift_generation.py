@@ -257,6 +257,7 @@ def determine_drift_points(
     """
     drift_points = {}
     if drift_length is None:
+        print("Are you sure you dont want to provide a drift length?")
         drift_length = (dataframe_size - min_index) // (4 * num_drifts)
 
     total_drift_length = num_drifts * drift_length
