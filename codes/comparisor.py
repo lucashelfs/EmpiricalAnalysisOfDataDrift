@@ -596,7 +596,9 @@ def run_full_experiment(max_batch_size: int):
 
     # datasets = ["electricity"]
 
-    batch_sizes = [1000, 1500, 2000, 2500]
+    # batch_sizes = [1000, 1500, 2000, 2500]
+
+    batch_sizes = [2500]
 
     # "magic" --> fix the issue with connection and save the file on path
     # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]

@@ -1,6 +1,6 @@
 import os
 import random
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -238,6 +238,7 @@ def determine_drift_points(
     scenario: str,
     min_index: int,
     num_drifts: int = 1,
+    drift_length: Optional[int] = None,
 ) -> Dict[str, List[Tuple[int, int]]]:
     """
     Determine the drift points for a synthetic dataset. The drift points occur only after the min_index.
@@ -248,31 +249,44 @@ def determine_drift_points(
     scenario (str): The scenario type ('parallel' or 'switching').
     min_index (int): The minimum index where drifts can start.
     num_drifts (int): The number of parallel drifts to generate (default is 1).
+    drift_length (Optional[int]): The length of each drift. If not provided, it will be calculated dynamically.
 
     Returns:
     Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
                                       representing the start and end indexes of the drifts.
     """
     drift_points = {}
+    if drift_length is None:
+        drift_length = (dataframe_size - min_index) // (4 * num_drifts)
+
+    total_drift_length = num_drifts * drift_length
+    if total_drift_length > dataframe_size or total_drift_length > (
+        dataframe_size - min_index
+    ):
+        raise ValueError(
+            "Total drift length exceeds dataframe size or minimum index constraint."
+        )
+
     if scenario == "parallel":
-        drift_size = dataframe_size // (4 * num_drifts)
-        center_index = dataframe_size // 2
+        space_between_drifts = (dataframe_size - total_drift_length) // (num_drifts + 1)
+        current_start = min_index + space_between_drifts
+
         for drift_num in range(num_drifts):
-            start_index = max(
-                center_index - (drift_size * num_drifts) // 2 + drift_num * drift_size,
-                min_index,
-            )
-            end_index = start_index + drift_size
+            start_index = current_start
+            end_index = min(start_index + drift_length, dataframe_size - 1)
             for i in range(num_features):
-                if f"feature{i+1}" not in drift_points:
-                    drift_points[f"feature{i+1}"] = []
-                drift_points[f"feature{i+1}"].append((start_index, end_index))
+                if f"feature{i + 1}" not in drift_points:
+                    drift_points[f"feature{i + 1}"] = []
+                drift_points[f"feature{i + 1}"].append((start_index, end_index))
+            current_start = end_index + space_between_drifts
+
     elif scenario == "switching":
         period = dataframe_size // num_features
         for i in range(num_features):
             start_index = max(i * period, min_index)
-            end_index = start_index + period
-            drift_points[f"feature{i+1}"] = [(start_index, end_index)]
+            end_index = min(start_index + drift_length, dataframe_size - 1)
+            drift_points[f"feature{i + 1}"] = [(start_index, end_index)]
+
     return drift_points
 
 
@@ -311,7 +325,7 @@ def generate_synthetic_dataset_with_drifts(
 
     min_index = 2 * batch_size
     drift_points = determine_drift_points(
-        dataframe_size, num_features, scenario, min_index
+        dataframe_size, num_features, scenario, min_index, drift_length=5 * batch_size
     )
     all_drift_points = []
     drift_info = {feature: [] for feature in features_with_drifts}
