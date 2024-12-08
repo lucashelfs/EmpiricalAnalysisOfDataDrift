@@ -1,3 +1,6 @@
+import os
+import matplotlib.pyplot as plt
+
 from typing import Tuple, List, Dict, Optional
 
 import numpy as np
@@ -289,25 +292,21 @@ def determine_drift_points(
     return drift_points
 
 
-import os
-import matplotlib.pyplot as plt
-
-
 def plot_accumulated_differences(
     accumulated_differences: pd.DataFrame,
     features_with_drifts: List[str],
     dataset_name: str,
+    batch_size: int,
 ):
-    """
-    Plot the accumulated differences for the whole dataset and for each specified feature.
-
-    Parameters:
-    accumulated_differences (pd.DataFrame): DataFrame containing the accumulated differences for each feature.
-    features_with_drifts (List[str]): List of features to plot.
-    dataset_name (str): Name of the dataset for saving the plots.
-    """
-
     from codes.config import comparisons_output_dir as output_dir
+
+    num_batches = len(accumulated_differences) // batch_size
+    batch_indices = range(1, num_batches + 1)
+    accumulated_differences["Batch"] = (accumulated_differences.index // batch_size) + 1
+
+    # Calculate cumulative sum for each batch
+    accumulated_differences_cumsum = accumulated_differences.groupby("Batch").cumsum()
+    accumulated_differences_cumsum["Batch"] = accumulated_differences["Batch"]
 
     num_features = len(features_with_drifts)
     fig, axes = plt.subplots(
@@ -316,8 +315,8 @@ def plot_accumulated_differences(
 
     # Plot the accumulated dataset difference
     axes[0].plot(
-        accumulated_differences.index,
-        accumulated_differences.sum(axis=1),
+        batch_indices,
+        accumulated_differences_cumsum.groupby("Batch").sum().sum(axis=1),
         label="Total Difference",
         color="black",
     )
@@ -329,8 +328,8 @@ def plot_accumulated_differences(
     # Plot the accumulated differences for each feature
     for i, feature in enumerate(features_with_drifts, start=1):
         axes[i].plot(
-            accumulated_differences.index,
-            accumulated_differences[feature],
+            batch_indices,
+            accumulated_differences_cumsum.groupby("Batch")[feature].sum(),
             label=feature,
         )
         axes[i].set_ylabel(f"Accumulated Difference")
@@ -338,7 +337,7 @@ def plot_accumulated_differences(
         axes[i].legend()
         axes[i].grid(True)
 
-    axes[-1].set_xlabel("Index")
+    axes[-1].set_xlabel("Batch Index")
     plt.tight_layout()
 
     # Save the plot
@@ -349,6 +348,50 @@ def plot_accumulated_differences(
     plt.close()
 
     print(f"Accumulated differences plot saved to {plot_path}")
+
+    # Plot the accumulated differences for each batch
+    for batch in batch_indices:
+        batch_data = accumulated_differences[accumulated_differences["Batch"] == batch]
+
+        fig, axes = plt.subplots(
+            num_features + 1, 1, figsize=(14, 7 * (num_features + 1)), sharex=True
+        )
+
+        # Plot the total accumulated difference for the batch
+        axes[0].plot(
+            batch_data.index,
+            batch_data.sum(axis=1),
+            label=f"Batch {batch}",
+            color="black",
+        )
+        axes[0].set_ylabel("Total Accumulated Difference")
+        axes[0].set_title(f"Total Accumulated Differences for Batch {batch}")
+        axes[0].legend()
+        axes[0].grid(True)
+
+        # Plot the accumulated differences for each feature for the batch
+        for i, feature in enumerate(features_with_drifts, start=1):
+            axes[i].plot(
+                batch_data.index,
+                batch_data[feature].cumsum(),
+                label=feature,
+            )
+            axes[i].set_ylabel(f"Accumulated Difference")
+            axes[i].set_title(f"Accumulated Differences for {feature} (Batch {batch})")
+            axes[i].legend()
+            axes[i].grid(True)
+
+        axes[-1].set_xlabel("Index")
+        plt.tight_layout()
+
+        # Save the batch plot
+        batch_plot_path = os.path.join(
+            output_dir, f"{dataset_name}_accumulated_differences_in_batches_{batch}.png"
+        )
+        plt.savefig(batch_plot_path)
+        plt.close()
+
+        print(f"Accumulated differences batch plot saved to {batch_plot_path}")
 
 
 def generate_synthetic_dataset_with_drifts(

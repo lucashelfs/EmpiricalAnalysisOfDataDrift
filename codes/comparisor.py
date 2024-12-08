@@ -672,6 +672,7 @@ def run_full_experiment(max_batch_size: int):
                     accumulated_differences,
                     features_with_drifts,
                     "synthetic_dataset_with_parallel_drifts",
+                    batch_size=batch_size,
                 )
 
             elif dataset == "synthetic_dataset_with_switching_drifts":
@@ -706,6 +707,7 @@ def run_full_experiment(max_batch_size: int):
                     accumulated_differences,
                     features_with_drifts,
                     "synthetic_dataset_with_switching_drifts",
+                    batch_size=batch_size,
                 )
 
             print(f"{dataset} - {batch_size}")
