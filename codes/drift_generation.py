@@ -240,6 +240,8 @@ def determine_drift_points(
     min_index: int,
     num_drifts: int = 1,
     drift_length: Optional[int] = None,
+    batch_size: int = 1000,
+    drift_within_batch: float = 1.0,
 ) -> Dict[str, List[Tuple[int, int]]]:
     """
     Determine the drift points for a synthetic dataset. The drift points occur only after the min_index.
@@ -251,6 +253,8 @@ def determine_drift_points(
     min_index (int): The minimum index where drifts can start.
     num_drifts (int): The number of parallel drifts to generate (default is 1).
     drift_length (Optional[int]): The length of each drift. If not provided, it will be calculated dynamically.
+    batch_size (int): The size of each batch.
+    drift_within_batch (float): The percentage of the drift that should be within a batch (default is 1.0).
 
     Returns:
     Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
@@ -258,7 +262,6 @@ def determine_drift_points(
     """
     drift_points = {}
     if drift_length is None:
-        print("Are you sure you dont want to provide a drift length?")
         drift_length = (dataframe_size - min_index) // (4 * num_drifts)
 
     total_drift_length = num_drifts * drift_length
@@ -269,25 +272,38 @@ def determine_drift_points(
             "Total drift length exceeds dataframe size or minimum index constraint."
         )
 
-    if scenario == "parallel":
-        space_between_drifts = (dataframe_size - total_drift_length) // (num_drifts + 1)
-        current_start = min_index + space_between_drifts
+    # Calculate batch boundaries
+    batch_boundaries = [
+        (i, min(i + batch_size, dataframe_size))
+        for i in range(min_index, dataframe_size, batch_size)
+    ]
 
-        for drift_num in range(num_drifts):
-            start_index = current_start
-            end_index = min(start_index + drift_length, dataframe_size - 1)
-            for i in range(num_features):
-                if f"feature{i + 1}" not in drift_points:
-                    drift_points[f"feature{i + 1}"] = []
-                drift_points[f"feature{i + 1}"].append((start_index, end_index))
-            current_start = end_index + space_between_drifts
+    if scenario == "parallel":
+        for i in range(num_drifts):
+            start_index, end_index = batch_boundaries[i]
+            drift_start = start_index + int(
+                (end_index - start_index) * (1 - drift_within_batch)
+            )
+            drift_end = drift_start + drift_length
+            for j in range(num_features):
+                if f"feature{j + 1}" not in drift_points:
+                    drift_points[f"feature{j + 1}"] = []
+                drift_points[f"feature{j + 1}"].append((drift_start, drift_end))
 
     elif scenario == "switching":
-        period = dataframe_size // num_features
         for i in range(num_features):
-            start_index = max(i * period, min_index)
-            end_index = min(start_index + drift_length, dataframe_size - 1)
-            drift_points[f"feature{i + 1}"] = [(start_index, end_index)]
+            start_index, end_index = batch_boundaries[i % len(batch_boundaries)]
+            drift_start = start_index + int(
+                (end_index - start_index) * (1 - drift_within_batch)
+            )
+            drift_end = drift_start + drift_length
+            if drift_end > end_index:
+                # If drift end exceeds the current batch, extend to the next batch
+                next_batch_start, next_batch_end = batch_boundaries[
+                    (i + 1) % len(batch_boundaries)
+                ]
+                drift_end = min(drift_end, next_batch_end)
+            drift_points[f"feature{i + 1}"] = [(drift_start, drift_end)]
 
     return drift_points
 
@@ -398,7 +414,10 @@ def generate_synthetic_dataset_with_drifts(
         dataframe_size,
         num_features,
         scenario,
-        min_index=0,
+        drift_within_batch=0.05,  # this is for sliding the drift
+        batch_size=batch_size,
+        drift_length=batch_size * 4,
+        min_index=batch_size,  # this assures that the first batch is stable
         num_drifts=len(features_with_drifts),
     )
 
