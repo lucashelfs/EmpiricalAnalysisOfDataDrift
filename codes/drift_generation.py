@@ -1,3 +1,4 @@
+import math
 import os
 import matplotlib.pyplot as plt
 
@@ -233,13 +234,20 @@ def plot_data_disturbance():
     plt.show()
 
 
+def there_is_space_for_all_drifts(num_drifts, drift_length, index_space_size):
+    if num_drifts * drift_length > index_space_size:
+        raise ValueError(
+            "Total drift length exceeds the available space between the minimum index and the end of the stream."
+        )
+    return True
+
+
 def determine_drift_points(
     dataframe_size: int,
-    num_features: int,
     scenario: str,
     min_index: int,
-    num_drifts: int = 1,
-    drift_length: Optional[int] = None,
+    features_with_drifts: List[str] = None,
+    total_drift_length: Optional[int] = None,
     batch_size: int = 1000,
     drift_within_batch: float = 1.0,
 ) -> Dict[str, List[Tuple[int, int]]]:
@@ -252,7 +260,7 @@ def determine_drift_points(
     scenario (str): The scenario type ('parallel' or 'switching').
     min_index (int): The minimum index where drifts can start.
     num_drifts (int): The number of parallel drifts to generate (default is 1).
-    drift_length (Optional[int]): The length of each drift. If not provided, it will be calculated dynamically.
+    total_drift_length (Optional[int]): The total length of all drifts combined.
     batch_size (int): The size of each batch.
     drift_within_batch (float): The percentage of the drift that should be within a batch (default is 1.0).
 
@@ -260,11 +268,12 @@ def determine_drift_points(
     Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
                                       representing the start and end indexes of the drifts.
     """
-    drift_points = {}
-    if drift_length is None:
-        drift_length = (dataframe_size - min_index) // (4 * num_drifts)
+    if not features_with_drifts:
+        raise ValueError("No features with drifts specified.")
 
-    total_drift_length = num_drifts * drift_length
+    num_drifts = 2
+    drift_points = {feature: [] for feature in features_with_drifts}
+
     if total_drift_length > dataframe_size or total_drift_length > (
         dataframe_size - min_index
     ):
@@ -272,38 +281,42 @@ def determine_drift_points(
             "Total drift length exceeds dataframe size or minimum index constraint."
         )
 
-    # Calculate batch boundaries
-    batch_boundaries = [
-        (i, min(i + batch_size, dataframe_size))
-        for i in range(min_index, dataframe_size, batch_size)
-    ]
+    # Need space between the drifts - leave the drifts out of the first and last batch of the stream
+    index_space_size = dataframe_size - 2 * min_index
 
+    # Now match the drifts to the batch boundaries in a way that they are evenly split across the batches that are inside the index_space_size
     if scenario == "parallel":
-        for i in range(num_drifts):
-            start_index, end_index = batch_boundaries[i]
-            drift_start = start_index + int(
-                (end_index - start_index) * (1 - drift_within_batch)
-            )
-            drift_end = drift_start + drift_length
-            for j in range(num_features):
-                if f"feature{j + 1}" not in drift_points:
-                    drift_points[f"feature{j + 1}"] = []
-                drift_points[f"feature{j + 1}"].append((drift_start, drift_end))
+        drift_length = math.ceil(
+            total_drift_length / (num_drifts * len(features_with_drifts))
+        )
+        spacing = (index_space_size - num_drifts * drift_length) // (num_drifts)
+
+        if there_is_space_for_all_drifts(num_drifts, drift_length, index_space_size):
+            for i in range(num_drifts):
+                start_index = min_index + i * (drift_length + spacing)
+                end_index = start_index + drift_length
+                drift_start = start_index + int(
+                    (end_index - start_index) * (1 - drift_within_batch)
+                )
+                drift_end = drift_start + drift_length
+                for feature in features_with_drifts:
+                    drift_points[feature].append((drift_start, drift_end))
 
     elif scenario == "switching":
-        for i in range(num_features):
-            start_index, end_index = batch_boundaries[i % len(batch_boundaries)]
-            drift_start = start_index + int(
-                (end_index - start_index) * (1 - drift_within_batch)
-            )
-            drift_end = drift_start + drift_length
-            if drift_end > end_index:
-                # If drift end exceeds the current batch, extend to the next batch
-                next_batch_start, next_batch_end = batch_boundaries[
-                    (i + 1) % len(batch_boundaries)
-                ]
-                drift_end = min(drift_end, next_batch_end)
-            drift_points[f"feature{i + 1}"] = [(drift_start, drift_end)]
+        drift_length = math.ceil(total_drift_length / len(features_with_drifts))
+        spacing = (index_space_size - num_drifts * drift_length) // len(
+            features_with_drifts
+        )
+
+        if there_is_space_for_all_drifts(num_drifts, drift_length, index_space_size):
+            for i, feature in enumerate(features_with_drifts):
+                start_index = min_index + i * (drift_length + spacing)
+                end_index = start_index + drift_length
+                drift_start = start_index + int(
+                    (end_index - start_index) * (1 - drift_within_batch)
+                )
+                drift_end = drift_start + drift_length
+                drift_points[feature] = [(drift_start, drift_end)]
 
     return drift_points
 
@@ -412,13 +425,12 @@ def generate_synthetic_dataset_with_drifts(
     # Determine drift points
     drift_points = determine_drift_points(
         dataframe_size,
-        num_features,
         scenario,
-        drift_within_batch=0.05,  # this is for sliding the drift
+        drift_within_batch=1.0,  # this is for sliding the drift 1.0 is 100% inside of batch and 0.05 is 5% inside of batch
         batch_size=batch_size,
-        drift_length=batch_size * 4,
+        total_drift_length=20000,
         min_index=batch_size,  # this assures that the first batch is stable
-        num_drifts=len(features_with_drifts),
+        features_with_drifts=features_with_drifts,
     )
 
     # Apply abrupt drifts to the dataframe
