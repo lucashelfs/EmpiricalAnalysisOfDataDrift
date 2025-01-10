@@ -428,6 +428,8 @@ def plot_all_features(
     drift_points: List[int] = None,
     drift_info: Dict[str, List[Tuple[str, int, int]]] = None,
     suffix: str = "",
+    batch_size: int = 1000,
+    use_batch_numbers: bool = False,
 ):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
     # Exclude class column
@@ -450,8 +452,20 @@ def plot_all_features(
         ax.plot(df.index, df[column], label=column)
         if drift_info and column in drift_info:
             for drift_type, start_index, end_index in drift_info[column]:
-                ax.axvline(x=start_index, color="red", linestyle="--", linewidth=1.5)
-                ax.axvline(x=end_index, color="red", linestyle="--", linewidth=1.5)
+                ax.axvline(
+                    x=start_index,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label=f"{drift_type} start",
+                )
+                ax.axvline(
+                    x=end_index,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label=f"{drift_type} end",
+                )
                 ax.add_patch(
                     patches.Rectangle(
                         (start_index, ax.get_ylim()[0]),
@@ -472,7 +486,15 @@ def plot_all_features(
                     color="black",
                     bbox=dict(facecolor="yellow", alpha=0.5),
                 )
-        ax.set_xlabel("Index")
+        if use_batch_numbers:
+            # Create secondary x-axis for batch numbers
+            ax2 = ax.twiny()
+            ax2.set_xticks(ax.get_xticks())
+            ax2.set_xbound(ax.get_xbound())
+            ax2.set_xticklabels([int(x // batch_size) for x in ax.get_xticks()])
+            ax2.set_xlabel("Batch Index")
+        else:
+            ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
         ax.legend()
@@ -494,13 +516,25 @@ def plot_all_features(
         plt.plot(df.index, df[column], label=column)
         if drift_info and column in drift_info:
             for drift_type, start_index, end_index in drift_info[column]:
-                plt.axvline(x=start_index, color="red", linestyle="--", linewidth=1.5)
-                plt.axvline(x=end_index, color="red", linestyle="--", linewidth=1.5)
+                plt.axvline(
+                    x=start_index,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label=f"{drift_type} start",
+                )
+                plt.axvline(
+                    x=end_index,
+                    color="red",
+                    linestyle="--",
+                    linewidth=1.5,
+                    label=f"{drift_type} end",
+                )
                 plt.gca().add_patch(
                     patches.Rectangle(
-                        (start_index, plt.gca().get_ylim()[0]),
+                        (start_index, plt.ylim()[0]),
                         end_index - start_index,
-                        plt.gca().get_ylim()[1] - plt.gca().get_ylim()[0],
+                        plt.ylim()[1] - plt.ylim()[0],
                         color="yellow",
                         alpha=0.3,
                         label=f"{drift_type} drift",
@@ -508,7 +542,7 @@ def plot_all_features(
                 )
                 plt.text(
                     (start_index + end_index) / 2,
-                    plt.gca().get_ylim()[1],
+                    plt.ylim()[1],
                     f"{drift_type} drift",
                     horizontalalignment="center",
                     verticalalignment="top",
@@ -516,7 +550,15 @@ def plot_all_features(
                     color="black",
                     bbox=dict(facecolor="yellow", alpha=0.5),
                 )
-        plt.xlabel("Index")
+        if use_batch_numbers:
+            # Create secondary x-axis for batch numbers
+            ax2 = plt.gca().twiny()
+            ax2.set_xticks(plt.gca().get_xticks())
+            ax2.set_xbound(plt.gca().get_xbound())
+            ax2.set_xticklabels([int(x // batch_size) for x in plt.gca().get_xticks()])
+            ax2.set_xlabel("Batch Index")
+        else:
+            plt.xlabel("Index")
         plt.ylabel(column)
         plt.title(f"{dataset_name} - {column}")
         plt.legend()
@@ -529,72 +571,7 @@ def plot_all_features(
         plt.close()
 
 
-def generate_synthetic_datasets():
-    """Generate and save synthetic datasets with and without drifts."""
-    # Generate synthetic dataset without drifts
-    synthetic_df_no_drifts = create_synthetic_dataframe(
-        dataframe_size=80000, num_features=5, loc=10, scale=1, seed=42
-    )
-    save_synthetic_dataset(synthetic_df_no_drifts, "synthetic_dataset_no_drifts")
-
-    # Generate synthetic dataset with parallel drifts
-    (
-        synthetic_df_with_parallel_drifts,
-        parallel_drift_points,
-        parallel_drift_info,
-        accumulated_differences_parallel,
-        features_with_drifts_parallel,
-    ) = generate_synthetic_dataset_with_drifts(
-        dataframe_size=80000,
-        features_with_drifts=["feature1", "feature3", "feature5"],
-        batch_size=2500,
-        num_features=5,
-        loc=10,
-        scale=1,
-        seed=42,
-        scenario="parallel",
-    )
-    save_synthetic_dataset(
-        synthetic_df_with_parallel_drifts, "synthetic_dataset_with_parallel_drifts"
-    )
-    plot_all_features(
-        synthetic_df_with_parallel_drifts,
-        "synthetic_dataset_with_parallel_drifts",
-        parallel_drift_points,
-        suffix="_with_parallel_drifts",
-        drift_info=parallel_drift_info,
-    )
-
-    # Generate synthetic dataset with switching drifts
-    (
-        synthetic_df_with_switching_drifts,
-        switching_drift_points,
-        switching_drift_info,
-        accumulated_differences_switching,
-        features_with_drifts_switching,
-    ) = generate_synthetic_dataset_with_drifts(
-        dataframe_size=80000,
-        features_with_drifts=["feature1", "feature3", "feature5"],
-        batch_size=2500,
-        num_features=5,
-        loc=10,
-        scale=1,
-        seed=42,
-        scenario="switching",
-    )
-    save_synthetic_dataset(
-        synthetic_df_with_switching_drifts, "synthetic_dataset_with_switching_drifts"
-    )
-    plot_all_features(
-        synthetic_df_with_switching_drifts,
-        "synthetic_dataset_with_switching_drifts",
-        switching_drift_points,
-        suffix="_with_switching_drifts",
-        drift_info=switching_drift_info,
-    )
-
-
-def run_full_experiment(max_batch_size: int):
+def run_full_experiment():
     """Run full experiment for all datasets."""
     datasets = []
 
@@ -604,6 +581,8 @@ def run_full_experiment(max_batch_size: int):
     # datasets = ["electricity"]
 
     # batch_sizes = [1000, 1500, 2000, 2500]
+
+    # batch_sizes = [2500]
 
     batch_sizes = [2500]
 
@@ -650,7 +629,8 @@ def run_full_experiment(max_batch_size: int):
                 ) = generate_synthetic_dataset_with_drifts(
                     dataframe_size=80000,
                     features_with_drifts=["feature1", "feature3", "feature5"],
-                    batch_size=max_batch_size,
+                    batch_size=batch_size,  # these two lines are for determining where drifts must occur
+                    drift_within_batch=1.0,
                     num_features=5,
                     loc=10,
                     scale=1,
@@ -667,6 +647,15 @@ def run_full_experiment(max_batch_size: int):
                     parallel_drift_points,
                     suffix="_with_parallel_drifts",
                     drift_info=parallel_drift_info,
+                )
+                plot_all_features(
+                    synthetic_df_with_parallel_drifts,
+                    "synthetic_dataset_with_parallel_drifts",
+                    parallel_drift_points,
+                    suffix="_with_parallel_drifts_and_batches",
+                    drift_info=parallel_drift_info,
+                    batch_size=batch_size,
+                    use_batch_numbers=True,
                 )
                 plot_accumulated_differences(
                     accumulated_differences,
@@ -685,7 +674,7 @@ def run_full_experiment(max_batch_size: int):
                 ) = generate_synthetic_dataset_with_drifts(
                     dataframe_size=80000,
                     features_with_drifts=["feature1", "feature3", "feature5"],
-                    batch_size=max_batch_size,
+                    batch_size=batch_size,
                     num_features=5,
                     loc=10,
                     scale=1,
@@ -702,6 +691,15 @@ def run_full_experiment(max_batch_size: int):
                     switching_drift_points,
                     suffix="_with_switching_drifts",
                     drift_info=switching_drift_info,
+                )
+                plot_all_features(
+                    synthetic_df_with_switching_drifts,
+                    "synthetic_dataset_with_switching_drifts",
+                    switching_drift_points,
+                    suffix="_with_switching_drifts_and_batches",
+                    drift_info=switching_drift_info,
+                    batch_size=batch_size,
+                    use_batch_numbers=True,
                 )
                 plot_accumulated_differences(
                     accumulated_differences,
@@ -744,5 +742,4 @@ def run_full_experiment(max_batch_size: int):
 
 
 if __name__ == "__main__":
-    max_batch_size = 2500  # Set the maximum batch size
-    run_full_experiment(max_batch_size)
+    run_full_experiment()
