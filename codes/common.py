@@ -28,7 +28,9 @@ from codes.river_datasets import (
     sea_concept_drift_dataset,
     stagger_concept_drift_dataset,
 )
-from codes.utils import encode_labels, load_csv_dataset
+from drift_info import extract_drift_info
+from label_encoder import encode_labels
+
 
 common_datasets_file_path_prefix = os.path.join(project_path_root, "data/")
 
@@ -138,6 +140,7 @@ def define_batches(X: pd.DataFrame, batch_size: int) -> pd.DataFrame:
 
 def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, str]:
     """Load the desired dataset."""
+    from codes.utils import load_csv_dataset
 
     if dataset in insects_datasets:
         dataset_filename_str = (
@@ -234,20 +237,6 @@ def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, st
 
     Y = encode_labels(Y_og)
     return df, Y, dataset_filename_str
-
-
-def extract_drift_info(dataset_id_with_scenario: str):
-    """Extract drift information from the drift config."""
-    dataset_id_with_scenario = dataset_id_with_scenario.split("_")
-    dataset = dataset_id_with_scenario[0]
-    scenario = "_".join(dataset_id_with_scenario[1:])
-
-    if not drift_config.get(dataset, False):
-        raise ValueError("Dataset not found in drift config file.")
-
-    column = drift_config[dataset][scenario]["column"]
-    drifts = drift_config[dataset][scenario]["drifts"]
-    return dataset, column, drifts
 
 
 def plot_data_streams_with_drifts(

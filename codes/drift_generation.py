@@ -2,10 +2,11 @@ import math
 import os
 import matplotlib.pyplot as plt
 
-from typing import Tuple, List, Dict, Optional
+from typing import Tuple, List, Dict, Optional, Any
 
 import numpy as np
 import pandas as pd
+from pandas import DataFrame
 
 from codes.config import comparisons_output_dir as output_dir
 from codes.drift_measures import DataFrameComparator
@@ -248,25 +249,11 @@ def determine_drift_points(
     min_index: int,
     features_with_drifts: List[str] = None,
     total_drift_length: Optional[int] = None,
-    batch_size: int = 1000,
     drift_within_batch: float = 1.0,
 ) -> Dict[str, List[Tuple[int, int]]]:
     """
     Determine the drift points for a synthetic dataset. The drift points occur only after the min_index.
 
-    Parameters:
-    dataframe_size (int): The size of the dataframe.
-    num_features (int): The number of features in the dataframe.
-    scenario (str): The scenario type ('parallel' or 'switching').
-    min_index (int): The minimum index where drifts can start.
-    num_drifts (int): The number of parallel drifts to generate (default is 1).
-    total_drift_length (Optional[int]): The total length of all drifts combined.
-    batch_size (int): The size of each batch.
-    drift_within_batch (float): The percentage of the drift that should be within a batch (default is 1.0).
-
-    Returns:
-    Dict[str, List[Tuple[int, int]]]: A dictionary where keys are feature names and values are lists of tuples
-                                      representing the start and end indexes of the drifts.
     """
     if not features_with_drifts:
         raise ValueError("No features with drifts specified.")
@@ -388,12 +375,13 @@ def generate_synthetic_dataset_with_drifts(
     scale: float = 1,
     seed: int = 42,
     scenario: str = "parallel",
-) -> Tuple[
-    pd.DataFrame,
-    List[int],
-    Dict[str, List[Tuple[str, int, int]]],
-    pd.DataFrame,
-    List[str],
+    drift_within_batch: float = 1.0,
+) -> tuple[
+    DataFrame,
+    dict[str, list[tuple[int, int]]],
+    dict[str, list[Any]],
+    DataFrame,
+    list[str],
 ]:
     """
     Generate a synthetic dataset with specified drifts.
@@ -403,17 +391,11 @@ def generate_synthetic_dataset_with_drifts(
     features_with_drifts (List[str]): The list of features to which drifts will be applied.
     batch_size (int): The size of each batch.
     num_features (int): The number of features in the dataframe.
-    loc (float): The mean of the normal distribution for generating data.
-    scale (float): The standard deviation of the normal distribution for generating data.
+    loc (float): The mean of the normal distribution for generating features.
+    scale (float): The standard deviation of the normal distribution for generating features.
     seed (int): The random seed for reproducibility.
     scenario (str): The scenario type ('parallel' or 'switching').
-
-    Returns:
-    Tuple[pd.DataFrame, List[int], Dict[str, List[Tuple[str, int, int]]], pd.DataFrame, List[str]]: The synthetic dataframe with drifts,
-                                                                                                    the list of drift points,
-                                                                                                    the drift information,
-                                                                                                    the accumulated differences,
-                                                                                                    and the features with drifts.
+    drift_within_batch (float): The percentage of the drift that should be within a batch (default is 1.0).
     """
     np.random.seed(seed)
 
@@ -426,8 +408,7 @@ def generate_synthetic_dataset_with_drifts(
     drift_points = determine_drift_points(
         dataframe_size,
         scenario,
-        drift_within_batch=1.0,  # this is for sliding the drift 1.0 is 100% inside of batch and 0.05 is 5% inside of batch
-        batch_size=batch_size,
+        drift_within_batch=drift_within_batch,  # this is for sliding the drift 1.0 is 100% inside of batch and 0.05 is 5% inside of batch
         total_drift_length=20000,
         min_index=batch_size,  # this assures that the first batch is stable
         features_with_drifts=features_with_drifts,
