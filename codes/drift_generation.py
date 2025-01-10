@@ -290,20 +290,35 @@ def determine_drift_points(
                     drift_points[feature].append((drift_start, drift_end))
 
     elif scenario == "switching":
-        drift_length = math.ceil(total_drift_length / len(features_with_drifts))
-        spacing = (index_space_size - num_drifts * drift_length) // len(
-            features_with_drifts
+        # Drift length for each window per feature and per drift sequence
+        drift_length = math.ceil(
+            total_drift_length / (num_drifts * len(features_with_drifts))
         )
 
-        if there_is_space_for_all_drifts(num_drifts, drift_length, index_space_size):
-            for i, feature in enumerate(features_with_drifts):
-                start_index = min_index + i * (drift_length + spacing)
-                end_index = start_index + drift_length
-                drift_start = start_index + int(
-                    (end_index - start_index) * (1 - drift_within_batch)
-                )
-                drift_end = drift_start + drift_length
-                drift_points[feature] = [(drift_start, drift_end)]
+        # Calculate the available space for drift windows
+        available_space = (
+            index_space_size - num_drifts * len(features_with_drifts) * drift_length
+        )
+        # Ensure the available space is evenly distributed between drift windows
+        spacing = available_space // (num_drifts * len(features_with_drifts))
+
+        if there_is_space_for_all_drifts(
+            num_drifts * len(features_with_drifts), drift_length, index_space_size
+        ):
+            for i in range(num_drifts):  # Loop over sequences of drifts
+                for j, feature in enumerate(features_with_drifts):  # Loop over features
+                    # Calculate the start and end index for each drift window
+                    start_index = (
+                        min_index
+                        + i * (len(features_with_drifts) * (drift_length + spacing))
+                        + j * (drift_length + spacing)
+                    )
+                    end_index = start_index + drift_length
+                    drift_start = start_index + int(
+                        (end_index - start_index) * (1 - drift_within_batch)
+                    )
+                    drift_end = drift_start + drift_length
+                    drift_points[feature].append((drift_start, drift_end))
 
     return drift_points
 
