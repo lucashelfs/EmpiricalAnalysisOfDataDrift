@@ -9,6 +9,11 @@ import pandas as pd
 from codes.config import comparisons_output_dir as output_dir
 from utils import fetch_dataset_change_points
 
+import warnings
+
+warnings.filterwarnings("ignore", message="No artists with labels found")
+
+
 # Set global style parameters
 plt.rcParams["figure.facecolor"] = "#EAEAF2"  # Set the background color to grey
 plt.rcParams["axes.facecolor"] = "#EAEAF2"  # Set the axes background color to grey

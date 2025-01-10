@@ -6,7 +6,8 @@ import pandas as pd
 
 from codes.config import insects_datasets, load_insect_dataset
 from codes.config import comparisons_output_dir as output_dir
-from codes.utils import encode_labels, load_csv_dataset
+from codes.label_encoder import encode_labels
+from codes.utils import load_csv_dataset
 from codes.common import (
     load_magic_dataset_data,
     load_magic_dataset_targets,

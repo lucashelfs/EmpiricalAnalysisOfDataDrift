@@ -254,178 +254,159 @@ def fetch_change_points(dataset_name: str, df: pd.DataFrame) -> list:
     return change_points
 
 
-def run_full_experiment():
-    """Run full experiment for all datasets."""
-    datasets = []
-
-    # batch_sizes = [1000]
-    # datasets = ["MULTISTAGGER", "MULTISEA"]
-
-    # datasets = ["electricity"]
-
-    # batch_sizes = [1000, 1500, 2000, 2500]
-
-    # batch_sizes = [2500]
-
-    batch_sizes = [2500]
-
+def prepare_datasets():
+    """Prepare the list of datasets to be processed."""
     # "magic" --> fix the issue with connection and save the file on path
+    # datasets = ["MULTISTAGGER", "MULTISEA"]
+    # datasets = ["electricity"]
     # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
-
     # for dataset in insects_datasets.keys():
     #     if dataset != "Out-of-control":
     #         datasets.append(dataset)
-
     # datasets.append("Incremental (bal.)")
     # datasets.append("Abrupt (imbal.)")
     #
     # for dataset in datasets_with_added_drifts:
     #     datasets.append(dataset)
-
-    datasets = [
+    return [
         "synthetic_dataset_no_drifts",
         "synthetic_dataset_with_parallel_drifts",
         "synthetic_dataset_with_switching_drifts",
     ]
 
-    results = {dataset: {} for dataset in datasets}
+
+def prepare_output_path(dataset):
+    """Create and return the output directory for a dataset."""
+    output_path = os.path.join(output_dir, f"{dataset}")
+    os.makedirs(output_path, exist_ok=True)
+    return output_path
+
+
+def handle_synthetic_dataset(
+    scenario,
+    dataset,
+    dataframe_size,
+    batch_size,
+    drift_within_batch,
+    features_with_drifts,
+):
+    """Generate, save, and plot synthetic datasets."""
+    (
+        synthetic_df,
+        drift_points,
+        drift_info,
+        accumulated_differences,
+        features_with_drifts,
+    ) = generate_synthetic_dataset_with_drifts(
+        dataframe_size=dataframe_size,
+        features_with_drifts=features_with_drifts,
+        batch_size=batch_size,
+        drift_within_batch=drift_within_batch,
+        num_features=5,
+        loc=10,
+        scale=1,
+        seed=42,
+        scenario=scenario,
+    )
+    save_synthetic_dataset(synthetic_df, dataset)
+    plot_all_features(
+        synthetic_df,
+        dataset,
+        drift_points,
+        suffix=f"_{scenario}_drifts",
+        drift_info=drift_info,
+    )
+    plot_all_features(
+        synthetic_df,
+        dataset,
+        drift_points,
+        suffix=f"_{scenario}_drifts_and_batches",
+        drift_info=drift_info,
+        batch_size=batch_size,
+        use_batch_numbers=True,
+    )
+    plot_accumulated_differences(
+        accumulated_differences, features_with_drifts, dataset, batch_size=batch_size
+    )
+
+
+def run_single_experiment(dataset, batch_size, csv_file_path):
+    """Run the main experiment pipeline for a single dataset and batch size."""
+    drift_results, test_results, X_shape = run_test(
+        dataset=dataset, batch_size=batch_size, plot_heatmaps=True
+    )
+    num_batches = X_shape // batch_size
+    save_results_to_csv(
+        dataset, batch_size, drift_results, test_results, num_batches, csv_file_path
+    )
+    plot_drift_points(drift_results, dataset, batch_size)
+    return test_results
+
+
+def consolidate_results(csv_file_paths):
+    """Consolidate individual CSV files into a single CSV."""
+    target_csv_file = os.path.join(output_dir, "consolidated_results.csv")
+    os.makedirs(output_dir, exist_ok=True)
+    consolidate_csv_files(csv_file_paths, target_csv_file)
+
+
+def run_full_experiment():
+    """Run the full experiment pipeline."""
+
+    # batch_sizes = [1000]
+    # batch_sizes = [1000, 1500, 2000, 2500]
+    # batch_sizes = [2500]
+    # batch_sizes = [2500]
+
+    datasets = prepare_datasets()
+    batch_sizes = [2500]
+    results = {}
     csv_file_paths = []
 
     for dataset in datasets:
         dataset_results = {}
-        output_path = os.path.join(output_dir, f"{dataset}")
-        os.makedirs(output_path, exist_ok=True)
+        output_path = prepare_output_path(dataset)
         csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
-
-        # Remove the file if it already exists
         if os.path.exists(csv_file_path):
             os.remove(csv_file_path)
 
+        dataframe_size = 80000
         drift_within_batch = 1.0
         features_with_drifts = ["feature1", "feature3", "feature5"]
-        dataframe_size = 80000
+
         for batch_size in batch_sizes:
             if dataset == "synthetic_dataset_with_parallel_drifts":
-                (
-                    synthetic_df_with_parallel_drifts,
-                    parallel_drift_points,
-                    parallel_drift_info,
-                    accumulated_differences,
+                handle_synthetic_dataset(
+                    "parallel",
+                    dataset,
+                    dataframe_size,
+                    batch_size,
+                    drift_within_batch,
                     features_with_drifts,
-                ) = generate_synthetic_dataset_with_drifts(
-                    dataframe_size=dataframe_size,
-                    features_with_drifts=features_with_drifts,
-                    batch_size=batch_size,  # these two lines are for determining where drifts must occur
-                    drift_within_batch=drift_within_batch,
-                    num_features=5,
-                    loc=10,
-                    scale=1,
-                    seed=42,
-                    scenario="parallel",
                 )
-                save_synthetic_dataset(
-                    synthetic_df_with_parallel_drifts,
-                    "synthetic_dataset_with_parallel_drifts",
-                )
-                plot_all_features(
-                    synthetic_df_with_parallel_drifts,
-                    "synthetic_dataset_with_parallel_drifts",
-                    parallel_drift_points,
-                    suffix="_with_parallel_drifts",
-                    drift_info=parallel_drift_info,
-                )
-                plot_all_features(
-                    synthetic_df_with_parallel_drifts,
-                    "synthetic_dataset_with_parallel_drifts",
-                    parallel_drift_points,
-                    suffix="_with_parallel_drifts_and_batches",
-                    drift_info=parallel_drift_info,
-                    batch_size=batch_size,
-                    use_batch_numbers=True,
-                )
-                plot_accumulated_differences(
-                    accumulated_differences,
-                    features_with_drifts,
-                    "synthetic_dataset_with_parallel_drifts",
-                    batch_size=batch_size,
-                )
-
             elif dataset == "synthetic_dataset_with_switching_drifts":
-                (
-                    synthetic_df_with_switching_drifts,
-                    switching_drift_points,
-                    switching_drift_info,
-                    accumulated_differences,
+                handle_synthetic_dataset(
+                    "switching",
+                    dataset,
+                    dataframe_size,
+                    batch_size,
+                    drift_within_batch,
                     features_with_drifts,
-                ) = generate_synthetic_dataset_with_drifts(
-                    dataframe_size=dataframe_size,
-                    features_with_drifts=features_with_drifts,
-                    batch_size=batch_size,
-                    drift_within_batch=drift_within_batch,
-                    num_features=5,
-                    loc=10,
-                    scale=1,
-                    seed=42,
-                    scenario="switching",
-                )
-                save_synthetic_dataset(
-                    synthetic_df_with_switching_drifts,
-                    "synthetic_dataset_with_switching_drifts",
-                )
-                plot_all_features(
-                    synthetic_df_with_switching_drifts,
-                    "synthetic_dataset_with_switching_drifts",
-                    switching_drift_points,
-                    suffix="_with_switching_drifts",
-                    drift_info=switching_drift_info,
-                )
-                plot_all_features(
-                    synthetic_df_with_switching_drifts,
-                    "synthetic_dataset_with_switching_drifts",
-                    switching_drift_points,
-                    suffix="_with_switching_drifts_and_batches",
-                    drift_info=switching_drift_info,
-                    batch_size=batch_size,
-                    use_batch_numbers=True,
-                )
-                plot_accumulated_differences(
-                    accumulated_differences,
-                    features_with_drifts,
-                    "synthetic_dataset_with_switching_drifts",
-                    batch_size=batch_size,
                 )
 
             print(f"{dataset} - {batch_size}")
-            drift_results, test_results, X_shape = run_test(
-                dataset=dataset,
-                batch_size=batch_size,
-                plot_heatmaps=True,
-            )
-            num_batches = X_shape // batch_size  # Calculate the number of batches
+            test_results = run_single_experiment(dataset, batch_size, csv_file_path)
             dataset_results[batch_size] = test_results
-            plot_drift_points(drift_results, dataset, batch_size)
-            save_results_to_csv(
-                dataset,
-                batch_size,
-                drift_results,
-                test_results,
-                num_batches,
-                csv_file_path,
-            )
-            print()
 
         results[dataset] = dataset_results
         plot_results(dataset_results, dataset, batch_sizes)
         csv_file_paths.append(csv_file_path)
 
-        # Load the dataset and plot all features
+        # Load and plot original dataset features
         df, _, _ = load_and_prepare_dataset(dataset)
         plot_all_features(df, dataset)
 
-    # Consolidate all CSV files into a single CSV file
-    target_csv_file = os.path.join(output_dir, "consolidated_results.csv")
-    os.makedirs(output_dir, exist_ok=True)
-    consolidate_csv_files(csv_file_paths, target_csv_file)
+    consolidate_results(csv_file_paths)
 
 
 if __name__ == "__main__":
