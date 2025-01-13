@@ -256,7 +256,8 @@ def determine_drift_points(
 
     """
     if not features_with_drifts:
-        raise ValueError("No features with drifts specified.")
+        print("No features with drifts specified.")
+        return {}
 
     num_drifts = 2
     drift_points = {feature: [] for feature in features_with_drifts}

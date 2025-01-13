@@ -14,19 +14,17 @@ from sklearn.metrics import (
 from sklearn.naive_bayes import MultinomialNB
 
 from codes.common import (
-    calculate_index,
     define_batches,
     find_indexes,
     load_and_prepare_dataset,
 )
-from codes.config import comparisons_output_dir as output_dir, insects_datasets
+from codes.config import comparisons_output_dir as output_dir
 from codes.ddm import fetch_hdddm_drifts, fetch_jsddm_drifts, fetch_ksddm_drifts
 from codes.drift_generation import (
     generate_synthetic_dataset_with_drifts,
     plot_accumulated_differences,
     save_synthetic_dataset,
 )
-from drift_config import drift_config
 from codes.plots import plot_all_features, plot_results, plot_drift_points
 
 
@@ -182,6 +180,9 @@ def save_results_to_csv(
     metrics_results: dict[Any, dict[str, float | tuple[Any, Any, float]]],
     num_batches: int,
     csv_file_path: str,
+    drift_alignment_with_batch: float = "N/A",
+    scenario: str = "N/A",
+    type_of_dataset: str = "N/A",
 ):
     """Save experiment results to csv."""
     # Create the data structure to be saved in CSV
@@ -206,6 +207,9 @@ def save_results_to_csv(
                 "num_drifts": num_drifts,
                 "num_batches": num_batches,
                 "auc": roc_auc,
+                "drift_alignment_with_batch": drift_alignment_with_batch,
+                "scenario": scenario,
+                "type_of_dataset": type_of_dataset,
             }
         )
 
@@ -234,24 +238,6 @@ def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
     # Save the consolidated data frame to the target CSV file
     consolidated_df.to_csv(target_csv_file, index=False)
     print(f"Consolidated results saved to {target_csv_file}")
-
-
-def fetch_change_points(dataset_name: str, df: pd.DataFrame) -> list:
-    """Fetch change points for the given dataset."""
-    change_points = []
-
-    if dataset_name in insects_datasets:
-        change_points = insects_datasets[dataset_name]["change_point"]
-
-    if dataset_name in drift_config:
-        _, column, drifts = extract_drift_info(dataset_name)
-        for drift_type in drifts:
-            for drift in drifts[drift_type]:
-                start_index = calculate_index(df, drift[0])
-                end_index = calculate_index(df, drift[1])
-                change_points.extend([start_index, end_index])
-
-    return change_points
 
 
 def prepare_datasets():
@@ -287,8 +273,8 @@ def handle_synthetic_dataset(
     dataset,
     dataframe_size,
     batch_size,
-    drift_within_batch,
-    features_with_drifts,
+    drift_within_batch: float = 1.0,
+    features_with_drifts: list[str] = None,
 ):
     """Generate, save, and plot synthetic datasets."""
     (
@@ -313,34 +299,53 @@ def handle_synthetic_dataset(
         synthetic_df,
         dataset,
         drift_points,
-        suffix=f"_{scenario}_drifts",
+        suffix=f"_{scenario}_drifts_{batch_size}_{drift_within_batch}",
         drift_info=drift_info,
     )
     plot_all_features(
         synthetic_df,
         dataset,
         drift_points,
-        suffix=f"_{scenario}_drifts_and_batches",
+        suffix=f"_{scenario}_drifts_and_batches_{batch_size}_{drift_within_batch}",
         drift_info=drift_info,
         batch_size=batch_size,
         use_batch_numbers=True,
     )
-    plot_accumulated_differences(
-        accumulated_differences, features_with_drifts, dataset, batch_size=batch_size
-    )
+    if scenario != "no_drifts":
+        plot_accumulated_differences(
+            accumulated_differences,
+            features_with_drifts,
+            dataset,
+            batch_size=batch_size,
+        )
 
 
-def run_single_experiment(dataset, batch_size, csv_file_path):
+def run_single_experiment(
+    dataset,
+    batch_size,
+):
     """Run the main experiment pipeline for a single dataset and batch size."""
     drift_results, test_results, X_shape = run_test(
         dataset=dataset, batch_size=batch_size, plot_heatmaps=True
     )
     num_batches = X_shape // batch_size
-    save_results_to_csv(
-        dataset, batch_size, drift_results, test_results, num_batches, csv_file_path
-    )
-    plot_drift_points(drift_results, dataset, batch_size)
-    return test_results
+    # save_results_to_csv(
+    #     dataset,
+    #     batch_size,
+    #     drift_results,
+    #     test_results,
+    #     num_batches,
+    #     csv_file_path,
+    #     drift_alignment_with_batch=drift_alignment_with_batch,
+    #     scenario=scenario,
+    #     type_of_dataset=type_of_dataset,
+    # )
+    #
+    # # TODO: maybe stripping this save to outside can be a good idea, we can save the drifts and the results from multiple cases in a single file
+    # # We need to keep a good patter, the things used to be defined on the filenames, maybe doing this will change the current pattern. do we want this?
+    #
+    # plot_drift_points(drift_results, dataset, batch_size)
+    return test_results, drift_results, num_batches
 
 
 def consolidate_results(csv_file_paths):
@@ -358,45 +363,135 @@ def run_full_experiment():
     # batch_sizes = [2500]
     # batch_sizes = [2500]
 
-    datasets = prepare_datasets()
-    batch_sizes = [2500]
     results = {}
     csv_file_paths = []
 
+    datasets = prepare_datasets()
+    batch_sizes = [2500]
+    drift_alignment_batch_percentages = [0.05, 0.5, 1.0]
+    dataframe_size = 80000
+    features_with_drifts = ["feature1", "feature3", "feature5"]
+
+    # TODO: the for below needs to work for the different scenarios of synthethic and also keep working for the original insects datasets. probably adding a new column to the dicts and propagating that into a table will be the easiest way
+
     for dataset in datasets:
         dataset_results = {}
+
+        # Clear old csvs
         output_path = prepare_output_path(dataset)
         csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
         if os.path.exists(csv_file_path):
             os.remove(csv_file_path)
 
-        dataframe_size = 80000
-        drift_within_batch = 1.0
-        features_with_drifts = ["feature1", "feature3", "feature5"]
-
         for batch_size in batch_sizes:
-            if dataset == "synthetic_dataset_with_parallel_drifts":
-                handle_synthetic_dataset(
-                    "parallel",
+            if dataset.startswith("synthetic_"):
+                type_of_dataset = "synthetic"
+
+                if dataset == "synthetic_dataset_no_drifts":
+                    scenario = "no_drifts"
+                    handle_synthetic_dataset(
+                        scenario,
+                        dataset,
+                        dataframe_size,
+                        batch_size,
+                        features_with_drifts=[],
+                    )
+
+                    print(f"{dataset} - {batch_size}")
+
+                    (
+                        test_results,
+                        drift_results,
+                        num_batches,
+                    ) = run_single_experiment(
+                        dataset,
+                        batch_size,
+                    )
+                    plot_drift_points(drift_results, dataset, batch_size)
+
+                    save_results_to_csv(
+                        dataset,
+                        batch_size,
+                        drift_results,
+                        test_results,
+                        num_batches,
+                        csv_file_path,
+                        scenario=scenario,
+                        type_of_dataset=type_of_dataset,
+                    )
+
+                    dataset_results[batch_size] = test_results
+
+                else:
+                    for drift_within_batch in drift_alignment_batch_percentages:
+                        scenario = "N/A"
+
+                        if dataset == "synthetic_dataset_with_parallel_drifts":
+                            scenario = "parallel"
+                            handle_synthetic_dataset(
+                                scenario,
+                                dataset,
+                                dataframe_size,
+                                batch_size,
+                                drift_within_batch,
+                                features_with_drifts,
+                            )
+
+                        elif dataset == "synthetic_dataset_with_switching_drifts":
+                            scenario = "switching"
+                            handle_synthetic_dataset(
+                                scenario,
+                                dataset,
+                                dataframe_size,
+                                batch_size,
+                                drift_within_batch,
+                                features_with_drifts,
+                            )
+
+                        print(f"{dataset} - {batch_size} - {drift_within_batch}")
+
+                        (
+                            test_results,
+                            drift_results,
+                            num_batches,
+                        ) = run_single_experiment(
+                            dataset,
+                            batch_size,
+                        )
+                        plot_drift_points(drift_results, dataset, batch_size)
+
+                        save_results_to_csv(
+                            dataset,
+                            batch_size,
+                            drift_results,
+                            test_results,
+                            num_batches,
+                            csv_file_path,
+                            drift_alignment_with_batch=drift_within_batch,
+                            scenario=scenario,
+                            type_of_dataset=type_of_dataset,
+                        )
+
+                        dataset_results[batch_size] = test_results
+            else:
+                print(f"{dataset} - {batch_size}")
+
+                test_results, drift_results, num_batches = run_single_experiment(
                     dataset,
-                    dataframe_size,
                     batch_size,
-                    drift_within_batch,
-                    features_with_drifts,
-                )
-            elif dataset == "synthetic_dataset_with_switching_drifts":
-                handle_synthetic_dataset(
-                    "switching",
-                    dataset,
-                    dataframe_size,
-                    batch_size,
-                    drift_within_batch,
-                    features_with_drifts,
                 )
 
-            print(f"{dataset} - {batch_size}")
-            test_results = run_single_experiment(dataset, batch_size, csv_file_path)
-            dataset_results[batch_size] = test_results
+                save_results_to_csv(
+                    dataset,
+                    batch_size,
+                    drift_results,
+                    test_results,
+                    num_batches,
+                    csv_file_path,
+                )
+                plot_drift_points(drift_results, dataset, batch_size)
+
+                dataset_results[batch_size] = test_results
 
         results[dataset] = dataset_results
         plot_results(dataset_results, dataset, batch_sizes)
