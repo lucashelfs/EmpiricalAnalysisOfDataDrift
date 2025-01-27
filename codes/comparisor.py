@@ -27,6 +27,8 @@ from codes.drift_generation import (
 )
 from codes.plots import plot_all_features, plot_results, plot_drift_points
 
+from river import tree
+
 
 def run_prequential_naive_bayes(
     dataset: str,
@@ -87,7 +89,70 @@ def run_prequential_naive_bayes(
     return X, Y, batch_predictions
 
 
-def run_test(dataset: str, batch_size: int = 1000, plot_heatmaps: bool = True):
+def run_prequential_hoeffding_tree(
+    dataset: str,
+    batch_size: int = 1000,
+    batches_with_drift_list: Optional[List[str]] = None,
+):
+    # Paper: https://homes.cs.washington.edu/~pedrod/papers/kdd00.pdf
+    X, Y, _ = load_and_prepare_dataset(dataset)
+    X = define_batches(X=X, batch_size=batch_size)
+    Y = pd.DataFrame(Y, columns=["class"])
+    Y = define_batches(X=Y, batch_size=batch_size)
+
+    reference_batch = 1
+    reference = X[X.Batch == reference_batch].iloc[:, :-1]
+    y_reference = Y[Y.Batch == reference_batch].iloc[:, :-1].values.ravel()
+
+    model = tree.HoeffdingTreeClassifier()
+
+    # Train on reference batch
+    for x, y in zip(reference.to_dict(orient="records"), y_reference):
+        model.learn_one(x, y)
+
+    # Test and store predictions for the reference batch
+    y_pred = [model.predict_one(x) for x in reference.to_dict(orient="records")]
+    batch_predictions = y_pred.copy()
+
+    batches = list(set(X.Batch) - {reference_batch})
+    # batch_predictions = []
+    drift_indexes = []
+
+    if batches_with_drift_list is not None:
+        drift_indexes = [
+            index + 1  # Adjust index to align with batch numbering
+            for index, value in enumerate(batches_with_drift_list)
+            if value == "drift"
+        ]
+
+    for batch in batches:
+        X_batch = X[X.Batch == batch].iloc[:, :-1]
+        Y_batch = Y[Y.Batch == batch].iloc[:, :-1].values.ravel()
+
+        # Test
+        y_pred = [model.predict_one(x) for x in X_batch.to_dict(orient="records")]
+        batch_predictions.extend(y_pred)
+
+        # Train
+        if batches_with_drift_list is not None and batch in drift_indexes:
+            # Reset the model due to detected drift
+            model = tree.HoeffdingTreeClassifier()
+            for x, y in zip(X_batch.to_dict(orient="records"), Y_batch):
+                model.learn_one(x, y)
+        else:
+            # Incremental learning without reset
+            for x, y in zip(X_batch.to_dict(orient="records"), Y_batch):
+                model.learn_one(x, y)
+
+    return X, Y, batch_predictions
+
+
+def run_test(
+    dataset: str,
+    batch_size: int = 1000,
+    plot_heatmaps: bool = True,
+    algorithm: str = "NB",
+):
     """Runs tests on the dataset using multiple drift detection methods."""
 
     ks_drifts = fetch_ksddm_drifts(
@@ -111,23 +176,42 @@ def run_test(dataset: str, batch_size: int = 1000, plot_heatmaps: bool = True):
         batch_size=batch_size, plot_heatmaps=plot_heatmaps, dataset=dataset
     )
 
-    X, Y, batch_predictions_base = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size
-    )
-    X, Y, batch_predictions_ks = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_drifts
-    )
-    X, Y, batch_predictions_ks_90 = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_90_drifts
-    )
-    X, Y, batch_predictions_hd = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=hd_drifts
-    )
-    X, Y, batch_predictions_js = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=js_drifts
-    )
+    if algorithm == "NB":
+        X, Y, batch_predictions_base = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size
+        )
+        X, Y, batch_predictions_ks = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_drifts
+        )
+        X, Y, batch_predictions_ks_90 = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_90_drifts
+        )
+        X, Y, batch_predictions_hd = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=hd_drifts
+        )
+        X, Y, batch_predictions_js = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=js_drifts
+        )
+        y_true = Y["class"].values
 
-    y_true = Y["class"].values
+    if algorithm == "HT":
+        X, Y, batch_predictions_base = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size
+        )
+        X, Y, batch_predictions_ks = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_drifts
+        )
+        X, Y, batch_predictions_ks_90 = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_90_drifts
+        )
+        X, Y, batch_predictions_hd = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=hd_drifts
+        )
+        X, Y, batch_predictions_js = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size, batches_with_drift_list=js_drifts
+        )
+
+        y_true = Y["class"].values
 
     results = {
         "KS95": find_indexes(ks_drifts.tolist()),
@@ -183,6 +267,7 @@ def save_results_to_csv(
     drift_alignment_with_batch: float = "N/A",
     scenario: str = "N/A",
     type_of_dataset: str = "N/A",
+    algorithm: str = "N/A",
 ):
     """Save experiment results to csv."""
     # Create the data structure to be saved in CSV
@@ -210,6 +295,7 @@ def save_results_to_csv(
                 "drift_alignment_with_batch": drift_alignment_with_batch,
                 "scenario": scenario,
                 "type_of_dataset": type_of_dataset,
+                "algorithm": algorithm,
             }
         )
 
@@ -220,7 +306,6 @@ def save_results_to_csv(
     df.to_csv(
         csv_file_path, mode="a", index=False, header=not os.path.exists(csv_file_path)
     )
-    print(f"Results for {dataset}, batch size {batch_size} saved to {csv_file_path}")
 
 
 def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
@@ -255,6 +340,7 @@ def prepare_datasets():
     # for dataset in datasets_with_added_drifts:
     #     datasets.append(dataset)
     return [
+        # "MULTISTAGGER",
         "synthetic_dataset_no_drifts",
         "synthetic_dataset_with_parallel_drifts",
         "synthetic_dataset_with_switching_drifts",
@@ -320,31 +406,12 @@ def handle_synthetic_dataset(
         )
 
 
-def run_single_experiment(
-    dataset,
-    batch_size,
-):
+def run_single_experiment(dataset, batch_size, algorithm):
     """Run the main experiment pipeline for a single dataset and batch size."""
     drift_results, test_results, X_shape = run_test(
-        dataset=dataset, batch_size=batch_size, plot_heatmaps=True
+        dataset=dataset, batch_size=batch_size, plot_heatmaps=True, algorithm=algorithm
     )
     num_batches = X_shape // batch_size
-    # save_results_to_csv(
-    #     dataset,
-    #     batch_size,
-    #     drift_results,
-    #     test_results,
-    #     num_batches,
-    #     csv_file_path,
-    #     drift_alignment_with_batch=drift_alignment_with_batch,
-    #     scenario=scenario,
-    #     type_of_dataset=type_of_dataset,
-    # )
-    #
-    # # TODO: maybe stripping this save to outside can be a good idea, we can save the drifts and the results from multiple cases in a single file
-    # # We need to keep a good patter, the things used to be defined on the filenames, maybe doing this will change the current pattern. do we want this?
-    #
-    # plot_drift_points(drift_results, dataset, batch_size)
     return test_results, drift_results, num_batches
 
 
@@ -367,12 +434,11 @@ def run_full_experiment():
     csv_file_paths = []
 
     datasets = prepare_datasets()
-    batch_sizes = [2500]
+    batch_sizes = [1000, 2500, 5000]
     drift_alignment_batch_percentages = [0.05, 0.5, 1.0]
     dataframe_size = 80000
     features_with_drifts = ["feature1", "feature3", "feature5"]
-
-    # TODO: the for below needs to work for the different scenarios of synthethic and also keep working for the original insects datasets. probably adding a new column to the dicts and propagating that into a table will be the easiest way
+    algorithms = ["NB", "HT"]
 
     for dataset in datasets:
         dataset_results = {}
@@ -380,84 +446,34 @@ def run_full_experiment():
         # Clear old csvs
         output_path = prepare_output_path(dataset)
         csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
+
         if os.path.exists(csv_file_path):
             os.remove(csv_file_path)
 
-        for batch_size in batch_sizes:
-            if dataset.startswith("synthetic_"):
-                type_of_dataset = "synthetic"
+        for algorithm in algorithms:
+            print(f"Algorithm - {algorithm}")
 
-                if dataset == "synthetic_dataset_no_drifts":
-                    scenario = "no_drifts"
-                    handle_synthetic_dataset(
-                        scenario,
-                        dataset,
-                        dataframe_size,
-                        batch_size,
-                        features_with_drifts=[],
-                    )
+            for batch_size in batch_sizes:
+                if dataset.startswith("synthetic_"):
+                    type_of_dataset = "synthetic"
 
-                    print(f"{dataset} - {batch_size}")
+                    if dataset == "synthetic_dataset_no_drifts":
+                        scenario = "no_drifts"
+                        handle_synthetic_dataset(
+                            scenario,
+                            dataset,
+                            dataframe_size,
+                            batch_size,
+                            features_with_drifts=[],
+                        )
 
-                    (
-                        test_results,
-                        drift_results,
-                        num_batches,
-                    ) = run_single_experiment(
-                        dataset,
-                        batch_size,
-                    )
-                    plot_drift_points(drift_results, dataset, batch_size)
-
-                    save_results_to_csv(
-                        dataset,
-                        batch_size,
-                        drift_results,
-                        test_results,
-                        num_batches,
-                        csv_file_path,
-                        scenario=scenario,
-                        type_of_dataset=type_of_dataset,
-                    )
-
-                    dataset_results[batch_size] = test_results
-
-                else:
-                    for drift_within_batch in drift_alignment_batch_percentages:
-                        scenario = "N/A"
-
-                        if dataset == "synthetic_dataset_with_parallel_drifts":
-                            scenario = "parallel"
-                            handle_synthetic_dataset(
-                                scenario,
-                                dataset,
-                                dataframe_size,
-                                batch_size,
-                                drift_within_batch,
-                                features_with_drifts,
-                            )
-
-                        elif dataset == "synthetic_dataset_with_switching_drifts":
-                            scenario = "switching"
-                            handle_synthetic_dataset(
-                                scenario,
-                                dataset,
-                                dataframe_size,
-                                batch_size,
-                                drift_within_batch,
-                                features_with_drifts,
-                            )
-
-                        print(f"{dataset} - {batch_size} - {drift_within_batch}")
+                        print(f"{dataset} - {batch_size}")
 
                         (
                             test_results,
                             drift_results,
                             num_batches,
-                        ) = run_single_experiment(
-                            dataset,
-                            batch_size,
-                        )
+                        ) = run_single_experiment(dataset, batch_size, algorithm)
                         plot_drift_points(drift_results, dataset, batch_size)
 
                         save_results_to_csv(
@@ -467,41 +483,94 @@ def run_full_experiment():
                             test_results,
                             num_batches,
                             csv_file_path,
-                            drift_alignment_with_batch=drift_within_batch,
                             scenario=scenario,
                             type_of_dataset=type_of_dataset,
+                            algorithm=algorithm,
                         )
 
                         dataset_results[batch_size] = test_results
-            else:
-                print(f"{dataset} - {batch_size}")
 
-                test_results, drift_results, num_batches = run_single_experiment(
-                    dataset,
-                    batch_size,
-                )
+                    else:
+                        for drift_within_batch in drift_alignment_batch_percentages:
+                            scenario = "N/A"
 
-                save_results_to_csv(
-                    dataset,
-                    batch_size,
-                    drift_results,
-                    test_results,
-                    num_batches,
-                    csv_file_path,
-                )
-                plot_drift_points(drift_results, dataset, batch_size)
+                            if dataset == "synthetic_dataset_with_parallel_drifts":
+                                scenario = "parallel"
+                                handle_synthetic_dataset(
+                                    scenario,
+                                    dataset,
+                                    dataframe_size,
+                                    batch_size,
+                                    drift_within_batch,
+                                    features_with_drifts,
+                                )
 
-                dataset_results[batch_size] = test_results
+                            elif dataset == "synthetic_dataset_with_switching_drifts":
+                                scenario = "switching"
+                                handle_synthetic_dataset(
+                                    scenario,
+                                    dataset,
+                                    dataframe_size,
+                                    batch_size,
+                                    drift_within_batch,
+                                    features_with_drifts,
+                                )
 
-        results[dataset] = dataset_results
-        plot_results(dataset_results, dataset, batch_sizes)
-        csv_file_paths.append(csv_file_path)
+                            print(f"{dataset} - {batch_size} - {drift_within_batch}")
 
-        # Load and plot original dataset features
-        df, _, _ = load_and_prepare_dataset(dataset)
-        plot_all_features(df, dataset)
+                            (
+                                test_results,
+                                drift_results,
+                                num_batches,
+                            ) = run_single_experiment(dataset, batch_size, algorithm)
+                            plot_drift_points(drift_results, dataset, batch_size)
 
-    consolidate_results(csv_file_paths)
+                            save_results_to_csv(
+                                dataset,
+                                batch_size,
+                                drift_results,
+                                test_results,
+                                num_batches,
+                                csv_file_path,
+                                drift_alignment_with_batch=drift_within_batch,
+                                scenario=scenario,
+                                type_of_dataset=type_of_dataset,
+                                algorithm=algorithm,
+                            )
+
+                            dataset_results[batch_size] = test_results
+                else:
+                    print(f"{dataset} - {batch_size}")
+
+                    (
+                        test_results,
+                        drift_results,
+                        num_batches,
+                    ) = run_single_experiment(dataset, batch_size, algorithm)
+
+                    save_results_to_csv(
+                        dataset,
+                        batch_size,
+                        drift_results,
+                        test_results,
+                        num_batches,
+                        csv_file_path,
+                        algorithm=algorithm,
+                    )
+                    plot_drift_points(drift_results, dataset, batch_size)
+
+                    dataset_results[batch_size] = test_results
+
+            # TODO: check the plots for all the algorithms separetely
+            results[dataset] = dataset_results
+            plot_results(dataset_results, dataset, batch_sizes)
+            csv_file_paths.append(csv_file_path)
+
+            # Load and plot original dataset features
+            df, _, _ = load_and_prepare_dataset(dataset)
+            plot_all_features(df, dataset)
+
+    consolidate_results(list(set(csv_file_paths)))
 
 
 if __name__ == "__main__":
