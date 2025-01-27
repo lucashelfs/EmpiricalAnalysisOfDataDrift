@@ -238,8 +238,6 @@ def plot_all_features(
     plt.savefig(combined_plot_path, facecolor=fig.get_facecolor())
     plt.close()
 
-    print(f"Combined feature plots saved to {combined_plot_path}")
-
     # Save each feature plot in a separate file
     for column in feature_columns:
         plt.figure(figsize=(14, 7), facecolor="white")
