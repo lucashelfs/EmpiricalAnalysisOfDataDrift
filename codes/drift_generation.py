@@ -379,8 +379,6 @@ def plot_accumulated_differences(
     plt.savefig(plot_path)
     plt.close()
 
-    print(f"Accumulated differences plot saved to {plot_path}")
-
 
 def generate_synthetic_dataset_with_drifts(
     dataframe_size: int,
@@ -465,7 +463,6 @@ def save_synthetic_dataset(df: pd.DataFrame, dataset_name: str):
     os.makedirs(dataset_output_dir, exist_ok=True)
     csv_file_path = os.path.join(dataset_output_dir, f"{dataset_name}.csv")
     df.to_csv(csv_file_path, index=False)
-    print(f"Synthetic dataset saved to {csv_file_path}")
 
 
 if __name__ == "__main__":
