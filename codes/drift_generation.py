@@ -329,6 +329,8 @@ def plot_accumulated_differences(
     features_with_drifts: List[str],
     dataset_name: str,
     batch_size: int,
+    detected_drifts: Optional[Dict[str, List[int]]] = None,
+    drift_within_batch: float = 1.0,
 ):
     from codes.config import comparisons_output_dir as output_dir
 
@@ -372,12 +374,93 @@ def plot_accumulated_differences(
     axes[-1].set_xlabel("Batch Index")
     plt.tight_layout()
 
-    # Save the plot
+    # Save the first plot
     output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
     os.makedirs(output_dir, exist_ok=True)
-    plot_path = os.path.join(output_dir, f"{dataset_name}_accumulated_differences.png")
+    plot_path = os.path.join(
+        output_dir,
+        f"{dataset_name}_accumulated_differences.png",
+    )
     plt.savefig(plot_path)
     plt.close()
+
+    # Generate the second plot if detected_drifts is not None
+    if detected_drifts is not None:
+        # Create a new figure for the techniques' accumulated distances
+        fig, ax = plt.subplots(figsize=(14, 7))
+
+        # Plot the accumulated distances for each technique
+        for technique, drift_batches in detected_drifts.items():
+            # Reset cumulative sum when a drift is detected
+            cumulative_sum = 0
+            accumulated_distances = []
+            for batch in batch_indices:
+                if (
+                    batch - 1 in drift_batches
+                ):  # Reset cumulative sum if drift is detected
+                    cumulative_sum = 0
+                cumulative_sum += (
+                    accumulated_differences_cumsum.groupby("Batch")
+                    .sum()
+                    .sum(axis=1)
+                    .iloc[batch - 1]
+                )
+                accumulated_distances.append(cumulative_sum)
+            ax.plot(batch_indices, accumulated_distances, label=technique)
+
+        ax.set_xlabel("Batch Index")
+        ax.set_ylabel("Accumulated Distance")
+        ax.set_title("Accumulated Distances for Each Technique (Resetting at Drifts)")
+        ax.legend()
+        ax.grid(True)
+        plt.tight_layout()
+
+        # Save the second plot
+        techniques_plot_path = os.path.join(
+            output_dir,
+            f"{dataset_name}_techniques_accumulated_differences_{batch_size}_{drift_within_batch}.png",
+        )
+        plt.savefig(techniques_plot_path)
+        plt.close()
+
+        # Generate the third plot: individual plots for each technique
+        num_techniques = len(detected_drifts)
+        fig, axes = plt.subplots(
+            num_techniques, 1, figsize=(14, 7 * num_techniques), sharex=True
+        )
+
+        for i, (technique, drift_batches) in enumerate(detected_drifts.items()):
+            # Reset cumulative sum when a drift is detected
+            cumulative_sum = 0
+            accumulated_distances = []
+            for batch in batch_indices:
+                if (
+                    batch - 1 in drift_batches
+                ):  # Reset cumulative sum if drift is detected
+                    cumulative_sum = 0
+                cumulative_sum += (
+                    accumulated_differences_cumsum.groupby("Batch")
+                    .sum()
+                    .sum(axis=1)
+                    .iloc[batch - 1]
+                )
+                accumulated_distances.append(cumulative_sum)
+            axes[i].plot(batch_indices, accumulated_distances, label=technique)
+            axes[i].set_ylabel("Accumulated Distance")
+            axes[i].set_title(f"Accumulated Distances for {technique}")
+            axes[i].legend()
+            axes[i].grid(True)
+
+        axes[-1].set_xlabel("Batch Index")
+        plt.tight_layout()
+
+        # Save the third plot
+        individual_techniques_plot_path = os.path.join(
+            output_dir,
+            f"{dataset_name}_techniques_accumulated_differences_{batch_size}_{drift_within_batch}_split.png",
+        )
+        plt.savefig(individual_techniques_plot_path)
+        plt.close()
 
 
 def generate_synthetic_dataset(

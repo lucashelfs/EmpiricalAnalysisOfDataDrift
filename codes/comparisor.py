@@ -115,7 +115,6 @@ def run_prequential_hoeffding_tree(
     batch_predictions = y_pred.copy()
 
     batches = list(set(X.Batch) - {reference_batch})
-    # batch_predictions = []
     drift_indexes = []
 
     if batches_with_drift_list is not None:
@@ -397,13 +396,17 @@ def handle_synthetic_dataset(
         batch_size=batch_size,
         use_batch_numbers=True,
     )
+
     if scenario != "no_drifts":
+        # TODO: this must be on other place, we need to plot differences after the drifts are detected
         plot_accumulated_differences(
             accumulated_differences,
             features_with_drifts,
             dataset,
             batch_size=batch_size,
         )
+
+    return synthetic_df, accumulated_differences
 
 
 def run_single_experiment(dataset, batch_size, algorithm):
@@ -425,20 +428,19 @@ def consolidate_results(csv_file_paths):
 def run_full_experiment():
     """Run the full experiment pipeline."""
 
-    # batch_sizes = [1000]
-    # batch_sizes = [1000, 1500, 2000, 2500]
-    # batch_sizes = [2500]
-    # batch_sizes = [2500]
-
     results = {}
     csv_file_paths = []
 
     datasets = prepare_datasets()
+
     batch_sizes = [1000, 2500, 5000]
     drift_alignment_batch_percentages = [0.05, 0.5, 1.0]
+
     dataframe_size = 80000
+
     features_with_drifts = ["feature1", "feature3", "feature5"]
-    algorithms = ["NB", "HT"]
+    # algorithms = ["NB", "HT"]
+    algorithms = ["NB"]
 
     for dataset in datasets:
         dataset_results = {}
@@ -459,7 +461,10 @@ def run_full_experiment():
 
                     if dataset == "synthetic_dataset_no_drifts":
                         scenario = "no_drifts"
-                        handle_synthetic_dataset(
+                        (
+                            synthetic_df,
+                            accumulated_differences,
+                        ) = handle_synthetic_dataset(
                             scenario,
                             dataset,
                             dataframe_size,
@@ -493,10 +498,13 @@ def run_full_experiment():
                     else:
                         for drift_within_batch in drift_alignment_batch_percentages:
                             scenario = "N/A"
-
+                            synthetic_df, accumulated_differences = None, None
                             if dataset == "synthetic_dataset_with_parallel_drifts":
                                 scenario = "parallel"
-                                handle_synthetic_dataset(
+                                (
+                                    synthetic_df,
+                                    accumulated_differences,
+                                ) = handle_synthetic_dataset(
                                     scenario,
                                     dataset,
                                     dataframe_size,
@@ -507,7 +515,10 @@ def run_full_experiment():
 
                             elif dataset == "synthetic_dataset_with_switching_drifts":
                                 scenario = "switching"
-                                handle_synthetic_dataset(
+                                (
+                                    synthetic_df,
+                                    accumulated_differences,
+                                ) = handle_synthetic_dataset(
                                     scenario,
                                     dataset,
                                     dataframe_size,
@@ -524,6 +535,16 @@ def run_full_experiment():
                                 num_batches,
                             ) = run_single_experiment(dataset, batch_size, algorithm)
                             plot_drift_points(drift_results, dataset, batch_size)
+
+                            # Plot accumulated distances until each drift detection, for all techniques
+                            plot_accumulated_differences(
+                                accumulated_differences,
+                                features_with_drifts,
+                                dataset,
+                                batch_size=batch_size,
+                                detected_drifts=drift_results,
+                                drift_within_batch=drift_within_batch,
+                            )
 
                             save_results_to_csv(
                                 dataset,
@@ -561,7 +582,6 @@ def run_full_experiment():
 
                     dataset_results[batch_size] = test_results
 
-            # TODO: check the plots for all the algorithms separetely
             results[dataset] = dataset_results
             plot_results(dataset_results, dataset, batch_sizes)
             csv_file_paths.append(csv_file_path)
