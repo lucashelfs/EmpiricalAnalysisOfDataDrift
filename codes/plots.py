@@ -1,4 +1,5 @@
 import os
+import warnings
 from typing import Any, Dict, List, Tuple
 
 import matplotlib.patches as patches
@@ -9,10 +10,7 @@ import pandas as pd
 from codes.config import comparisons_output_dir as output_dir
 from utils import fetch_dataset_change_points
 
-import warnings
-
 warnings.filterwarnings("ignore", message="No artists with labels found")
-
 
 # Set global style parameters
 plt.rcParams["figure.facecolor"] = "#EAEAF2"  # Set the background color to grey
@@ -181,20 +179,22 @@ def plot_all_features(
     for ax, column in zip(axes, feature_columns):
         ax.plot(df.index, df[column], label=column)
         if drift_info and column in drift_info:
+            added_labels = set()  # Track labels that have been added to the legend
             for drift_type, start_index, end_index in drift_info[column]:
+                # Always plot the lines and rectangles
                 ax.axvline(
                     x=start_index,
                     color="red",
                     linestyle="--",
                     linewidth=1.5,
-                    label=f"{drift_type} start",
+                    label="drift limit" if "drift limit" not in added_labels else None,
                 )
                 ax.axvline(
                     x=end_index,
                     color="red",
                     linestyle="--",
                     linewidth=1.5,
-                    label=f"{drift_type} end",
+                    label=None,  # No label for the end line to avoid duplication
                 )
                 ax.add_patch(
                     patches.Rectangle(
@@ -203,9 +203,15 @@ def plot_all_features(
                         ax.get_ylim()[1] - ax.get_ylim()[0],
                         color="yellow",
                         alpha=0.3,
-                        label=f"{drift_type} drift",
+                        label=f"{drift_type} drift"
+                        if f"{drift_type} drift" not in added_labels
+                        else None,
                     )
                 )
+                # Add labels to the set to avoid duplicates in the legend
+                added_labels.add("drift limit")
+                added_labels.add(f"{drift_type} drift")
+
                 ax.text(
                     (start_index + end_index) / 2,
                     ax.get_ylim()[1],
@@ -227,7 +233,7 @@ def plot_all_features(
             ax.set_xlabel("Index")
         ax.set_ylabel(column)
         ax.set_title(f"{dataset_name} - {column}")
-        ax.legend()
+        ax.legend()  # Ensure the legend is associated with the primary axis (ax)
         ax.grid(True)
 
     # Save the combined plot
@@ -243,20 +249,22 @@ def plot_all_features(
         plt.figure(figsize=(14, 7), facecolor="white")
         plt.plot(df.index, df[column], label=column)
         if drift_info and column in drift_info:
+            added_labels = set()  # Track labels that have been added to the legend
             for drift_type, start_index, end_index in drift_info[column]:
+                # Always plot the lines and rectangles
                 plt.axvline(
                     x=start_index,
                     color="red",
                     linestyle="--",
                     linewidth=1.5,
-                    label=f"{drift_type} start",
+                    label="drift limit" if "drift limit" not in added_labels else None,
                 )
                 plt.axvline(
                     x=end_index,
                     color="red",
                     linestyle="--",
                     linewidth=1.5,
-                    label=f"{drift_type} end",
+                    label=None,  # No label for the end line to avoid duplication
                 )
                 plt.gca().add_patch(
                     patches.Rectangle(
@@ -265,9 +273,15 @@ def plot_all_features(
                         plt.ylim()[1] - plt.ylim()[0],
                         color="yellow",
                         alpha=0.3,
-                        label=f"{drift_type} drift",
+                        label=f"{drift_type} drift"
+                        if f"{drift_type} drift" not in added_labels
+                        else None,
                     )
                 )
+                # Add labels to the set to avoid duplicates in the legend
+                added_labels.add("drift limit")
+                added_labels.add(f"{drift_type} drift")
+
                 plt.text(
                     (start_index + end_index) / 2,
                     plt.ylim()[1],
@@ -278,19 +292,30 @@ def plot_all_features(
                     color="black",
                     bbox=dict(facecolor="yellow", alpha=0.5),
                 )
+
+        plt.ylabel(column)
+        plt.title(f"{dataset_name} - {column}")
+        plt.legend()  # Ensure the legend is associated with the primary axis
+        plt.grid(True)
+
         if use_batch_numbers:
-            # Create secondary x-axis for batch numbers
             ax2 = plt.gca().twiny()
-            ax2.set_xticks(plt.gca().get_xticks())
-            ax2.set_xbound(plt.gca().get_xbound())
-            ax2.set_xticklabels([int(x // batch_size) for x in plt.gca().get_xticks()])
+            ax2.set_xbound(ax.get_xbound())
+
+            # Calculate batch numbers based on the index
+            batch_ticks = [i for i in range(0, len(df) + 1, batch_size)]
+            batch_labels = [i // batch_size for i in batch_ticks]
+
+            # Slice the batch_ticks and batch_labels to include only every 10th batch
+            batch_ticks_sliced = batch_ticks[::10]  # Every 10th batch tick
+            batch_labels_sliced = batch_labels[::10]  # Every 10th batch label
+
+            # Set the sliced ticks and labels
+            ax2.set_xticks(batch_ticks_sliced)
+            ax2.set_xticklabels(batch_labels_sliced)
             ax2.set_xlabel("Batch Index")
         else:
             plt.xlabel("Index")
-        plt.ylabel(column)
-        plt.title(f"{dataset_name} - {column}")
-        plt.legend()
-        plt.grid(True)
 
         feature_plot_path = os.path.join(
             dataset_output_dir, f"{dataset_name}_{column}{suffix}.png"
