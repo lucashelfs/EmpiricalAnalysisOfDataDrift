@@ -17,6 +17,17 @@ def define_batches(X, batch_size):
     return X
 
 
+def map_label_names(method):
+    if method == "KSDDM 95":
+        return "KS95"
+    if method == "KSDDM 90":
+        return "KS90"
+    if method == "HDDDM":
+        return "HD"
+    if method == "JSDDM":
+        return "JS"
+
+
 def plot_heatmap(
     technique,
     heatmap_data,
@@ -55,7 +66,7 @@ def plot_heatmap(
         vmin=min_value,
         vmax=max_value,
         xticklabels=heatmap_data.columns,
-        yticklabels=heatmap_data.index,
+        yticklabels=heatmap_data.index + 1,
         linewidths=0.5,
         cbar_ax=cbar_ax,
         cbar_kws={"orientation": "horizontal"},
@@ -63,34 +74,63 @@ def plot_heatmap(
 
     if change_points:
         for batch_number in change_points:
-            # batch_number = cp // batch_size
             ax.axvline(
-                x=batch_number + 0.5,
+                # x=batch_number - 1.5,
+                x=batch_number - 1.5,
                 color="red",
                 linestyle="--",
                 linewidth=1.5,
                 label="Detected drift",
             )
 
-    ax.set_title(
-        f"{technique} - Heatmap for dataset {dataset} with batch size {batch_size}",
-        fontsize=20,
-    )
+    technique = map_label_names(technique)
 
-    ax.set(xlabel="Batch", ylabel="Features")
+    if dataset == "synthetic_dataset_with_switching_drifts_abrupt":
+        ax.set_title(
+            f"{technique} - Heatmap for dataset SYN-SA (Batch Size {batch_size})",
+            fontsize=20,
+        )
+
+    elif dataset == "synthetic_dataset_with_switching_drifts_incremental":
+        ax.set_title(
+            f"{technique} - Heatmap for dataset SYN-SI (Batch Size {batch_size})",
+            fontsize=20,
+        )
+
+    elif dataset == "synthetic_dataset_with_parallel_drifts_abrupt":
+        ax.set_title(
+            f"{technique} - Heatmap for dataset SYN-PA (Batch Size {batch_size})",
+            fontsize=20,
+        )
+
+    elif dataset == "synthetic_dataset_with_parallel_drifts_incremental":
+        ax.set_title(
+            f"{technique} - Heatmap for dataset SYN-PI (Batch Size {batch_size})",
+            fontsize=20,
+        )
+
+    else:
+        ax.set_title(
+            f"{technique} - Heatmap for dataset {dataset} (Batch Size {batch_size})",
+            fontsize=20,
+        )
+
+    ax.set(xlabel="Batch", ylabel="Feature")
 
     label_text = (
         "P-values of test between batch and reference"
         if "KSDDM" in technique
         else "Distance between batch and reference"
     )
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=18)
-    ax.collections[0].colorbar.set_label(label=label_text, fontsize=18)
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=18)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=18)
 
-    # Set x-ticks to skip some values for readability
-    max_xticks = 20  # Adjust this value as needed
+    # This part of the code fixes the indexes plots and etc
+
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=15)
+    ax.collections[0].colorbar.set_label(label=label_text, fontsize=15)
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=15)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=15)
+
+    max_xticks = 25  # Adjust this value as needed
 
     if len(heatmap_data.columns) > max_xticks:
         xticks = list(
@@ -100,13 +140,20 @@ def plot_heatmap(
                 len(heatmap_data.columns) // max_xticks + 1,
             )
         )
-        ax.set_xticks(xticks)
+        ax.set_xticks(
+            [i + 1.0 for i in xticks]
+        )  # Shift tick positions to align with columns
         ax.set_xticklabels(
             [heatmap_data.columns[i] for i in xticks],
-            rotation=45,
+            # rotation=45,
             ha="right",
-            fontsize=15,
+            fontsize=13,
         )
+    else:
+        ax.set_xticks(
+            [i + 1.0 for i in range(len(heatmap_data.columns))]
+        )  # Align ticks
+        ax.set_xticklabels(heatmap_data.columns, ha="right", fontsize=13)
 
     handles, labels = ax.get_legend_handles_labels()
     unique_labels = dict(zip(labels, handles))

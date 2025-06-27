@@ -28,8 +28,8 @@ from codes.river_datasets import (
     sea_concept_drift_dataset,
     stagger_concept_drift_dataset,
 )
-from drift_info import extract_drift_info
-from label_encoder import encode_labels
+from codes.drift_info import extract_drift_info
+from codes.label_encoder import encode_labels
 
 
 common_datasets_file_path_prefix = os.path.join(project_path_root, "data/")
@@ -129,7 +129,8 @@ def load_multi_stagger(seed, dataset_size):
 
 def find_indexes(drifts_list: list) -> list:
     """Fetch the indexes where drifts occur."""
-    return [index for index, value in enumerate(drifts_list) if value == "drift"]
+
+    return [index + 2 for index, value in enumerate(drifts_list) if value == "drift"]
 
 
 def define_batches(X: pd.DataFrame, batch_size: int) -> pd.DataFrame:
@@ -210,27 +211,49 @@ def load_and_prepare_dataset(dataset: str) -> Tuple[pd.DataFrame, np.ndarray, st
         )
         dataset_filename_str = "synthetic_dataset_with_drifts"
 
-    elif dataset == "synthetic_dataset_with_parallel_drifts":
+    elif dataset == "synthetic_dataset_with_parallel_drifts_abrupt":
         df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
-                "synthetic_dataset_with_parallel_drifts",
-                "synthetic_dataset_with_parallel_drifts.csv",
+                "synthetic_dataset_with_parallel_drifts_abrupt",
+                "synthetic_dataset_with_parallel_drifts_abrupt.csv",
             ),
             "class",
         )
-        dataset_filename_str = "synthetic_dataset_with_parallel_drifts"
+        dataset_filename_str = "synthetic_dataset_with_parallel_drifts_abrupt"
 
-    elif dataset == "synthetic_dataset_with_switching_drifts":
+    elif dataset == "synthetic_dataset_with_switching_drifts_abrupt":
         df, Y_og = load_csv_dataset(
             os.path.join(
                 output_dir,
-                "synthetic_dataset_with_switching_drifts",
-                "synthetic_dataset_with_switching_drifts.csv",
+                "synthetic_dataset_with_switching_drifts_abrupt",
+                "synthetic_dataset_with_switching_drifts_abrupt.csv",
             ),
             "class",
         )
-        dataset_filename_str = "synthetic_dataset_with_switching_drifts"
+        dataset_filename_str = "synthetic_dataset_with_switching_drifts_abrupt"
+
+    elif dataset == "synthetic_dataset_with_parallel_drifts_incremental":
+        df, Y_og = load_csv_dataset(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_with_parallel_drifts_incremental",
+                "synthetic_dataset_with_parallel_drifts_incremental.csv",
+            ),
+            "class",
+        )
+        dataset_filename_str = "synthetic_dataset_with_parallel_drifts_incremental"
+
+    elif dataset == "synthetic_dataset_with_switching_drifts_incremental":
+        df, Y_og = load_csv_dataset(
+            os.path.join(
+                output_dir,
+                "synthetic_dataset_with_switching_drifts_incremental",
+                "synthetic_dataset_with_switching_drifts_incremental.csv",
+            ),
+            "class",
+        )
+        dataset_filename_str = "synthetic_dataset_with_switching_drifts_incremental"
 
     else:
         raise ValueError(f"Dataset {dataset} not recognized.")
