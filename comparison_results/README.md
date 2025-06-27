@@ -6,7 +6,7 @@ This directory contains all experimental results from the data drift detection f
 
 ### Root Level Files
 - **`consolidated_results.csv`** - Combined performance metrics for all experiments across datasets, batch sizes, and drift detection methods
-- **`consolidated_drift_results.json`** - Consolidated drift detection analysis comparing synthetic vs detected drift points
+- **`consolidated_drift_results.json`** - **Synthetic datasets only** - Consolidated drift detection analysis comparing ground truth synthetic drift points vs detected drift points
 - **`drift_detection_results.csv`** - Additional drift detection metrics and statistics
 
 ### Dataset Directories
@@ -60,6 +60,7 @@ Each dataset has its own subdirectory containing:
 ### JSON Files
 - **Synthetic drift analysis**: comparison between true and detected drift points
 - **Batch-level drift information**: detailed drift timing and feature analysis
+- **Note**: JSON files are generated exclusively for synthetic datasets since they have known ground truth drift points. The ground truth for real world concept drift datasets was not considered in depth on the comparison for the current version of this work and stands as a future improvement.
 
 ### PNG Files
 - **Feature plots**: Distribution visualizations for each dataset feature
