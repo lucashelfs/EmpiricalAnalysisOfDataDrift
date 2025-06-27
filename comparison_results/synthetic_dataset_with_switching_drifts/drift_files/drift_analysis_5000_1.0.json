@@ -1,0 +1,70 @@
+{
+    "dataset": "synthetic_dataset_with_switching_drifts",
+    "drift_within_batch": 1.0,
+    "batch_size": 5000,
+    "synthetic_drifts": {
+        "feature1": [
+            1,
+            7,
+            8
+        ],
+        "feature3": [
+            3,
+            4,
+            10
+        ],
+        "feature5": [
+            5,
+            6,
+            12,
+            13
+        ]
+    },
+    "detected_drifts": {
+        "ks_drifts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            13
+        ],
+        "ks_90_drifts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            13
+        ],
+        "hd_drifts": [
+            2,
+            4,
+            7,
+            9,
+            11,
+            12
+        ],
+        "js_drifts": [
+            2,
+            4,
+            7,
+            9,
+            11
+        ]
+    }
+}

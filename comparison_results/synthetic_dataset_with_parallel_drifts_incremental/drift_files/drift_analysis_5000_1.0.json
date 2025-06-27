@@ -1,0 +1,49 @@
+{
+    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+    "drift_within_batch": 1.0,
+    "batch_size": 5000,
+    "synthetic_drifts": {
+        "feature1": [
+            2,
+            8
+        ],
+        "feature3": [
+            2,
+            8
+        ],
+        "feature5": [
+            2,
+            8
+        ]
+    },
+    "detected_drifts": {
+        "ks_drifts": [
+            1,
+            2,
+            7,
+            8
+        ],
+        "ks_90_drifts": [
+            1,
+            2,
+            5,
+            7,
+            8,
+            13
+        ],
+        "hd_drifts": [
+            1,
+            3,
+            7,
+            9,
+            13
+        ],
+        "js_drifts": [
+            1,
+            3,
+            7,
+            9,
+            13
+        ]
+    }
+}
