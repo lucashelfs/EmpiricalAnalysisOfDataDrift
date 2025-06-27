@@ -377,30 +377,26 @@ def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
 
 def prepare_datasets():
     """Prepare the list of datasets to be processed."""
-    # "magic" --> fix the issue with connection and save the file on path
-    # datasets = ["MULTISTAGGER", "MULTISEA"]
-    # datasets = ["electricity"]
-    # datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
-    # for dataset in insects_datasets.keys():
-    #     if dataset != "Out-of-control":
-    #         datasets.append(dataset)
-    # datasets.append("Incremental (bal.)")
-    # datasets.append("Abrupt (imbal.)")
-    #
-    # for dataset in datasets_with_added_drifts:
-    #     datasets.append(dataset)
     return [
-        "Abrupt (imbal.)",
-        "Abrupt (bal.)",
+        "Incremental-gradual (bal.)",
+        "Incremental-gradual (imbal.)",
+        "Incremental-abrupt-reoccurring (bal.)",
+        "Incremental-abrupt-reoccurring (imbal.)",
+        "Incremental-reoccurring (bal.)",
+        "Incremental-reoccurring (imbal.)",
         "MULTISTAGGER",
         "MULTISEA",
         "electricity",
-        "magic",
         "synthetic_dataset_with_parallel_drifts_abrupt",
         "synthetic_dataset_with_switching_drifts_incremental",
         "synthetic_dataset_with_parallel_drifts_incremental",
         "synthetic_dataset_with_switching_drifts_abrupt",
         "synthetic_dataset_no_drifts",
+        "magic",
+        "Abrupt (imbal.)",
+        "Abrupt (bal.)",
+        "Incremental (bal.)",
+        "Incremental (imbal.)",
     ]
 
 
@@ -590,30 +586,21 @@ def run_full_experiment():
     json_file_paths = []
 
     datasets = prepare_datasets()
-
-    # batch_sizes = [1000, 2500, 5000]
-    # drift_alignment_batch_percentages = [0.05, 0.5, 1.0]
-    #
     dataframe_size = 80000
     num_drifts = 2
-
-    #
     features_with_drifts = ["feature1", "feature3", "feature5"]
-    # algorithms = ["NB", "HT"]
-
-    # Use this one --> batch_sizes = [1000, 2500, 5000]
-    # batch_sizes = [1000]
 
     batch_sizes = [
         1000,
         1500,
         2000,
         2500,
-    ]  # We have issues when batch size == 1500, probably is an index thing
+    ]
 
     # drift_alignment_batch_percentages = [0.5, 1.0, 0.05]
     drift_alignment_batch_percentages = [1.0]
     algorithms = ["NB"]
+    # algorithms = ["NB", "HT"]
 
     for dataset in datasets:
         dataset_results = {}
