@@ -43,38 +43,23 @@ After running the experiment, the results can be found on the folder _comparison
 Each subfolder contains the results for a specific dataset, along with the plots and the metrics results.
 Also on the folder _comparison_results_, there is a CSV file named _consolidated_results.csv_ with all the metrics obtained in the experiments for all batch sizes, datasets and techniques.
 
-## Running Tests
+## Documentation
 
-The repository includes a comprehensive test suite that covers the key components of the framework. To run the tests:
+This repository includes comprehensive documentation for different aspects of the framework:
 
-### Using the test runner script
+### [Comparison Results Documentation](comparison_results/README.md)
+Detailed documentation of the experimental results structure, including:
+- Directory organization and file formats
+- Dataset types (real vs synthetic)
+- Performance metrics and visualizations
+- Drift detection method comparisons
 
-The easiest way to run tests is using the provided script:
+### [Synthetic Datasets Documentation](synthetic_datasets_documentation.md)
+Complete specification of the synthetic datasets used in the empirical analysis:
+- Theoretical foundation and drift scenario design
+- Base dataset generation methodology
+- Drift configuration parameters
+- Implementation details and reproducibility guidelines
+- Visual examples and plot interpretations
 
-```bash
-poetry shell
-./run_tests.py  # Run tests with pytest (default)
-./run_tests.py --framework unittest  # Run tests with unittest
-./run_tests.py --framework both  # Run tests with both frameworks
-./run_tests.py -v  # Run tests with verbose output
-```
-
-### Manually running tests
-
-You can also run tests manually:
-
-#### Using unittest
-
-```bash
-poetry shell
-python -m unittest discover tests
-```
-
-#### Using pytest
-
-```bash
-poetry shell
-pytest tests/
-```
-
-For more details about the tests and how to run specific test cases, see the [tests/README.md](tests/README.md) file.
+These documentation files provide essential information for understanding the experimental setup, reproducing results, and extending the framework for future research.
