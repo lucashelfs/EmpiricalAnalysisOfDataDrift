@@ -1,0 +1,16 @@
+dataset,batch_size,technique,accuracy,precision,recall,f1,num_drifts,num_batches,auc,drift_alignment_with_batch,scenario,type_of_dataset,algorithm
+synthetic_dataset_with_switching_drifts,1000,Base,0.646625,0.6525044828107938,0.646625,0.6432328535518512,0,80,0.6466860026117198,0.5,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS95,0.65935,0.667669588704368,0.65935,0.6551192139573946,20,80,0.6594192888356598,0.5,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS90,0.66035,0.6668695550275896,0.66035,0.6570421692025517,22,80,0.6604114454732208,0.5,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,HD,0.65715,0.6614878396825712,0.65715,0.6548682337000561,15,80,0.6572008817190944,0.5,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,JS,0.65715,0.6614878396825712,0.65715,0.6548682337000561,15,80,0.6572008817190944,0.5,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,Base,0.649425,0.6567355431264834,0.649425,0.6453391399754554,0,80,0.649492144332869,1.0,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS95,0.664225,0.6673809796868382,0.664225,0.6626635343293127,21,80,0.6642675876045264,1.0,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS90,0.664225,0.6673809796868382,0.664225,0.6626635343293127,21,80,0.6642675876045264,1.0,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,HD,0.66075,0.6680559695299069,0.66075,0.6570669192250882,16,80,0.6608148362557954,1.0,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,JS,0.66075,0.6680559695299069,0.66075,0.6570669192250882,16,80,0.6608148362557954,1.0,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,Base,0.6443,0.6491027323980596,0.6443,0.6414561769342587,0,80,0.6443557204514532,0.05,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS95,0.6561125,0.6603507969810111,0.6561125,0.6538612139335868,24,80,0.6561629672511591,0.05,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,KS90,0.6561125,0.6603507969810111,0.6561125,0.6538612139335868,24,80,0.6561629672511591,0.05,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,HD,0.652675,0.6595410921920322,0.652675,0.6489445966675135,14,80,0.652739489351363,0.05,switching,synthetic,NB
+synthetic_dataset_with_switching_drifts,1000,JS,0.6525375,0.658872227551843,0.6525375,0.6490845147186879,13,80,0.6525995596092029,0.05,switching,synthetic,NB

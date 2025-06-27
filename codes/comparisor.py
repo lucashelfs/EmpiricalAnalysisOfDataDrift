@@ -1,35 +1,39 @@
+import json
 import os
-from typing import List, Dict, Optional, Any
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import (
     accuracy_score,
+    auc,
+    f1_score,
     precision_score,
     recall_score,
     roc_curve,
-    auc,
-    f1_score,
 )
-
-from codes.config import comparisons_output_dir as output_dir
-
+from sklearn.naive_bayes import MultinomialNB
 
 from codes.common import (
-    common_datasets,
-    calculate_index,
     define_batches,
-    extract_drift_info,
-    datasets_with_added_drifts,
     find_indexes,
     load_and_prepare_dataset,
 )
-from codes.ddm import fetch_ksddm_drifts, fetch_hdddm_drifts, fetch_jsddm_drifts
-from codes.config import insects_datasets
+from codes.config import comparisons_output_dir as output_dir
+from codes.ddm import fetch_hdddm_drifts, fetch_jsddm_drifts, fetch_ksddm_drifts
+from codes.drift_generation import (
+    generate_synthetic_dataset_with_drifts,
+    plot_accumulated_differences,
+    save_synthetic_dataset,
+)
+from codes.plots import (
+    plot_all_features,
+    plot_results,
+    plot_drift_points,
+    plot_feature_and_its_variations,
+)
+
+from river import tree
 
 
 def run_prequential_naive_bayes(
@@ -91,8 +95,75 @@ def run_prequential_naive_bayes(
     return X, Y, batch_predictions
 
 
-def run_test(dataset: str, batch_size: int = 1000, plot_heatmaps: bool = True):
-    """Runs tests on the dataset using multiple drift detection methods."""
+def run_prequential_hoeffding_tree(
+    dataset: str,
+    batch_size: int = 1000,
+    batches_with_drift_list: Optional[List[str]] = None,
+):
+    # Paper: https://homes.cs.washington.edu/~pedrod/papers/kdd00.pdf
+    X, Y, _ = load_and_prepare_dataset(dataset)
+    X = define_batches(X=X, batch_size=batch_size)
+    Y = pd.DataFrame(Y, columns=["class"])
+    Y = define_batches(X=Y, batch_size=batch_size)
+
+    reference_batch = 1
+    reference = X[X.Batch == reference_batch].iloc[:, :-1]
+    y_reference = Y[Y.Batch == reference_batch].iloc[:, :-1].values.ravel()
+
+    model = tree.HoeffdingTreeClassifier()
+
+    # Train on reference batch
+    for x, y in zip(reference.to_dict(orient="records"), y_reference):
+        model.learn_one(x, y)
+
+    # Test and store predictions for the reference batch
+    y_pred = [model.predict_one(x) for x in reference.to_dict(orient="records")]
+    batch_predictions = y_pred.copy()
+
+    batches = list(set(X.Batch) - {reference_batch})
+    drift_indexes = []
+
+    if batches_with_drift_list is not None:
+        drift_indexes = [
+            index + 1  # Adjust index to align with batch numbering
+            for index, value in enumerate(batches_with_drift_list)
+            if value == "drift"
+        ]
+
+    for batch in batches:
+        X_batch = X[X.Batch == batch].iloc[:, :-1]
+        Y_batch = Y[Y.Batch == batch].iloc[:, :-1].values.ravel()
+
+        # Test
+        y_pred = [model.predict_one(x) for x in X_batch.to_dict(orient="records")]
+        batch_predictions.extend(y_pred)
+
+        # Train
+        if batches_with_drift_list is not None and batch in drift_indexes:
+            # Reset the model due to detected drift
+            model = tree.HoeffdingTreeClassifier()
+            for x, y in zip(X_batch.to_dict(orient="records"), Y_batch):
+                model.learn_one(x, y)
+        else:
+            # Incremental learning without reset
+            for x, y in zip(X_batch.to_dict(orient="records"), Y_batch):
+                model.learn_one(x, y)
+
+    return X, Y, batch_predictions
+
+
+def fetch_all_drifts(
+    batch_size,
+    dataset,
+    drift_alignment_within_batch: Optional[float] = None,
+    plot_heatmaps: bool = True,
+):
+    hd_drifts = fetch_hdddm_drifts(
+        batch_size=batch_size,
+        plot_heatmaps=plot_heatmaps,
+        dataset=dataset,
+        drift_alignment_within_batch=drift_alignment_within_batch,
+    )
 
     ks_drifts = fetch_ksddm_drifts(
         batch_size=batch_size,
@@ -100,44 +171,103 @@ def run_test(dataset: str, batch_size: int = 1000, plot_heatmaps: bool = True):
         mean_threshold=0.05,
         plot_heatmaps=plot_heatmaps,
         text="KSDDM 95",
+        drift_alignment_within_batch=drift_alignment_within_batch,
     )
+
     ks_90_drifts = fetch_ksddm_drifts(
         batch_size=batch_size,
         dataset=dataset,
         plot_heatmaps=plot_heatmaps,
         mean_threshold=0.10,
         text="KSDDM 90",
+        drift_alignment_within_batch=drift_alignment_within_batch,
     )
-    hd_drifts = fetch_hdddm_drifts(
-        batch_size=batch_size, plot_heatmaps=plot_heatmaps, dataset=dataset
-    )
+
     js_drifts = fetch_jsddm_drifts(
-        batch_size=batch_size, plot_heatmaps=plot_heatmaps, dataset=dataset
+        batch_size=batch_size,
+        plot_heatmaps=plot_heatmaps,
+        dataset=dataset,
+        drift_alignment_within_batch=drift_alignment_within_batch,
     )
 
-    X, Y, batch_predictions_base = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size
-    )
-    X, Y, batch_predictions_ks = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_drifts
-    )
-    X, Y, batch_predictions_ks_90 = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=ks_90_drifts
-    )
-    X, Y, batch_predictions_hd = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=hd_drifts
-    )
-    X, Y, batch_predictions_js = run_prequential_naive_bayes(
-        dataset=dataset, batch_size=batch_size, batches_with_drift_list=js_drifts
-    )
+    return {
+        "ks_drifts": ks_drifts,
+        "ks_90_drifts": ks_90_drifts,
+        "hd_drifts": hd_drifts,
+        "js_drifts": js_drifts,
+    }
 
-    y_true = Y["class"].values
+
+def run_test(
+    dataset: str,
+    batch_size: int = 1000,
+    plot_heatmaps: bool = True,
+    algorithm: str = "NB",
+    drift_alignment_within_batch: Optional[float] = None,
+    detected_drifts_dict: dict = None,
+):
+    """Runs tests on the dataset using multiple drift detection methods."""
+
+    # This is where we get the info...
+
+    if algorithm == "NB":
+        X, Y, batch_predictions_base = run_prequential_naive_bayes(
+            dataset=dataset, batch_size=batch_size
+        )
+        X, Y, batch_predictions_ks = run_prequential_naive_bayes(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["ks_drifts"],
+        )
+        X, Y, batch_predictions_ks_90 = run_prequential_naive_bayes(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["ks_90_drifts"],
+        )
+        X, Y, batch_predictions_hd = run_prequential_naive_bayes(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["hd_drifts"],
+        )
+        X, Y, batch_predictions_js = run_prequential_naive_bayes(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["js_drifts"],
+        )
+        y_true = Y["class"].values
+
+    if algorithm == "HT":
+        X, Y, batch_predictions_base = run_prequential_hoeffding_tree(
+            dataset=dataset, batch_size=batch_size
+        )
+        X, Y, batch_predictions_ks = run_prequential_hoeffding_tree(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["ks_drifts"],
+        )
+        X, Y, batch_predictions_ks_90 = run_prequential_hoeffding_tree(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["ks_90_drifts"],
+        )
+        X, Y, batch_predictions_hd = run_prequential_hoeffding_tree(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["hd_drifts"],
+        )
+        X, Y, batch_predictions_js = run_prequential_hoeffding_tree(
+            dataset=dataset,
+            batch_size=batch_size,
+            batches_with_drift_list=detected_drifts_dict["js_drifts"],
+        )
+
+        y_true = Y["class"].values
 
     results = {
-        "KS95": find_indexes(ks_drifts.tolist()),
-        "KS90": find_indexes(ks_90_drifts.tolist()),
-        "HD": find_indexes(hd_drifts.tolist()),
-        "JS": find_indexes(js_drifts.tolist()),
+        "KS95": find_indexes(detected_drifts_dict["ks_drifts"].tolist()),
+        "KS90": find_indexes(detected_drifts_dict["ks_90_drifts"].tolist()),
+        "HD": find_indexes(detected_drifts_dict["hd_drifts"].tolist()),
+        "JS": find_indexes(detected_drifts_dict["js_drifts"].tolist()),
     }
 
     metrics_results = {}
@@ -177,130 +307,6 @@ def run_test(dataset: str, batch_size: int = 1000, plot_heatmaps: bool = True):
     return results, metrics_results, X.shape[0]
 
 
-def plot_drift_points(
-    drift_results: Dict[str, List[int]], dataset: str, batch_size: int
-):
-    """Plot drift points."""
-    os.makedirs(output_dir + f"/{dataset}/detected_drifts/", exist_ok=True)
-    plt.figure(figsize=(12, 8))
-    colors = {"KS95": "r", "KS90": "g", "HD": "b", "JS": "m"}
-
-    # Ensure all methods are on the Y-axis
-    methods = ["KS95", "KS90", "HD", "JS"]
-    for method in methods:
-        drifts = drift_results.get(method, [])
-        plt.scatter(
-            drifts,
-            [method] * len(drifts),
-            color=colors[method],
-            label=method if len(drifts) > 0 else None,
-            s=50,
-        )
-
-    # Plot all change points
-    change_points = fetch_dataset_change_points(dataset, batch_size)
-    label_added = False
-    for cp in change_points:
-        if not label_added:
-            plt.axvline(
-                x=cp, color="k", linestyle="--", linewidth=1, label="Change point"
-            )
-            label_added = True
-        else:
-            plt.axvline(x=cp, color="k", linestyle="--", linewidth=1)
-
-    plt.xlabel("Batch Index", fontsize=20)
-    # plt.ylabel('Detection Method', fontsize=14)
-    plt.title(f"Drift Points for {dataset} (Batch Size: {batch_size})", fontsize=20)
-    plt.legend(fontsize=15)
-    plt.grid(True)
-    plt.yticks(ticks=methods, labels=methods, fontsize=15)
-    plt.xticks(fontsize=15)
-
-    # Set integer ticks on the x-axis
-    plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    plt.savefig(
-        os.path.join(
-            output_dir + f"/{dataset}/detected_drifts/",
-            f"{dataset}_{batch_size}_drift_points.png",
-        ),
-        bbox_inches="tight",
-    )
-    plt.close()
-
-
-def plot_results(
-    results: dict[int, dict[Any, dict[str, float | tuple[Any, Any, float]]]],
-    dataset: str,
-    batch_sizes: List[int],
-):
-    """Plot metric results."""
-
-    os.makedirs(output_dir + f"/{dataset}/metrics/", exist_ok=True)
-    metrics = ["accuracy", "precision", "recall", "f1"]
-
-    # Create separate plots for each metric
-    for metric in metrics:
-        plt.figure(figsize=(10, 6))
-        for model in results[batch_sizes[0]]:
-            metric_values = [
-                results[batch_size][model][metric] for batch_size in batch_sizes
-            ]
-            plt.plot(batch_sizes, metric_values, marker="o", label=model)
-        plt.xlabel("Batch Size")
-        plt.ylabel(metric.capitalize())
-        plt.title(f"{metric.capitalize()} Comparison for {dataset}")
-        plt.legend()
-        plt.grid(True)
-        plt.xticks(batch_sizes)
-        plt.savefig(os.path.join(output_dir + f"/{dataset}/metrics/", f"{metric}.png"))
-        plt.close()
-
-    # Plot ROC Curve for each batch size in separate files
-    for batch_size in batch_sizes:
-        plt.figure(figsize=(10, 6))
-        for model in results[batch_size]:
-            fpr, tpr, roc_auc = results[batch_size][model]["roc_curve"]
-            plt.plot(fpr, tpr, label=f"{model} (AUC = {roc_auc:.4f})")
-        plt.plot([0, 1], [0, 1], "k--")
-        plt.xlabel("False Positive Rate")
-        plt.ylabel("True Positive Rate")
-        plt.title(f"ROC Curve for {dataset} (Batch Size: {batch_size})")
-        plt.legend()
-        plt.grid(True)
-        plt.savefig(
-            os.path.join(
-                output_dir + f"/{dataset}/metrics/", f"roc_curve_{batch_size}.png"
-            )
-        )
-        plt.close()
-
-    # Collect all ROC curves for top 3 plot
-    roc_curves = []
-    for batch_size in batch_sizes:
-        for model in results[batch_size]:
-            fpr, tpr, roc_auc = results[batch_size][model]["roc_curve"]
-            roc_curves.append(
-                (fpr, tpr, roc_auc, f"{model} (Batch Size: {batch_size})")
-            )
-
-    # Sort ROC curves by AUC in descending order and plot the top 3
-    roc_curves.sort(key=lambda x: x[2], reverse=True)
-    plt.figure(figsize=(10, 6))
-    for fpr, tpr, roc_auc, label in roc_curves[:3]:
-        plt.plot(fpr, tpr, label=f"{label}, AUC = {roc_auc:.4f}")
-    plt.plot([0, 1], [0, 1], "k--")
-    plt.xlabel("False Positive Rate")
-    plt.ylabel("True Positive Rate")
-    plt.title(f"Top 3 ROC Curves for {dataset}")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(
-        os.path.join(output_dir + f"/{dataset}/metrics/", f"top3_roc_curve.png")
-    )
-    plt.close()
-
-
 def save_results_to_csv(
     dataset: str,
     batch_size: int,
@@ -308,6 +314,10 @@ def save_results_to_csv(
     metrics_results: dict[Any, dict[str, float | tuple[Any, Any, float]]],
     num_batches: int,
     csv_file_path: str,
+    drift_alignment_with_batch: float = "N/A",
+    scenario: str = "N/A",
+    type_of_dataset: str = "N/A",
+    algorithm: str = "N/A",
 ):
     """Save experiment results to csv."""
     # Create the data structure to be saved in CSV
@@ -332,6 +342,10 @@ def save_results_to_csv(
                 "num_drifts": num_drifts,
                 "num_batches": num_batches,
                 "auc": roc_auc,
+                "drift_alignment_with_batch": drift_alignment_with_batch,
+                "scenario": scenario,
+                "type_of_dataset": type_of_dataset,
+                "algorithm": algorithm,
             }
         )
 
@@ -342,7 +356,6 @@ def save_results_to_csv(
     df.to_csv(
         csv_file_path, mode="a", index=False, header=not os.path.exists(csv_file_path)
     )
-    print(f"Results for {dataset}, batch size {batch_size} saved to {csv_file_path}")
 
 
 def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
@@ -362,84 +375,471 @@ def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
     print(f"Consolidated results saved to {target_csv_file}")
 
 
-def fetch_dataset_change_points(dataset_name: str, batch_size: int):
-    """Fetch all change points from dataset."""
-    change_points = []
+def prepare_datasets():
+    """Prepare the list of datasets to be processed."""
+    return [
+        "synthetic_dataset_with_parallel_drifts_abrupt",
+        "synthetic_dataset_with_switching_drifts_incremental",
+        "synthetic_dataset_with_parallel_drifts_incremental",
+        "synthetic_dataset_with_switching_drifts_abrupt",
+        "synthetic_dataset_no_drifts",
+        # Concept drift datasets below
+        "MULTISTAGGER",
+        "MULTISEA",
+        "SEA",
+        "STAGGER",
+        "electricity",
+        "magic",
+        "Abrupt (imbal.)",
+        "Abrupt (bal.)",
+        "Incremental (bal.)",
+        "Incremental (imbal.)",
+        "Incremental-gradual (bal.)",
+        "Incremental-gradual (imbal.)",
+        "Incremental-abrupt-reoccurring (bal.)",
+        "Incremental-abrupt-reoccurring (imbal.)",
+        "Incremental-reoccurring (bal.)",
+        "Incremental-reoccurring (imbal.)",
+    ]
 
-    if dataset_name in insects_datasets.keys():
-        change_points = insects_datasets[dataset_name]["change_point"]
 
-    if dataset_name in common_datasets.keys():
-        change_points = common_datasets[dataset_name]["change_point"]
-
-    if dataset_name in datasets_with_added_drifts:
-        df, _, _ = load_and_prepare_dataset(dataset_name)
-        _, column, drifts = extract_drift_info(dataset_name)
-        for drift_type in drifts:
-            for drift in drifts[drift_type]:
-                start_index = calculate_index(df, drift[0])
-                end_index = calculate_index(df, drift[1])
-                change_points.extend([start_index, end_index])
-
-    batches_with_change_points = [cp // batch_size for cp in change_points]
-    return batches_with_change_points
+def prepare_output_path(dataset):
+    """Create and return the output directory for a dataset."""
+    output_path = os.path.join(output_dir, f"{dataset}")
+    os.makedirs(output_path, exist_ok=True)
+    return output_path
 
 
-def run_full_experiment():
-    """Run full experiment for all datasets."""
-    # batch_sizes = [1000]
-    # datasets = ["electricity"]
+def handle_synthetic_dataset(
+    scenario,
+    dataset,
+    dataframe_size,
+    batch_size,
+    drift_within_batch: float = 1.0,
+    features_with_drifts: list[str] = None,
+    num_drifts: int = 2,
+):
+    """Generate, save, and plot synthetic datasets."""
+    (
+        synthetic_df,
+        drift_points,
+        drift_info,
+        accumulated_differences,
+        features_with_drifts,
+    ) = generate_synthetic_dataset_with_drifts(
+        dataframe_size=dataframe_size,
+        features_with_drifts=features_with_drifts,
+        batch_size=batch_size,
+        drift_within_batch=drift_within_batch,
+        num_features=5,
+        loc=10,
+        scale=1,
+        seed=42,
+        scenario=scenario,
+        num_drifts=num_drifts,
+    )
+    save_synthetic_dataset(synthetic_df, dataset)
+    plot_all_features(
+        synthetic_df,
+        dataset,
+        drift_points,
+        suffix=f"_{scenario}_drifts_{batch_size}_{drift_within_batch}",
+        drift_info=drift_info,
+    )
+    plot_all_features(
+        synthetic_df,
+        dataset,
+        drift_points,
+        suffix=f"_{scenario}_drifts_and_batches_{batch_size}_{drift_within_batch}",
+        drift_info=drift_info,
+        batch_size=batch_size,
+        use_batch_numbers=True,
+    )
+    plot_feature_and_its_variations(
+        dataset_name=dataset,
+        column="feature1",
+        suffix=f"_{scenario}_drifts_{batch_size}_",
+    )
 
-    batch_sizes = [1000, 1500, 2000, 2500]
-    datasets = ["electricity", "magic", "MULTISTAGGER", "MULTISEA", "SEA", "STAGGER"]
-    for dataset in insects_datasets.keys():
-        if dataset != "Out-of-control":
-            datasets.append(dataset)
+    if scenario != "no_drifts":
+        # TODO: this must be on other place, we need to plot differences after the drifts are detected
+        # TODO: This plot breaks when we use batch size of 1500, needs to be fixed but dropped for now
+        # plot_accumulated_differences(
+        #     accumulated_differences,
+        #     features_with_drifts,
+        #     dataset,
+        #     batch_size=batch_size,
+        # )
+        pass
 
-    # for dataset in datasets_with_added_drifts:
-    #     datasets.append(dataset)
+    return synthetic_df, accumulated_differences, drift_points
 
-    results = {dataset: {} for dataset in datasets}
-    csv_file_paths = []
 
-    for dataset in datasets:
-        dataset_results = {}
-        output_path = os.path.join(output_dir, f"{dataset}")
-        os.makedirs(output_path, exist_ok=True)
-        csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
+import json
+import os
+from typing import List
 
-        # Remove the file if it already exists
-        if os.path.exists(csv_file_path):
-            os.remove(csv_file_path)
 
-        for batch_size in batch_sizes:
-            print(f"{dataset} - {batch_size}")
-            drift_results, test_results, X_shape = run_test(
-                dataset=dataset,
-                batch_size=batch_size,
-                plot_heatmaps=True,
-            )
-            num_batches = X_shape // batch_size  # Calculate the number of batches
-            dataset_results[batch_size] = test_results
-            plot_drift_points(drift_results, dataset, batch_size)
-            save_results_to_csv(
-                dataset,
-                batch_size,
-                drift_results,
-                test_results,
-                num_batches,
-                csv_file_path,
-            )
-            print()
+def concatenate_json_files(
+    json_file_paths: List[str],
+    output_filename: str = "consolidated_drift_results.json",
+):
+    """Concatenate multiple JSON files into a single JSON file without merging their contents."""
+    all_jsons = []
 
-        results[dataset] = dataset_results
-        plot_results(dataset_results, dataset, batch_sizes)
-        csv_file_paths.append(csv_file_path)
+    for file_path in json_file_paths:
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                all_jsons.append(data)  # Append each JSON object to the list
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Error processing {file_path}: {e}")
 
-    # Consolidate all CSV files into a single CSV file
+    os.makedirs(output_dir, exist_ok=True)
+    target_file = os.path.join(output_dir, output_filename)
+
+    with open(target_file, "w", encoding="utf-8") as output_file:
+        json.dump(all_jsons, output_file, indent=4)
+
+    print(f"JSON files concatenated and saved to {target_file}")
+
+
+def save_drift_points_to_file(
+    synthetic_drift_points,
+    detected_drifts_dict,
+    batch_size,
+    dataset_name,
+    drift_within_batch,
+):
+    # Step 1: Process synthetic drift points
+    synthetic_drift_batches = {}
+    for feature, drift_ranges in synthetic_drift_points.items():
+        batch_ranges = []
+        for start, end in drift_ranges:
+            batch_ranges.extend(
+                range(start // batch_size + 1, (end // batch_size) + 2)
+            )  # can change this to avoid range, depending on the dataset name
+        synthetic_drift_batches[feature] = sorted(set(batch_ranges))
+
+    # Step 2: Process detected drift points
+    detected_drift_batches = {}
+    for method, drifts in detected_drifts_dict.items():
+        detected_drift_batches[method] = [
+            pair[0] + 2 for pair in enumerate(drifts) if pair[1] == "drift"
+        ]
+
+    # Step 3: Organize data
+    drift_data = {
+        "dataset": dataset_name,
+        "drift_within_batch": drift_within_batch,
+        "batch_size": batch_size,
+        "synthetic_drifts": synthetic_drift_batches,
+        "detected_drifts": detected_drift_batches,
+    }
+
+    dataset_output_dir = os.path.join(output_dir, dataset_name, "drift_files")
+    os.makedirs(dataset_output_dir, exist_ok=True)
+
+    output_file = (
+        dataset_output_dir + f"/drift_analysis_{batch_size}_{drift_within_batch}.json"
+    )
+
+    # Step 4: Save to JSON file
+    with open(output_file, "w") as f:
+        json.dump(drift_data, f, indent=4)
+
+    print(f"Drift data saved to {output_file}")
+
+    return output_file
+
+
+def run_single_experiment(
+    dataset,
+    batch_size,
+    algorithm,
+    drift_alignment_within_batch=None,
+    detected_drifts_dict=None,
+):
+    """Run the main experiment pipeline for a single dataset and batch size."""
+
+    drift_results, test_results, X_shape = run_test(
+        dataset=dataset,
+        batch_size=batch_size,
+        plot_heatmaps=True,
+        algorithm=algorithm,
+        drift_alignment_within_batch=drift_alignment_within_batch,
+        detected_drifts_dict=detected_drifts_dict,
+    )
+    num_batches = X_shape // batch_size
+    return test_results, drift_results, num_batches
+
+
+def consolidate_results(csv_file_paths):
+    """Consolidate individual CSV files into a single CSV."""
     target_csv_file = os.path.join(output_dir, "consolidated_results.csv")
     os.makedirs(output_dir, exist_ok=True)
     consolidate_csv_files(csv_file_paths, target_csv_file)
+
+
+def run_full_experiment():
+    """Run the full experiment pipeline."""
+
+    results = {}
+    csv_file_paths = []
+    json_file_paths = []
+
+    datasets = prepare_datasets()
+    dataframe_size = 80000
+    num_drifts = 2
+    features_with_drifts = ["feature1", "feature3", "feature5"]
+
+    batch_sizes = [
+        1000,
+        1500,
+        2000,
+        2500,
+    ]
+
+    # drift_alignment_batch_percentages = [0.5, 1.0, 0.05]
+    drift_alignment_batch_percentages = [1.0]
+    algorithms = ["NB"]
+    # algorithms = ["NB", "HT"]
+
+    for dataset in datasets:
+        dataset_results = {}
+
+        # Clear old csvs
+        output_path = prepare_output_path(dataset)
+        csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
+
+        if os.path.exists(csv_file_path):
+            os.remove(csv_file_path)
+
+        for algorithm in algorithms:
+            print(f"Algorithm - {algorithm}")
+
+            for batch_size in batch_sizes:
+                if dataset.startswith("synthetic_"):
+                    type_of_dataset = "synthetic"
+
+                    if dataset == "synthetic_dataset_no_drifts":
+                        scenario = "no_drifts"
+                        (
+                            synthetic_df,
+                            accumulated_differences,
+                            synthetic_drift_points,
+                        ) = handle_synthetic_dataset(
+                            scenario,
+                            dataset,
+                            dataframe_size,
+                            batch_size,
+                            features_with_drifts=[],
+                        )
+
+                        print(f"{dataset} - {batch_size}")
+
+                        detected_drifts_dict = fetch_all_drifts(
+                            batch_size,
+                            dataset,
+                            drift_alignment_within_batch=None,
+                            plot_heatmaps=True,
+                        )
+
+                        (
+                            test_results,
+                            drift_results,
+                            num_batches,
+                        ) = run_single_experiment(
+                            dataset,
+                            batch_size,
+                            algorithm,
+                            detected_drifts_dict=detected_drifts_dict,
+                        )
+                        plot_drift_points(
+                            drift_results,
+                            dataset,
+                            batch_size,
+                            synthetic_drift_points=synthetic_drift_points,
+                            max_index=int(dataframe_size / batch_size),
+                        )
+
+                        save_results_to_csv(
+                            dataset,
+                            batch_size,
+                            drift_results,
+                            test_results,
+                            num_batches,
+                            csv_file_path,
+                            scenario=scenario,
+                            type_of_dataset=type_of_dataset,
+                            algorithm=algorithm,
+                        )
+
+                        dataset_results[batch_size] = test_results
+
+                    else:
+                        for drift_within_batch in drift_alignment_batch_percentages:
+                            scenario = "N/A"
+                            synthetic_df, accumulated_differences = None, None
+                            if dataset.startswith(
+                                "synthetic_dataset_with_parallel_drifts"
+                            ):
+                                if "abrupt" in dataset:
+                                    scenario = "parallel_abrupt"
+                                else:
+                                    scenario = "parallel_incremental"
+
+                                (
+                                    synthetic_df,
+                                    accumulated_differences,
+                                    synthetic_drift_points,
+                                ) = handle_synthetic_dataset(
+                                    scenario,
+                                    dataset,
+                                    dataframe_size,
+                                    batch_size,
+                                    drift_within_batch,
+                                    features_with_drifts,
+                                    num_drifts=num_drifts,
+                                )
+
+                            elif dataset.startswith(
+                                "synthetic_dataset_with_switching_drifts"
+                            ):
+                                if "abrupt" in dataset:
+                                    scenario = "switching_abrupt"
+                                else:
+                                    scenario = "switching_incremental"
+
+                                (
+                                    synthetic_df,
+                                    accumulated_differences,
+                                    synthetic_drift_points,
+                                ) = handle_synthetic_dataset(
+                                    scenario,
+                                    dataset,
+                                    dataframe_size,
+                                    batch_size,
+                                    drift_within_batch,
+                                    features_with_drifts,
+                                    num_drifts=num_drifts,
+                                )
+
+                            print(f"{dataset} - {batch_size} - {drift_within_batch}")
+
+                            detected_drifts_dict = fetch_all_drifts(
+                                batch_size,
+                                dataset,
+                                drift_alignment_within_batch=drift_within_batch,
+                                plot_heatmaps=True,
+                            )
+
+                            # TODO: Generate dataset synthetic_drift_points, detected_drifts_dict
+                            output_file_drifts_analysis_file = (
+                                save_drift_points_to_file(
+                                    synthetic_drift_points,
+                                    detected_drifts_dict,
+                                    batch_size,
+                                    dataset,
+                                    drift_within_batch,
+                                )
+                            )
+
+                            json_file_paths.append(output_file_drifts_analysis_file)
+
+                            (
+                                test_results,
+                                drift_results,
+                                num_batches,
+                            ) = run_single_experiment(
+                                dataset,
+                                batch_size,
+                                algorithm,
+                                drift_alignment_within_batch=drift_within_batch,
+                                detected_drifts_dict=detected_drifts_dict,
+                            )
+                            plot_drift_points(
+                                drift_results,
+                                dataset,
+                                batch_size,
+                                synthetic_drift_points=synthetic_drift_points,
+                                drift_alignment_within_batch=drift_within_batch,
+                                max_index=int(dataframe_size / batch_size),
+                            )
+
+                            # TODO: fix the plot acc diff stuff
+                            # Plot accumulated distances until each drift detection, for all techniques
+                            # plot_accumulated_differences(
+                            #     accumulated_differences,
+                            #     features_with_drifts,
+                            #     dataset,
+                            #     batch_size=batch_size,
+                            #     detected_drifts=drift_results,
+                            #     drift_within_batch=drift_within_batch,
+                            # )
+
+                            save_results_to_csv(
+                                dataset,
+                                batch_size,
+                                drift_results,
+                                test_results,
+                                num_batches,
+                                csv_file_path,
+                                drift_alignment_with_batch=drift_within_batch,
+                                scenario=scenario,
+                                type_of_dataset=type_of_dataset,
+                                algorithm=algorithm,
+                            )
+
+                            dataset_results[batch_size] = test_results
+                else:
+                    print(f"{dataset} - {batch_size}")
+
+                    detected_drifts_dict = fetch_all_drifts(
+                        batch_size,
+                        dataset,
+                        drift_alignment_within_batch=None,
+                        plot_heatmaps=True,
+                    )
+
+                    (
+                        test_results,
+                        drift_results,
+                        num_batches,
+                    ) = run_single_experiment(
+                        dataset,
+                        batch_size,
+                        algorithm,
+                        detected_drifts_dict=detected_drifts_dict,
+                    )
+
+                    save_results_to_csv(
+                        dataset,
+                        batch_size,
+                        drift_results,
+                        test_results,
+                        num_batches,
+                        csv_file_path,
+                        algorithm=algorithm,
+                    )
+                    plot_drift_points(drift_results, dataset, batch_size)
+
+                    dataset_results[batch_size] = test_results
+
+            # TODO: check the plots for all the algorithms separately
+            results[dataset] = dataset_results
+            plot_results(dataset_results, dataset, batch_sizes)
+            csv_file_paths.append(csv_file_path)
+
+            # Load and plot original dataset features
+            df, _, _ = load_and_prepare_dataset(dataset)
+            plot_all_features(df, dataset)
+
+    # Consolidate all CSV files into a single CSV
+    consolidate_results(list(set(csv_file_paths)))
+
+    # Consolidate all JSON files into a single JSON
+    concatenate_json_files(list(set(json_file_paths)))
 
 
 if __name__ == "__main__":

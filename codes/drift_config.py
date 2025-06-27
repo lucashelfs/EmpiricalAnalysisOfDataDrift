@@ -1,6 +1,9 @@
 # Drift config can be specified using indexes if INTS
 # or portion of the DF in case of not knowing the size of the dataset
 
+
+# More on electricity here: https://api.openml.org/d/44156
+
 electricity_columns = [
     "date",
     "day",
@@ -30,5 +33,11 @@ drift_config = {
             "column": "nswdemand",
             "drifts": {"incremental": [(0.4, 0.8)]},
         },
-    }
+    },
+    # "MULTISTAGGER": {
+    #     "just_abrupt": {
+    #         "column": "size",
+    #         "drifts": {"abrupt": [(0.4, 0.8)]},
+    #     },
+    # },
 }

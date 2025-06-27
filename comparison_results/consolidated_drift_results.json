@@ -1,0 +1,1402 @@
+[
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 1000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                6,
+                40,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature3": [
+                15,
+                16,
+                17,
+                18,
+                19,
+                53,
+                54,
+                55,
+                56
+            ],
+            "feature5": [
+                28,
+                29,
+                30,
+                31,
+                66,
+                67,
+                68,
+                69
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                6,
+                7,
+                9,
+                15,
+                16,
+                19,
+                28,
+                29,
+                31,
+                32,
+                41,
+                44,
+                45,
+                53,
+                54,
+                57,
+                66,
+                67,
+                69,
+                70
+            ],
+            "ks_90_drifts": [
+                3,
+                6,
+                7,
+                9,
+                15,
+                16,
+                19,
+                28,
+                29,
+                31,
+                32,
+                41,
+                44,
+                45,
+                53,
+                54,
+                57,
+                66,
+                67,
+                69,
+                70
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                15,
+                17,
+                19,
+                28,
+                32,
+                35,
+                41,
+                44,
+                53,
+                55,
+                57,
+                66,
+                70,
+                75
+            ],
+            "js_drifts": [
+                3,
+                5,
+                15,
+                17,
+                19,
+                28,
+                32,
+                35,
+                41,
+                44,
+                53,
+                55,
+                57,
+                66,
+                70,
+                75
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 1000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                6,
+                40,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature3": [
+                15,
+                16,
+                17,
+                18,
+                19,
+                53,
+                54,
+                55,
+                56
+            ],
+            "feature5": [
+                28,
+                29,
+                30,
+                31,
+                66,
+                67,
+                68,
+                69
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                9,
+                15,
+                16,
+                17,
+                18,
+                19,
+                28,
+                29,
+                30,
+                31,
+                32,
+                41,
+                42,
+                43,
+                44,
+                45,
+                54,
+                55,
+                56,
+                57,
+                66,
+                67,
+                68,
+                69,
+                70
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                9,
+                15,
+                16,
+                17,
+                18,
+                19,
+                28,
+                29,
+                30,
+                31,
+                32,
+                41,
+                42,
+                43,
+                44,
+                45,
+                54,
+                55,
+                56,
+                57,
+                66,
+                67,
+                68,
+                69,
+                70
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                16,
+                18,
+                20,
+                29,
+                32,
+                35,
+                41,
+                43,
+                47,
+                51,
+                54,
+                57,
+                67,
+                69,
+                71
+            ],
+            "js_drifts": [
+                3,
+                5,
+                16,
+                18,
+                30,
+                32,
+                35,
+                41,
+                43,
+                47,
+                51,
+                54,
+                57,
+                67,
+                70,
+                75
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 1500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature3": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature5": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                5,
+                6,
+                27,
+                28,
+                29,
+                30,
+                47
+            ],
+            "ks_90_drifts": [
+                3,
+                5,
+                6,
+                10,
+                22,
+                27,
+                28,
+                29,
+                30,
+                47
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                27,
+                29,
+                30,
+                43,
+                52,
+                54
+            ],
+            "js_drifts": [
+                3,
+                5,
+                27,
+                29,
+                30,
+                43,
+                54
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 2500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                16,
+                17,
+                18
+            ],
+            "feature3": [
+                7,
+                8,
+                9,
+                21,
+                22
+            ],
+            "feature5": [
+                12,
+                13,
+                26,
+                27
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                17,
+                18,
+                19,
+                21,
+                22,
+                23,
+                26,
+                28
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                17,
+                18,
+                19,
+                21,
+                22,
+                23,
+                26,
+                28
+            ],
+            "hd_drifts": [
+                3,
+                8,
+                17,
+                22
+            ],
+            "js_drifts": [
+                3,
+                8,
+                17,
+                22
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 2000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature3": [
+                9,
+                10,
+                27,
+                28
+            ],
+            "feature5": [
+                15,
+                16,
+                33,
+                34
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                8,
+                9,
+                10,
+                11,
+                15,
+                16,
+                17,
+                21,
+                22,
+                23,
+                27,
+                28,
+                29,
+                33,
+                34,
+                35
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                8,
+                9,
+                10,
+                11,
+                15,
+                16,
+                17,
+                19,
+                21,
+                22,
+                23,
+                27,
+                28,
+                29,
+                33,
+                34,
+                35
+            ],
+            "hd_drifts": [
+                3,
+                9,
+                11,
+                15,
+                17,
+                19,
+                21,
+                23,
+                27,
+                33,
+                35
+            ],
+            "js_drifts": [
+                3,
+                9,
+                11,
+                15,
+                17,
+                19,
+                21,
+                23,
+                27,
+                33
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 2000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature3": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature5": [
+                3,
+                4,
+                21,
+                22
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                8,
+                21,
+                22,
+                23
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                8,
+                21,
+                22,
+                23,
+                31
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                14,
+                21,
+                23
+            ],
+            "js_drifts": [
+                3,
+                5,
+                14,
+                21,
+                23
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 2000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature3": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature5": [
+                3,
+                4,
+                21,
+                22
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                8,
+                21,
+                22,
+                23
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                8,
+                21,
+                22,
+                23,
+                31
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                14,
+                21,
+                23
+            ],
+            "js_drifts": [
+                3,
+                5,
+                14,
+                21,
+                23
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 1500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature3": [
+                11,
+                12,
+                13,
+                35,
+                36,
+                37,
+                38
+            ],
+            "feature5": [
+                19,
+                20,
+                21,
+                44,
+                45,
+                46
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                5,
+                6,
+                11,
+                12,
+                13,
+                14,
+                19,
+                20,
+                21,
+                22,
+                27,
+                28,
+                29,
+                30,
+                35,
+                36,
+                38,
+                39,
+                44,
+                45,
+                46,
+                47
+            ],
+            "ks_90_drifts": [
+                3,
+                5,
+                6,
+                10,
+                11,
+                12,
+                13,
+                14,
+                19,
+                20,
+                21,
+                22,
+                27,
+                28,
+                29,
+                30,
+                35,
+                36,
+                38,
+                39,
+                44,
+                45,
+                46,
+                47
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                11,
+                14,
+                19,
+                22,
+                27,
+                29,
+                36,
+                38,
+                44,
+                46,
+                54
+            ],
+            "js_drifts": [
+                3,
+                5,
+                11,
+                14,
+                19,
+                22,
+                27,
+                29,
+                36,
+                38,
+                44,
+                46,
+                54
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 1500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature3": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature5": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                6,
+                27,
+                28,
+                29,
+                30,
+                47
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                6,
+                10,
+                22,
+                27,
+                28,
+                29,
+                30,
+                47
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                28,
+                30,
+                43,
+                52,
+                54
+            ],
+            "js_drifts": [
+                3,
+                5,
+                28,
+                30,
+                43,
+                54
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 2500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                17,
+                18
+            ],
+            "feature3": [
+                3,
+                4,
+                17,
+                18
+            ],
+            "feature5": [
+                3,
+                4,
+                17,
+                18
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                13,
+                17,
+                18,
+                19
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                13,
+                17,
+                18,
+                19
+            ],
+            "hd_drifts": [
+                3,
+                4,
+                17,
+                18
+            ],
+            "js_drifts": [
+                3,
+                4,
+                17,
+                18
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 1500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                27,
+                28,
+                29
+            ],
+            "feature3": [
+                11,
+                12,
+                13,
+                35,
+                36,
+                37,
+                38
+            ],
+            "feature5": [
+                19,
+                20,
+                21,
+                44,
+                45,
+                46
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                6,
+                11,
+                12,
+                13,
+                14,
+                19,
+                20,
+                21,
+                22,
+                27,
+                28,
+                29,
+                30,
+                36,
+                37,
+                38,
+                39,
+                44,
+                45,
+                46,
+                47
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                6,
+                10,
+                11,
+                12,
+                13,
+                14,
+                19,
+                20,
+                21,
+                22,
+                27,
+                28,
+                29,
+                30,
+                36,
+                37,
+                38,
+                39,
+                44,
+                45,
+                46,
+                47
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                12,
+                14,
+                20,
+                22,
+                28,
+                30,
+                36,
+                39,
+                43,
+                45,
+                47,
+                52,
+                54
+            ],
+            "js_drifts": [
+                3,
+                5,
+                12,
+                14,
+                20,
+                22,
+                28,
+                30,
+                36,
+                39,
+                43,
+                45,
+                47,
+                52,
+                54
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 2000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                21,
+                22
+            ],
+            "feature3": [
+                9,
+                10,
+                27,
+                28
+            ],
+            "feature5": [
+                15,
+                16,
+                33,
+                34
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                8,
+                9,
+                10,
+                11,
+                15,
+                16,
+                17,
+                21,
+                22,
+                23,
+                27,
+                28,
+                29,
+                33,
+                34,
+                35
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                8,
+                9,
+                10,
+                11,
+                15,
+                16,
+                17,
+                19,
+                21,
+                22,
+                23,
+                27,
+                28,
+                29,
+                33,
+                34,
+                35
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                9,
+                11,
+                15,
+                17,
+                19,
+                21,
+                23,
+                27,
+                29,
+                33,
+                35
+            ],
+            "js_drifts": [
+                3,
+                5,
+                9,
+                11,
+                15,
+                17,
+                19,
+                21,
+                23,
+                27,
+                29,
+                33,
+                35
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 2500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                16,
+                17,
+                18
+            ],
+            "feature3": [
+                7,
+                8,
+                9,
+                21,
+                22
+            ],
+            "feature5": [
+                12,
+                13,
+                26,
+                27
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                17,
+                18,
+                19,
+                21,
+                22,
+                23,
+                26,
+                27,
+                28
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                17,
+                18,
+                19,
+                21,
+                22,
+                23,
+                26,
+                27,
+                28
+            ],
+            "hd_drifts": [
+                3,
+                8,
+                10,
+                12,
+                15,
+                17,
+                22,
+                24,
+                26,
+                29
+            ],
+            "js_drifts": [
+                3,
+                8,
+                10,
+                12,
+                15,
+                17,
+                22,
+                24,
+                26,
+                28
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+        "drift_within_batch": 1.0,
+        "batch_size": 1000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature3": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature5": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                6,
+                7,
+                9,
+                33,
+                41,
+                44,
+                45
+            ],
+            "ks_90_drifts": [
+                3,
+                6,
+                7,
+                9,
+                15,
+                31,
+                32,
+                41,
+                44,
+                45
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                41,
+                44
+            ],
+            "js_drifts": [
+                3,
+                5,
+                41,
+                44
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 1000,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature3": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ],
+            "feature5": [
+                3,
+                4,
+                5,
+                6,
+                41,
+                42,
+                43,
+                44
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                9,
+                33,
+                41,
+                42,
+                43,
+                44,
+                45
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                9,
+                15,
+                31,
+                32,
+                41,
+                42,
+                43,
+                44,
+                45
+            ],
+            "hd_drifts": [
+                3,
+                5,
+                41,
+                43
+            ],
+            "js_drifts": [
+                3,
+                5,
+                41,
+                43
+            ]
+        }
+    },
+    {
+        "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+        "drift_within_batch": 1.0,
+        "batch_size": 2500,
+        "synthetic_drifts": {
+            "feature1": [
+                3,
+                4,
+                17,
+                18
+            ],
+            "feature3": [
+                3,
+                4,
+                17,
+                18
+            ],
+            "feature5": [
+                3,
+                4,
+                17,
+                18
+            ]
+        },
+        "detected_drifts": {
+            "ks_drifts": [
+                3,
+                4,
+                5,
+                13,
+                17,
+                18,
+                19
+            ],
+            "ks_90_drifts": [
+                3,
+                4,
+                5,
+                13,
+                17,
+                18,
+                19
+            ],
+            "hd_drifts": [
+                3,
+                17
+            ],
+            "js_drifts": [
+                3,
+                17
+            ]
+        }
+    }
+]
