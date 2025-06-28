@@ -1,6 +1,10 @@
 # Empirical Analysis of Data Drift
 
-This repository contains the code for experiments from the paper *An Empirical Analysis of Data Drift Detection Techniques in Machine Learning Systems* for SBBD 2024, as well as the extended code and results that were submitted to the Journal of Information and Data Management 2025 (JIDM 2025).
+This repository contains the code for experiments from the paper *An Empirical Analysis of Data Drift Detection Techniques in Machine Learning Systems* published at SBBD 2024, as well as the extended code and results that were submitted to the Journal of Information and Data Management 2025 (JIDM 2025).
+
+## Publication
+
+**SBBD 2024**: The original research was published in the proceedings of the 39th Brazilian Symposium on Databases (SBBD 2024). The full paper is available at: https://sol.sbc.org.br/index.php/sbbd/article/view/30681
 
 ## Overview
 
