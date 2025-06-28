@@ -66,4 +66,12 @@ Complete specification of the synthetic datasets used in the empirical analysis:
 - Implementation details and reproducibility guidelines
 - Visual examples and plot interpretations
 
+### [Experimental Results Tables](experimental_results_tables.md)
+Comprehensive tables presenting F1 and AUC metrics across different batch sizes:
+- Performance comparison of all drift detection methods (Base, KS95, KS90, HD, JS)
+- Results for batch sizes 1,000, 1,500, 2,000, and 2,500
+- Detailed metrics for both real and synthetic datasets
+- Clear formatting with highlighted best-performing methods
+- Dataset abbreviations and method explanations
+
 These documentation files provide essential information for understanding the experimental setup, reproducing results, and extending the framework for future research.
