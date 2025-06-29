@@ -1,0 +1,593 @@
+dataset,batch_size,technique,phase,duration_seconds,type
+synthetic_dataset_with_parallel_drifts_abrupt,1000,HDDDM,drift_detection,0.4163659999612719,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,KSDDM_95,drift_detection,1.8344257920980453,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,KSDDM_90,drift_detection,1.6721608340740204,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,JSDDM,drift_detection,0.38705354183912277,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,HDDDM,drift_detection,0.35089304205030203,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,KSDDM_95,drift_detection,1.288043332984671,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,KSDDM_90,drift_detection,1.2991151669993997,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,JSDDM,drift_detection,0.3127948751207441,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,HDDDM,drift_detection,0.3877577499952167,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,KSDDM_95,drift_detection,1.15290049999021,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,KSDDM_90,drift_detection,1.047848666086793,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,JSDDM,drift_detection,0.27286170795559883,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,HDDDM,drift_detection,0.2665492920204997,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,KSDDM_95,drift_detection,1.3566085421480238,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,KSDDM_90,drift_detection,1.343139834003523,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,JSDDM,drift_detection,0.32773712486959994,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,HDDDM,drift_detection,0.43382683396339417,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,KSDDM_95,drift_detection,1.2522177079226822,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,KSDDM_90,drift_detection,1.169639374827966,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,JSDDM,drift_detection,0.4164218751247972,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,HDDDM,drift_detection,0.3608539591077715,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,KSDDM_95,drift_detection,0.9813523329794407,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,KSDDM_90,drift_detection,1.0529305001255125,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,JSDDM,drift_detection,0.3330849159974605,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,HDDDM,drift_detection,0.3247641669586301,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,KSDDM_95,drift_detection,1.090105792041868,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,KSDDM_90,drift_detection,0.9915436250157654,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,JSDDM,drift_detection,0.29359195893630385,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,HDDDM,drift_detection,0.2973822499625385,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,KSDDM_95,drift_detection,0.8462632501032203,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,KSDDM_90,drift_detection,0.8588427498470992,technique_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,JSDDM,drift_detection,0.3551492500118911,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,HDDDM,drift_detection,0.44385958299972117,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,KSDDM_95,drift_detection,1.7192502079997212,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,KSDDM_90,drift_detection,1.7269914590287954,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,JSDDM,drift_detection,0.37985604209825397,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,HDDDM,drift_detection,0.4109600828960538,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,KSDDM_95,drift_detection,1.284986749989912,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,KSDDM_90,drift_detection,1.1494222918991,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,JSDDM,drift_detection,0.41655533318407834,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,HDDDM,drift_detection,0.2977922500576824,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,KSDDM_95,drift_detection,1.1379347078036517,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,KSDDM_90,drift_detection,1.1163776668254286,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,JSDDM,drift_detection,0.28214745805598795,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,HDDDM,drift_detection,0.3706315839663148,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,KSDDM_95,drift_detection,1.1974721250589937,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,KSDDM_90,drift_detection,1.2333132920321077,technique_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,JSDDM,drift_detection,0.25516679184511304,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,HDDDM,drift_detection,0.5384356670547277,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,KSDDM_95,drift_detection,1.329119292087853,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,KSDDM_90,drift_detection,1.3706851250026375,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,JSDDM,drift_detection,0.39931720797903836,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,HDDDM,drift_detection,0.4317551248241216,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,KSDDM_95,drift_detection,1.117662417003885,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,KSDDM_90,drift_detection,1.0529501670971513,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,JSDDM,drift_detection,0.3225508751347661,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,HDDDM,drift_detection,0.3371810419484973,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,KSDDM_95,drift_detection,1.1618948329705745,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,KSDDM_90,drift_detection,1.1980214999057353,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,JSDDM,drift_detection,0.3153093329165131,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,HDDDM,drift_detection,0.27324787504039705,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,KSDDM_95,drift_detection,1.1987257078289986,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,KSDDM_90,drift_detection,1.105060749920085,technique_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,JSDDM,drift_detection,0.2456603329628706,technique_timing
+synthetic_dataset_no_drifts,1000,HDDDM,drift_detection,0.41525420802645385,technique_timing
+synthetic_dataset_no_drifts,1000,KSDDM_95,drift_detection,2.1340919169597328,technique_timing
+synthetic_dataset_no_drifts,1000,KSDDM_90,drift_detection,1.5879072500392795,technique_timing
+synthetic_dataset_no_drifts,1000,JSDDM,drift_detection,0.43854216602630913,technique_timing
+synthetic_dataset_no_drifts,1500,HDDDM,drift_detection,0.34378354204818606,technique_timing
+synthetic_dataset_no_drifts,1500,KSDDM_95,drift_detection,1.8246158328838646,technique_timing
+synthetic_dataset_no_drifts,1500,KSDDM_90,drift_detection,1.3058617499191314,technique_timing
+synthetic_dataset_no_drifts,1500,JSDDM,drift_detection,0.33030975004658103,technique_timing
+synthetic_dataset_no_drifts,2000,HDDDM,drift_detection,0.2992256670258939,technique_timing
+synthetic_dataset_no_drifts,2000,KSDDM_95,drift_detection,1.2745887918863446,technique_timing
+synthetic_dataset_no_drifts,2000,KSDDM_90,drift_detection,1.3134088329970837,technique_timing
+synthetic_dataset_no_drifts,2000,JSDDM,drift_detection,0.27997654187493026,technique_timing
+synthetic_dataset_no_drifts,2500,HDDDM,drift_detection,0.27227929211221635,technique_timing
+synthetic_dataset_no_drifts,2500,KSDDM_95,drift_detection,1.2655216248240322,technique_timing
+synthetic_dataset_no_drifts,2500,KSDDM_90,drift_detection,1.1817004170734435,technique_timing
+synthetic_dataset_no_drifts,2500,JSDDM,drift_detection,0.2514148340560496,technique_timing
+MULTISTAGGER,1000,HDDDM,drift_detection,0.342782957945019,technique_timing
+MULTISTAGGER,1000,KSDDM_95,drift_detection,0.7086672082077712,technique_timing
+MULTISTAGGER,1000,KSDDM_90,drift_detection,0.6943765829782933,technique_timing
+MULTISTAGGER,1000,JSDDM,drift_detection,0.4004112919792533,technique_timing
+MULTISTAGGER,1500,HDDDM,drift_detection,0.27952899993397295,technique_timing
+MULTISTAGGER,1500,KSDDM_95,drift_detection,0.5537105000112206,technique_timing
+MULTISTAGGER,1500,KSDDM_90,drift_detection,0.5669822921045125,technique_timing
+MULTISTAGGER,1500,JSDDM,drift_detection,0.3132397918961942,technique_timing
+MULTISTAGGER,2000,HDDDM,drift_detection,0.2797334580682218,technique_timing
+MULTISTAGGER,2000,KSDDM_95,drift_detection,0.5230761251877993,technique_timing
+MULTISTAGGER,2000,KSDDM_90,drift_detection,0.5213175839744508,technique_timing
+MULTISTAGGER,2000,JSDDM,drift_detection,0.2697121659293771,technique_timing
+MULTISTAGGER,2500,HDDDM,drift_detection,0.25998854101635516,technique_timing
+MULTISTAGGER,2500,KSDDM_95,drift_detection,0.515770792029798,technique_timing
+MULTISTAGGER,2500,KSDDM_90,drift_detection,0.46783487498760223,technique_timing
+MULTISTAGGER,2500,JSDDM,drift_detection,0.24366483418270946,technique_timing
+MULTISEA,1000,HDDDM,drift_detection,0.2905644169077277,technique_timing
+MULTISEA,1000,KSDDM_95,drift_detection,0.8074427079409361,technique_timing
+MULTISEA,1000,KSDDM_90,drift_detection,0.7971519578713924,technique_timing
+MULTISEA,1000,JSDDM,drift_detection,0.3507753340527415,technique_timing
+MULTISEA,1500,HDDDM,drift_detection,0.2522237920202315,technique_timing
+MULTISEA,1500,KSDDM_95,drift_detection,0.7081325410399586,technique_timing
+MULTISEA,1500,KSDDM_90,drift_detection,0.6405136249959469,technique_timing
+MULTISEA,1500,JSDDM,drift_detection,0.2863417500630021,technique_timing
+MULTISEA,2000,HDDDM,drift_detection,0.23925995803438127,technique_timing
+MULTISEA,2000,KSDDM_95,drift_detection,0.7671262500807643,technique_timing
+MULTISEA,2000,KSDDM_90,drift_detection,0.6028824159875512,technique_timing
+MULTISEA,2000,JSDDM,drift_detection,0.23265720903873444,technique_timing
+MULTISEA,2500,HDDDM,drift_detection,0.2975644578691572,technique_timing
+MULTISEA,2500,KSDDM_95,drift_detection,0.7253554579801857,technique_timing
+MULTISEA,2500,KSDDM_90,drift_detection,0.5443307079840451,technique_timing
+MULTISEA,2500,JSDDM,drift_detection,0.22535037505440414,technique_timing
+SEA,1000,HDDDM,drift_detection,0.34008733299560845,technique_timing
+SEA,1000,KSDDM_95,drift_detection,0.8398076249286532,technique_timing
+SEA,1000,KSDDM_90,drift_detection,0.8983122908975929,technique_timing
+SEA,1000,JSDDM,drift_detection,0.3069521249271929,technique_timing
+SEA,1500,HDDDM,drift_detection,0.3029638750012964,technique_timing
+SEA,1500,KSDDM_95,drift_detection,0.8952800000552088,technique_timing
+SEA,1500,KSDDM_90,drift_detection,0.7409403338097036,technique_timing
+SEA,1500,JSDDM,drift_detection,0.25401512486860156,technique_timing
+SEA,2000,HDDDM,drift_detection,0.27114133397117257,technique_timing
+SEA,2000,KSDDM_95,drift_detection,0.7895159169565886,technique_timing
+SEA,2000,KSDDM_90,drift_detection,0.615714916959405,technique_timing
+SEA,2000,JSDDM,drift_detection,0.2479015828575939,technique_timing
+SEA,2500,HDDDM,drift_detection,0.2450233749113977,technique_timing
+SEA,2500,KSDDM_95,drift_detection,0.5899672920349985,technique_timing
+SEA,2500,KSDDM_90,drift_detection,0.5536863750312477,technique_timing
+SEA,2500,JSDDM,drift_detection,0.22533899988047779,technique_timing
+STAGGER,1000,HDDDM,drift_detection,0.3834562909323722,technique_timing
+STAGGER,1000,KSDDM_95,drift_detection,0.7074369578622282,technique_timing
+STAGGER,1000,KSDDM_90,drift_detection,0.7554688327945769,technique_timing
+STAGGER,1000,JSDDM,drift_detection,0.3570134579204023,technique_timing
+STAGGER,1500,HDDDM,drift_detection,0.3023395410273224,technique_timing
+STAGGER,1500,KSDDM_95,drift_detection,0.5743262919131666,technique_timing
+STAGGER,1500,KSDDM_90,drift_detection,0.6522981668822467,technique_timing
+STAGGER,1500,JSDDM,drift_detection,0.2880549170076847,technique_timing
+STAGGER,2000,HDDDM,drift_detection,0.29269049991853535,technique_timing
+STAGGER,2000,KSDDM_95,drift_detection,0.5393284170422703,technique_timing
+STAGGER,2000,KSDDM_90,drift_detection,0.5400857501663268,technique_timing
+STAGGER,2000,JSDDM,drift_detection,0.32751299999654293,technique_timing
+STAGGER,2500,HDDDM,drift_detection,0.2711826250888407,technique_timing
+STAGGER,2500,KSDDM_95,drift_detection,0.48409779090434313,technique_timing
+STAGGER,2500,KSDDM_90,drift_detection,0.4798897919245064,technique_timing
+STAGGER,2500,JSDDM,drift_detection,0.2688235000241548,technique_timing
+electricity,1000,HDDDM,drift_detection,0.3597950420808047,technique_timing
+electricity,1000,KSDDM_95,drift_detection,0.7557449999731034,technique_timing
+electricity,1000,KSDDM_90,drift_detection,0.6766138749662787,technique_timing
+electricity,1000,JSDDM,drift_detection,0.33304858300834894,technique_timing
+electricity,1500,HDDDM,drift_detection,0.30423112493008375,technique_timing
+electricity,1500,KSDDM_95,drift_detection,0.6103584170341492,technique_timing
+electricity,1500,KSDDM_90,drift_detection,0.5647942500654608,technique_timing
+electricity,1500,JSDDM,drift_detection,0.3015047078952193,technique_timing
+electricity,2000,HDDDM,drift_detection,0.2982971251476556,technique_timing
+electricity,2000,KSDDM_95,drift_detection,0.5620182920247316,technique_timing
+electricity,2000,KSDDM_90,drift_detection,0.6089853751473129,technique_timing
+electricity,2000,JSDDM,drift_detection,0.26212762482464314,technique_timing
+electricity,2500,HDDDM,drift_detection,0.2835588329471648,technique_timing
+electricity,2500,KSDDM_95,drift_detection,0.5294264580588788,technique_timing
+electricity,2500,KSDDM_90,drift_detection,0.5263013748917729,technique_timing
+electricity,2500,JSDDM,drift_detection,0.2972088339738548,technique_timing
+magic,1000,HDDDM,drift_detection,0.2546075419522822,technique_timing
+magic,1000,KSDDM_95,drift_detection,0.5311920831445605,technique_timing
+magic,1000,KSDDM_90,drift_detection,0.4784299579914659,technique_timing
+magic,1000,JSDDM,drift_detection,0.24025604198686779,technique_timing
+magic,1500,HDDDM,drift_detection,0.20809533400461078,technique_timing
+magic,1500,KSDDM_95,drift_detection,0.4243020829744637,technique_timing
+magic,1500,KSDDM_90,drift_detection,0.47514295810833573,technique_timing
+magic,1500,JSDDM,drift_detection,0.19558991701342165,technique_timing
+magic,2000,HDDDM,drift_detection,0.1898040419910103,technique_timing
+magic,2000,KSDDM_95,drift_detection,0.39571783295832574,technique_timing
+magic,2000,KSDDM_90,drift_detection,0.4114395419601351,technique_timing
+magic,2000,JSDDM,drift_detection,0.18761495780199766,technique_timing
+magic,2500,HDDDM,drift_detection,0.19411404198035598,technique_timing
+magic,2500,KSDDM_95,drift_detection,0.4549950831569731,technique_timing
+magic,2500,KSDDM_90,drift_detection,0.40566966589540243,technique_timing
+magic,2500,JSDDM,drift_detection,0.16579054202884436,technique_timing
+Abrupt (imbal.),1000,HDDDM,drift_detection,10.408986499998719,technique_timing
+Abrupt (imbal.),1000,KSDDM_95,drift_detection,36.2109810418915,technique_timing
+Abrupt (imbal.),1000,KSDDM_90,drift_detection,34.520784083986655,technique_timing
+Abrupt (imbal.),1000,JSDDM,drift_detection,8.764623624971136,technique_timing
+Abrupt (imbal.),1500,HDDDM,drift_detection,8.532291749957949,technique_timing
+Abrupt (imbal.),1500,KSDDM_95,drift_detection,29.369811750017107,technique_timing
+Abrupt (imbal.),1500,KSDDM_90,drift_detection,27.442203207872808,technique_timing
+Abrupt (imbal.),1500,JSDDM,drift_detection,7.246651750057936,technique_timing
+Abrupt (imbal.),2000,HDDDM,drift_detection,7.602170333033428,technique_timing
+Abrupt (imbal.),2000,KSDDM_95,drift_detection,28.265976625028998,technique_timing
+Abrupt (imbal.),2000,KSDDM_90,drift_detection,26.784780374960974,technique_timing
+Abrupt (imbal.),2000,JSDDM,drift_detection,6.8027413750533015,technique_timing
+Abrupt (imbal.),2500,HDDDM,drift_detection,8.21690116589889,technique_timing
+Abrupt (imbal.),2500,KSDDM_95,drift_detection,28.288284625159577,technique_timing
+Abrupt (imbal.),2500,KSDDM_90,drift_detection,27.315409458009526,technique_timing
+Abrupt (imbal.),2500,JSDDM,drift_detection,6.681913499953225,technique_timing
+Abrupt (bal.),1000,HDDDM,drift_detection,2.0555284589063376,technique_timing
+Abrupt (bal.),1000,KSDDM_95,drift_detection,4.600915707880631,technique_timing
+Abrupt (bal.),1000,KSDDM_90,drift_detection,4.651718083070591,technique_timing
+Abrupt (bal.),1000,JSDDM,drift_detection,1.8392400001175702,technique_timing
+Abrupt (bal.),1500,HDDDM,drift_detection,1.9703209169674665,technique_timing
+Abrupt (bal.),1500,KSDDM_95,drift_detection,4.312837708974257,technique_timing
+Abrupt (bal.),1500,KSDDM_90,drift_detection,4.030063917161897,technique_timing
+Abrupt (bal.),1500,JSDDM,drift_detection,1.51092837494798,technique_timing
+Abrupt (bal.),2000,HDDDM,drift_detection,1.6955874999985099,technique_timing
+Abrupt (bal.),2000,KSDDM_95,drift_detection,4.084263291908428,technique_timing
+Abrupt (bal.),2000,KSDDM_90,drift_detection,4.107704332796857,technique_timing
+Abrupt (bal.),2000,JSDDM,drift_detection,1.565900166053325,technique_timing
+Abrupt (bal.),2500,HDDDM,drift_detection,1.399938500020653,technique_timing
+Abrupt (bal.),2500,KSDDM_95,drift_detection,3.9792690000031143,technique_timing
+Abrupt (bal.),2500,KSDDM_90,drift_detection,3.578344458946958,technique_timing
+Abrupt (bal.),2500,JSDDM,drift_detection,1.2378684161230922,technique_timing
+Incremental (bal.),1000,HDDDM,drift_detection,1.670617625117302,technique_timing
+Incremental (bal.),1000,KSDDM_95,drift_detection,4.069062291877344,technique_timing
+Incremental (bal.),1000,KSDDM_90,drift_detection,3.908872165950015,technique_timing
+Incremental (bal.),1000,JSDDM,drift_detection,1.407943750033155,technique_timing
+Incremental (bal.),1500,HDDDM,drift_detection,1.2998778340406716,technique_timing
+Incremental (bal.),1500,KSDDM_95,drift_detection,3.711041583912447,technique_timing
+Incremental (bal.),1500,KSDDM_90,drift_detection,3.733862957917154,technique_timing
+Incremental (bal.),1500,JSDDM,drift_detection,1.1437273330520838,technique_timing
+Incremental (bal.),2000,HDDDM,drift_detection,1.236588333034888,technique_timing
+Incremental (bal.),2000,KSDDM_95,drift_detection,3.339262542081997,technique_timing
+Incremental (bal.),2000,KSDDM_90,drift_detection,3.296863916097209,technique_timing
+Incremental (bal.),2000,JSDDM,drift_detection,1.0580569999292493,technique_timing
+Incremental (bal.),2500,HDDDM,drift_detection,1.1117107910104096,technique_timing
+Incremental (bal.),2500,KSDDM_95,drift_detection,3.166905874852091,technique_timing
+Incremental (bal.),2500,KSDDM_90,drift_detection,3.301734291948378,technique_timing
+Incremental (bal.),2500,JSDDM,drift_detection,0.9853783750440925,technique_timing
+Incremental (imbal.),1000,HDDDM,drift_detection,10.943721000105143,technique_timing
+Incremental (imbal.),1000,KSDDM_95,drift_detection,52.953084958018735,technique_timing
+Incremental (imbal.),1000,KSDDM_90,drift_detection,39.236272583017126,technique_timing
+Incremental (imbal.),1000,JSDDM,drift_detection,9.543364458018914,technique_timing
+Incremental (imbal.),1500,HDDDM,drift_detection,8.688650458818302,technique_timing
+Incremental (imbal.),1500,KSDDM_95,drift_detection,44.90666729095392,technique_timing
+Incremental (imbal.),1500,KSDDM_90,drift_detection,35.15101929195225,technique_timing
+Incremental (imbal.),1500,JSDDM,drift_detection,7.966379625024274,technique_timing
+Incremental (imbal.),2000,HDDDM,drift_detection,7.786286249989644,technique_timing
+Incremental (imbal.),2000,KSDDM_95,drift_detection,33.916287124855444,technique_timing
+Incremental (imbal.),2000,KSDDM_90,drift_detection,29.071093333885074,technique_timing
+Incremental (imbal.),2000,JSDDM,drift_detection,6.704727292060852,technique_timing
+Incremental (imbal.),2500,HDDDM,drift_detection,7.006552959093824,technique_timing
+Incremental (imbal.),2500,KSDDM_95,drift_detection,30.71995145897381,technique_timing
+Incremental (imbal.),2500,KSDDM_90,drift_detection,30.46693250001408,technique_timing
+Incremental (imbal.),2500,JSDDM,drift_detection,6.1483208341524005,technique_timing
+Incremental-gradual (bal.),1000,HDDDM,drift_detection,0.7555466671474278,technique_timing
+Incremental-gradual (bal.),1000,KSDDM_95,drift_detection,2.0432741658296436,technique_timing
+Incremental-gradual (bal.),1000,KSDDM_90,drift_detection,1.851820166921243,technique_timing
+Incremental-gradual (bal.),1000,JSDDM,drift_detection,0.699558167019859,technique_timing
+Incremental-gradual (bal.),1500,HDDDM,drift_detection,0.6823120000772178,technique_timing
+Incremental-gradual (bal.),1500,KSDDM_95,drift_detection,2.4414651659317315,technique_timing
+Incremental-gradual (bal.),1500,KSDDM_90,drift_detection,2.4469779999926686,technique_timing
+Incremental-gradual (bal.),1500,JSDDM,drift_detection,0.5832720419857651,technique_timing
+Incremental-gradual (bal.),2000,HDDDM,drift_detection,0.6363983328919858,technique_timing
+Incremental-gradual (bal.),2000,KSDDM_95,drift_detection,2.0387642909772694,technique_timing
+Incremental-gradual (bal.),2000,KSDDM_90,drift_detection,2.0441668750718236,technique_timing
+Incremental-gradual (bal.),2000,JSDDM,drift_detection,0.5673997078556567,technique_timing
+Incremental-gradual (bal.),2500,HDDDM,drift_detection,0.577668207930401,technique_timing
+Incremental-gradual (bal.),2500,KSDDM_95,drift_detection,2.220205208985135,technique_timing
+Incremental-gradual (bal.),2500,KSDDM_90,drift_detection,2.1865623749326915,technique_timing
+Incremental-gradual (bal.),2500,JSDDM,drift_detection,0.4946033749729395,technique_timing
+Incremental-gradual (imbal.),1000,HDDDM,drift_detection,3.3591385420877486,technique_timing
+Incremental-gradual (imbal.),1000,KSDDM_95,drift_detection,12.262183541897684,technique_timing
+Incremental-gradual (imbal.),1000,KSDDM_90,drift_detection,11.122663417132571,technique_timing
+Incremental-gradual (imbal.),1000,JSDDM,drift_detection,2.9144768328405917,technique_timing
+Incremental-gradual (imbal.),1500,HDDDM,drift_detection,2.8203644168097526,technique_timing
+Incremental-gradual (imbal.),1500,KSDDM_95,drift_detection,10.212234125006944,technique_timing
+Incremental-gradual (imbal.),1500,KSDDM_90,drift_detection,9.522740917047486,technique_timing
+Incremental-gradual (imbal.),1500,JSDDM,drift_detection,2.3900866250041872,technique_timing
+Incremental-gradual (imbal.),2000,HDDDM,drift_detection,2.496089833090082,technique_timing
+Incremental-gradual (imbal.),2000,KSDDM_95,drift_detection,9.519856709055603,technique_timing
+Incremental-gradual (imbal.),2000,KSDDM_90,drift_detection,9.091297500068322,technique_timing
+Incremental-gradual (imbal.),2000,JSDDM,drift_detection,2.229247083887458,technique_timing
+Incremental-gradual (imbal.),2500,HDDDM,drift_detection,2.2934037919621915,technique_timing
+Incremental-gradual (imbal.),2500,KSDDM_95,drift_detection,9.134958082810044,technique_timing
+Incremental-gradual (imbal.),2500,KSDDM_90,drift_detection,8.713383834110573,technique_timing
+Incremental-gradual (imbal.),2500,JSDDM,drift_detection,2.0835299999453127,technique_timing
+Incremental-abrupt-reoccurring (bal.),1000,HDDDM,drift_detection,1.2883835840038955,technique_timing
+Incremental-abrupt-reoccurring (bal.),1000,KSDDM_95,drift_detection,4.274809000082314,technique_timing
+Incremental-abrupt-reoccurring (bal.),1000,KSDDM_90,drift_detection,3.8237804579548538,technique_timing
+Incremental-abrupt-reoccurring (bal.),1000,JSDDM,drift_detection,1.399786707945168,technique_timing
+Incremental-abrupt-reoccurring (bal.),1500,HDDDM,drift_detection,1.2787789171561599,technique_timing
+Incremental-abrupt-reoccurring (bal.),1500,KSDDM_95,drift_detection,3.9384101249743253,technique_timing
+Incremental-abrupt-reoccurring (bal.),1500,KSDDM_90,drift_detection,3.1319507078733295,technique_timing
+Incremental-abrupt-reoccurring (bal.),1500,JSDDM,drift_detection,1.020531625021249,technique_timing
+Incremental-abrupt-reoccurring (bal.),2000,HDDDM,drift_detection,1.1050069169141352,technique_timing
+Incremental-abrupt-reoccurring (bal.),2000,KSDDM_95,drift_detection,4.247038625180721,technique_timing
+Incremental-abrupt-reoccurring (bal.),2000,KSDDM_90,drift_detection,4.143610999919474,technique_timing
+Incremental-abrupt-reoccurring (bal.),2000,JSDDM,drift_detection,0.9778947089798748,technique_timing
+Incremental-abrupt-reoccurring (bal.),2500,HDDDM,drift_detection,1.148838208988309,technique_timing
+Incremental-abrupt-reoccurring (bal.),2500,KSDDM_95,drift_detection,3.155752999940887,technique_timing
+Incremental-abrupt-reoccurring (bal.),2500,KSDDM_90,drift_detection,3.2647526250220835,technique_timing
+Incremental-abrupt-reoccurring (bal.),2500,JSDDM,drift_detection,0.9376805410720408,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1000,HDDDM,drift_detection,8.525599000044167,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1000,KSDDM_95,drift_detection,37.5973198749125,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1000,KSDDM_90,drift_detection,31.682372709037736,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1000,JSDDM,drift_detection,6.839105375111103,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1500,HDDDM,drift_detection,6.964799459092319,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1500,KSDDM_95,drift_detection,29.588956749998033,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1500,KSDDM_90,drift_detection,23.524563166080043,technique_timing
+Incremental-abrupt-reoccurring (imbal.),1500,JSDDM,drift_detection,5.757931583095342,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2000,HDDDM,drift_detection,6.0308706250507385,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2000,KSDDM_95,drift_detection,26.97325541707687,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2000,KSDDM_90,drift_detection,23.195015374803916,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2000,JSDDM,drift_detection,5.217072166968137,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2500,HDDDM,drift_detection,5.692364416085184,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2500,KSDDM_95,drift_detection,24.860090374946594,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2500,KSDDM_90,drift_detection,24.205874749924988,technique_timing
+Incremental-abrupt-reoccurring (imbal.),2500,JSDDM,drift_detection,5.114681791048497,technique_timing
+Incremental-reoccurring (bal.),1000,HDDDM,drift_detection,1.9618427911773324,technique_timing
+Incremental-reoccurring (bal.),1000,KSDDM_95,drift_detection,4.633762959158048,technique_timing
+Incremental-reoccurring (bal.),1000,KSDDM_90,drift_detection,4.341200042050332,technique_timing
+Incremental-reoccurring (bal.),1000,JSDDM,drift_detection,1.7494597921613604,technique_timing
+Incremental-reoccurring (bal.),1500,HDDDM,drift_detection,1.7178552921395749,technique_timing
+Incremental-reoccurring (bal.),1500,KSDDM_95,drift_detection,4.515047541819513,technique_timing
+Incremental-reoccurring (bal.),1500,KSDDM_90,drift_detection,4.03700820915401,technique_timing
+Incremental-reoccurring (bal.),1500,JSDDM,drift_detection,1.491524500073865,technique_timing
+Incremental-reoccurring (bal.),2000,HDDDM,drift_detection,1.562163749942556,technique_timing
+Incremental-reoccurring (bal.),2000,KSDDM_95,drift_detection,3.7251017910894006,technique_timing
+Incremental-reoccurring (bal.),2000,KSDDM_90,drift_detection,3.1216857079416513,technique_timing
+Incremental-reoccurring (bal.),2000,JSDDM,drift_detection,1.4284308329224586,technique_timing
+Incremental-reoccurring (bal.),2500,HDDDM,drift_detection,1.458124834112823,technique_timing
+Incremental-reoccurring (bal.),2500,KSDDM_95,drift_detection,4.529985249973834,technique_timing
+Incremental-reoccurring (bal.),2500,KSDDM_90,drift_detection,4.611889084102586,technique_timing
+Incremental-reoccurring (bal.),2500,JSDDM,drift_detection,1.291183500085026,technique_timing
+Incremental-reoccurring (imbal.),1000,HDDDM,drift_detection,9.813117458019406,technique_timing
+Incremental-reoccurring (imbal.),1000,KSDDM_95,drift_detection,35.28933545900509,technique_timing
+Incremental-reoccurring (imbal.),1000,KSDDM_90,drift_detection,32.80278295907192,technique_timing
+Incremental-reoccurring (imbal.),1000,JSDDM,drift_detection,8.661196915898472,technique_timing
+Incremental-reoccurring (imbal.),1500,HDDDM,drift_detection,8.435558666009456,technique_timing
+Incremental-reoccurring (imbal.),1500,KSDDM_95,drift_detection,29.229392000008374,technique_timing
+Incremental-reoccurring (imbal.),1500,KSDDM_90,drift_detection,27.121092916000634,technique_timing
+Incremental-reoccurring (imbal.),1500,JSDDM,drift_detection,7.368224250152707,technique_timing
+Incremental-reoccurring (imbal.),2000,HDDDM,drift_detection,7.792414875002578,technique_timing
+Incremental-reoccurring (imbal.),2000,KSDDM_95,drift_detection,29.399368499871343,technique_timing
+Incremental-reoccurring (imbal.),2000,KSDDM_90,drift_detection,27.971144834067672,technique_timing
+Incremental-reoccurring (imbal.),2000,JSDDM,drift_detection,6.614830208942294,technique_timing
+Incremental-reoccurring (imbal.),2500,HDDDM,drift_detection,7.263798624975607,technique_timing
+Incremental-reoccurring (imbal.),2500,KSDDM_95,drift_detection,27.046771791996434,technique_timing
+Incremental-reoccurring (imbal.),2500,KSDDM_90,drift_detection,25.458088249899447,technique_timing
+Incremental-reoccurring (imbal.),2500,JSDDM,drift_detection,6.226034166989848,technique_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,ALL,evaluation,0.8817492499947548,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1000,ALL,total,5.191827708855271,batch_total
+synthetic_dataset_with_parallel_drifts_abrupt,1500,ALL,evaluation,0.7916608329396695,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,1500,ALL,total,4.042580374749377,batch_total
+synthetic_dataset_with_parallel_drifts_abrupt,2000,ALL,evaluation,0.7368628750555217,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2000,ALL,total,3.5983136252034456,batch_total
+synthetic_dataset_with_parallel_drifts_abrupt,2500,ALL,evaluation,0.7191537918988615,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_abrupt,2500,ALL,total,4.013276333920658,batch_total
+synthetic_dataset_with_switching_drifts_incremental,1000,ALL,evaluation,0.9831168327946216,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,1000,ALL,total,4.255316832801327,batch_total
+synthetic_dataset_with_switching_drifts_incremental,1500,ALL,evaluation,0.8625240421388298,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,1500,ALL,total,3.5908280841540545,batch_total
+synthetic_dataset_with_switching_drifts_incremental,2000,ALL,evaluation,0.7983132919762284,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,2000,ALL,total,3.4983996259979904,batch_total
+synthetic_dataset_with_switching_drifts_incremental,2500,ALL,evaluation,0.7454417918343097,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_incremental,2500,ALL,total,3.10317466664128,batch_total
+synthetic_dataset_with_parallel_drifts_incremental,1000,ALL,evaluation,0.9274348749313504,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,1000,ALL,total,5.197472125058994,batch_total
+synthetic_dataset_with_parallel_drifts_incremental,1500,ALL,evaluation,0.9397920828778297,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,1500,ALL,total,4.201795082772151,batch_total
+synthetic_dataset_with_parallel_drifts_incremental,2000,ALL,evaluation,0.7740427090320736,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,2000,ALL,total,3.6083750010002404,batch_total
+synthetic_dataset_with_parallel_drifts_incremental,2500,ALL,evaluation,0.728304916061461,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_parallel_drifts_incremental,2500,ALL,total,3.78496216586791,batch_total
+synthetic_dataset_with_switching_drifts_abrupt,1000,ALL,evaluation,1.0328072090633214,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,1000,ALL,total,4.670460291905329,batch_total
+synthetic_dataset_with_switching_drifts_abrupt,1500,ALL,evaluation,0.8555959169752896,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,1500,ALL,total,3.7805871260352433,batch_total
+synthetic_dataset_with_switching_drifts_abrupt,2000,ALL,evaluation,0.8044275420252234,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,2000,ALL,total,3.8169126249849796,batch_total
+synthetic_dataset_with_switching_drifts_abrupt,2500,ALL,evaluation,0.737850375007838,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_with_switching_drifts_abrupt,2500,ALL,total,3.5606232909485698,batch_total
+synthetic_dataset_no_drifts,1000,ALL,evaluation,0.9277939589228481,phase_timing
+synthetic_dataset_no_drifts,1000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_no_drifts,1000,ALL,total,5.503672124817967,batch_total
+synthetic_dataset_no_drifts,1500,ALL,evaluation,0.8326873749028891,phase_timing
+synthetic_dataset_no_drifts,1500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_no_drifts,1500,ALL,total,4.637339666020125,batch_total
+synthetic_dataset_no_drifts,2000,ALL,evaluation,0.7569108339957893,phase_timing
+synthetic_dataset_no_drifts,2000,ALL,visualization,0.0,phase_timing
+synthetic_dataset_no_drifts,2000,ALL,total,3.9241952090524137,batch_total
+synthetic_dataset_no_drifts,2500,ALL,evaluation,0.693310750182718,phase_timing
+synthetic_dataset_no_drifts,2500,ALL,visualization,0.0,phase_timing
+synthetic_dataset_no_drifts,2500,ALL,total,3.6643124581314623,batch_total
+MULTISTAGGER,1000,ALL,evaluation,0.7959390410687774,phase_timing
+MULTISTAGGER,1000,ALL,visualization,0.0,phase_timing
+MULTISTAGGER,1000,ALL,total,2.942252706969157,batch_total
+MULTISTAGGER,1500,ALL,evaluation,0.7326615829952061,phase_timing
+MULTISTAGGER,1500,ALL,visualization,0.0,phase_timing
+MULTISTAGGER,1500,ALL,total,2.4461973330471665,batch_total
+MULTISTAGGER,2000,ALL,evaluation,0.6998312079813331,phase_timing
+MULTISTAGGER,2000,ALL,visualization,0.0,phase_timing
+MULTISTAGGER,2000,ALL,total,2.2937397081404924,batch_total
+MULTISTAGGER,2500,ALL,evaluation,0.6801870840135962,phase_timing
+MULTISTAGGER,2500,ALL,visualization,0.0,phase_timing
+MULTISTAGGER,2500,ALL,total,2.1675142091698945,batch_total
+MULTISEA,1000,ALL,evaluation,0.6611844170838594,phase_timing
+MULTISEA,1000,ALL,visualization,0.0,phase_timing
+MULTISEA,1000,ALL,total,2.9071971252560616,batch_total
+MULTISEA,1500,ALL,evaluation,0.6066887499764562,phase_timing
+MULTISEA,1500,ALL,visualization,0.0,phase_timing
+MULTISEA,1500,ALL,total,2.493974583921954,batch_total
+MULTISEA,2000,ALL,evaluation,0.6050997080747038,phase_timing
+MULTISEA,2000,ALL,visualization,0.0,phase_timing
+MULTISEA,2000,ALL,total,2.447098582983017,batch_total
+MULTISEA,2500,ALL,evaluation,0.5971414169762284,phase_timing
+MULTISEA,2500,ALL,visualization,0.0,phase_timing
+MULTISEA,2500,ALL,total,2.389821333112195,batch_total
+SEA,1000,ALL,evaluation,0.8274464590940624,phase_timing
+SEA,1000,ALL,visualization,0.0,phase_timing
+SEA,1000,ALL,total,3.2126855000387877,batch_total
+SEA,1500,ALL,evaluation,0.718711500056088,phase_timing
+SEA,1500,ALL,visualization,0.0,phase_timing
+SEA,1500,ALL,total,2.9119937079958618,batch_total
+SEA,2000,ALL,evaluation,0.7644593329168856,phase_timing
+SEA,2000,ALL,visualization,0.0,phase_timing
+SEA,2000,ALL,total,2.6888109159190208,batch_total
+SEA,2500,ALL,evaluation,0.6114417079370469,phase_timing
+SEA,2500,ALL,visualization,0.0,phase_timing
+SEA,2500,ALL,total,2.2255416659172624,batch_total
+STAGGER,1000,ALL,evaluation,0.8619866669178009,phase_timing
+STAGGER,1000,ALL,visualization,0.0,phase_timing
+STAGGER,1000,ALL,total,3.065450416877866,batch_total
+STAGGER,1500,ALL,evaluation,0.7830397910438478,phase_timing
+STAGGER,1500,ALL,visualization,0.0,phase_timing
+STAGGER,1500,ALL,total,2.6001438330858946,batch_total
+STAGGER,2000,ALL,evaluation,0.749079667031765,phase_timing
+STAGGER,2000,ALL,visualization,0.0,phase_timing
+STAGGER,2000,ALL,total,2.44877141690813,batch_total
+STAGGER,2500,ALL,evaluation,0.7459487500600517,phase_timing
+STAGGER,2500,ALL,visualization,0.0,phase_timing
+STAGGER,2500,ALL,total,2.2500225419644266,batch_total
+electricity,1000,ALL,evaluation,0.5327838328666985,phase_timing
+electricity,1000,ALL,visualization,0.0,phase_timing
+electricity,1000,ALL,total,2.6580628328956664,batch_total
+electricity,1500,ALL,evaluation,0.4536817080806941,phase_timing
+electricity,1500,ALL,visualization,0.0,phase_timing
+electricity,1500,ALL,total,2.234655249863863,batch_total
+electricity,2000,ALL,evaluation,0.4148781660478562,phase_timing
+electricity,2000,ALL,visualization,0.0,phase_timing
+electricity,2000,ALL,total,2.146383582148701,batch_total
+electricity,2500,ALL,evaluation,0.39682099991478026,phase_timing
+electricity,2500,ALL,visualization,0.0,phase_timing
+electricity,2500,ALL,total,2.0333845419809222,batch_total
+magic,1000,ALL,evaluation,0.25196429109200835,phase_timing
+magic,1000,ALL,visualization,0.0,phase_timing
+magic,1000,ALL,total,1.7565303740557283,batch_total
+magic,1500,ALL,evaluation,0.2242017921525985,phase_timing
+magic,1500,ALL,visualization,0.0,phase_timing
+magic,1500,ALL,total,1.5274007513653487,batch_total
+magic,2000,ALL,evaluation,0.23906395817175508,phase_timing
+magic,2000,ALL,visualization,0.0,phase_timing
+magic,2000,ALL,total,1.4237162920180708,batch_total
+magic,2500,ALL,evaluation,0.21352329198271036,phase_timing
+magic,2500,ALL,visualization,0.0,phase_timing
+magic,2500,ALL,total,1.4341904169414192,batch_total
+Abrupt (imbal.),1000,ALL,evaluation,25.59862699988298,phase_timing
+Abrupt (imbal.),1000,ALL,visualization,0.0,phase_timing
+Abrupt (imbal.),1000,ALL,total,115.50409737508744,batch_total
+Abrupt (imbal.),1500,ALL,evaluation,26.417459500022233,phase_timing
+Abrupt (imbal.),1500,ALL,visualization,0.0,phase_timing
+Abrupt (imbal.),1500,ALL,total,99.00851800013334,batch_total
+Abrupt (imbal.),2000,ALL,evaluation,28.141966165974736,phase_timing
+Abrupt (imbal.),2000,ALL,visualization,0.0,phase_timing
+Abrupt (imbal.),2000,ALL,total,97.59777579084039,batch_total
+Abrupt (imbal.),2500,ALL,evaluation,25.28303137491457,phase_timing
+Abrupt (imbal.),2500,ALL,visualization,0.0,phase_timing
+Abrupt (imbal.),2500,ALL,total,95.78569912491366,batch_total
+Abrupt (bal.),1000,ALL,evaluation,4.315301374997944,phase_timing
+Abrupt (bal.),1000,ALL,visualization,0.0,phase_timing
+Abrupt (bal.),1000,ALL,total,17.462782958056778,batch_total
+Abrupt (bal.),1500,ALL,evaluation,4.845908709103242,phase_timing
+Abrupt (bal.),1500,ALL,visualization,0.0,phase_timing
+Abrupt (bal.),1500,ALL,total,16.670139542082325,batch_total
+Abrupt (bal.),2000,ALL,evaluation,4.464955999981612,phase_timing
+Abrupt (bal.),2000,ALL,visualization,0.0,phase_timing
+Abrupt (bal.),2000,ALL,total,15.918504209024832,batch_total
+Abrupt (bal.),2500,ALL,evaluation,4.380960416980088,phase_timing
+Abrupt (bal.),2500,ALL,visualization,0.0,phase_timing
+Abrupt (bal.),2500,ALL,total,14.576458208961412,batch_total
+Incremental (bal.),1000,ALL,evaluation,3.006366250105202,phase_timing
+Incremental (bal.),1000,ALL,visualization,0.0,phase_timing
+Incremental (bal.),1000,ALL,total,14.062949458137155,batch_total
+Incremental (bal.),1500,ALL,evaluation,3.662406791932881,phase_timing
+Incremental (bal.),1500,ALL,visualization,0.0,phase_timing
+Incremental (bal.),1500,ALL,total,13.551010416820645,batch_total
+Incremental (bal.),2000,ALL,evaluation,3.3145996669773012,phase_timing
+Incremental (bal.),2000,ALL,visualization,0.0,phase_timing
+Incremental (bal.),2000,ALL,total,12.245455208001658,batch_total
+Incremental (bal.),2500,ALL,evaluation,3.2577412920072675,phase_timing
+Incremental (bal.),2500,ALL,visualization,0.0,phase_timing
+Incremental (bal.),2500,ALL,total,11.823559417156503,batch_total
+Incremental (imbal.),1000,ALL,evaluation,24.615699499845505,phase_timing
+Incremental (imbal.),1000,ALL,visualization,0.0,phase_timing
+Incremental (imbal.),1000,ALL,total,137.292249500053,batch_total
+Incremental (imbal.),1500,ALL,evaluation,25.036896291887388,phase_timing
+Incremental (imbal.),1500,ALL,visualization,0.0,phase_timing
+Incremental (imbal.),1500,ALL,total,121.74971925094724,batch_total
+Incremental (imbal.),2000,ALL,evaluation,24.265158167108893,phase_timing
+Incremental (imbal.),2000,ALL,visualization,0.0,phase_timing
+Incremental (imbal.),2000,ALL,total,101.74368537520058,batch_total
+Incremental (imbal.),2500,ALL,evaluation,23.737652708077803,phase_timing
+Incremental (imbal.),2500,ALL,visualization,0.0,phase_timing
+Incremental (imbal.),2500,ALL,total,98.0795447921846,batch_total
+Incremental-gradual (bal.),1000,ALL,evaluation,1.27424362488091,phase_timing
+Incremental-gradual (bal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-gradual (bal.),1000,ALL,total,6.624528208049014,batch_total
+Incremental-gradual (bal.),1500,ALL,evaluation,1.5915387079585344,phase_timing
+Incremental-gradual (bal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-gradual (bal.),1500,ALL,total,7.745653123827651,batch_total
+Incremental-gradual (bal.),2000,ALL,evaluation,1.4912222500424832,phase_timing
+Incremental-gradual (bal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-gradual (bal.),2000,ALL,total,6.7780266660265625,batch_total
+Incremental-gradual (bal.),2500,ALL,evaluation,1.5088504999876022,phase_timing
+Incremental-gradual (bal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-gradual (bal.),2500,ALL,total,6.987971500027925,batch_total
+Incremental-gradual (imbal.),1000,ALL,evaluation,7.686583041911945,phase_timing
+Incremental-gradual (imbal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-gradual (imbal.),1000,ALL,total,37.345131624955684,batch_total
+Incremental-gradual (imbal.),1500,ALL,evaluation,7.96078283386305,phase_timing
+Incremental-gradual (imbal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-gradual (imbal.),1500,ALL,total,32.90629820898175,batch_total
+Incremental-gradual (imbal.),2000,ALL,evaluation,7.961924665840343,phase_timing
+Incremental-gradual (imbal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-gradual (imbal.),2000,ALL,total,31.298493748996407,batch_total
+Incremental-gradual (imbal.),2500,ALL,evaluation,7.9280640000943094,phase_timing
+Incremental-gradual (imbal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-gradual (imbal.),2500,ALL,total,30.153416916029528,batch_total
+Incremental-abrupt-reoccurring (bal.),1000,ALL,evaluation,2.9346698340959847,phase_timing
+Incremental-abrupt-reoccurring (bal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (bal.),1000,ALL,total,13.721525000175461,batch_total
+Incremental-abrupt-reoccurring (bal.),1500,ALL,evaluation,3.5589341251179576,phase_timing
+Incremental-abrupt-reoccurring (bal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (bal.),1500,ALL,total,12.92868229211308,batch_total
+Incremental-abrupt-reoccurring (bal.),2000,ALL,evaluation,3.1587886661291122,phase_timing
+Incremental-abrupt-reoccurring (bal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (bal.),2000,ALL,total,13.632421916117892,batch_total
+Incremental-abrupt-reoccurring (bal.),2500,ALL,evaluation,3.069457583129406,phase_timing
+Incremental-abrupt-reoccurring (bal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (bal.),2500,ALL,total,11.576567250071093,batch_total
+Incremental-abrupt-reoccurring (imbal.),1000,ALL,evaluation,19.194580791983753,phase_timing
+Incremental-abrupt-reoccurring (imbal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (imbal.),1000,ALL,total,103.83906616689637,batch_total
+Incremental-abrupt-reoccurring (imbal.),1500,ALL,evaluation,19.87652491615154,phase_timing
+Incremental-abrupt-reoccurring (imbal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (imbal.),1500,ALL,total,85.71286312513985,batch_total
+Incremental-abrupt-reoccurring (imbal.),2000,ALL,evaluation,19.668198791798204,phase_timing
+Incremental-abrupt-reoccurring (imbal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (imbal.),2000,ALL,total,81.0845046248287,batch_total
+Incremental-abrupt-reoccurring (imbal.),2500,ALL,evaluation,19.01362400013022,phase_timing
+Incremental-abrupt-reoccurring (imbal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-abrupt-reoccurring (imbal.),2500,ALL,total,78.88672566600144,batch_total
+Incremental-reoccurring (bal.),1000,ALL,evaluation,4.316935084061697,phase_timing
+Incremental-reoccurring (bal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (bal.),1000,ALL,total,17.003290209220722,batch_total
+Incremental-reoccurring (bal.),1500,ALL,evaluation,5.067086667055264,phase_timing
+Incremental-reoccurring (bal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (bal.),1500,ALL,total,16.828612125944346,batch_total
+Incremental-reoccurring (bal.),2000,ALL,evaluation,4.721581042045727,phase_timing
+Incremental-reoccurring (bal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (bal.),2000,ALL,total,14.55904099997133,batch_total
+Incremental-reoccurring (bal.),2500,ALL,evaluation,4.710127209080383,phase_timing
+Incremental-reoccurring (bal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (bal.),2500,ALL,total,16.601416709134355,batch_total
+Incremental-reoccurring (imbal.),1000,ALL,evaluation,25.547611665911973,phase_timing
+Incremental-reoccurring (imbal.),1000,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (imbal.),1000,ALL,total,112.11416883184575,batch_total
+Incremental-reoccurring (imbal.),1500,ALL,evaluation,26.925910709192976,phase_timing
+Incremental-reoccurring (imbal.),1500,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (imbal.),1500,ALL,total,99.08027745923027,batch_total
+Incremental-reoccurring (imbal.),2000,ALL,evaluation,25.779765042010695,phase_timing
+Incremental-reoccurring (imbal.),2000,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (imbal.),2000,ALL,total,97.55763904214837,batch_total
+Incremental-reoccurring (imbal.),2500,ALL,evaluation,25.0810708750505,phase_timing
+Incremental-reoccurring (imbal.),2500,ALL,visualization,0.0,phase_timing
+Incremental-reoccurring (imbal.),2500,ALL,total,91.07586208404973,batch_total
+ALL,ALL,HDDDM,drift_detection,2.158357182611889,technique_avg
+ALL,ALL,KSDDM_95,drift_detection,8.097768109618864,technique_avg
+ALL,ALL,KSDDM_90,drift_detection,7.297740114129348,technique_avg
+ALL,ALL,JSDDM,drift_detection,1.8793085352240486,technique_avg

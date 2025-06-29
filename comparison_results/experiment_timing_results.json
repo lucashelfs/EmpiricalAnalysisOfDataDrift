@@ -1,0 +1,3701 @@
+{
+    "experiment_metadata": {
+        "start_time": "2025-06-29T14:15:08.925271",
+        "datasets_processed": 21,
+        "total_duration": 2794.011161417002,
+        "end_time": "2025-06-29T15:01:49.620274"
+    },
+    "dataset_timings": {
+        "synthetic_dataset_with_parallel_drifts_abrupt": {
+            "total_time": 16.845998042728752,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 4.3100784588605165,
+                    "evaluation": 0.8817492499947548,
+                    "visualization": 0.0,
+                    "total": 5.191827708855271
+                },
+                "1500": {
+                    "drift_detection": 3.250919541809708,
+                    "evaluation": 0.7916608329396695,
+                    "visualization": 0.0,
+                    "total": 4.042580374749377
+                },
+                "2000": {
+                    "drift_detection": 2.861450750147924,
+                    "evaluation": 0.7368628750555217,
+                    "visualization": 0.0,
+                    "total": 3.5983136252034456
+                },
+                "2500": {
+                    "drift_detection": 3.294122542021796,
+                    "evaluation": 0.7191537918988615,
+                    "visualization": 0.0,
+                    "total": 4.013276333920658
+                }
+            },
+            "phases": {}
+        },
+        "synthetic_dataset_with_switching_drifts_incremental": {
+            "total_time": 14.447719209594652,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 3.2722000000067055,
+                    "evaluation": 0.9831168327946216,
+                    "visualization": 0.0,
+                    "total": 4.255316832801327
+                },
+                "1500": {
+                    "drift_detection": 2.7283040420152247,
+                    "evaluation": 0.8625240421388298,
+                    "visualization": 0.0,
+                    "total": 3.5908280841540545
+                },
+                "2000": {
+                    "drift_detection": 2.700086334021762,
+                    "evaluation": 0.7983132919762284,
+                    "visualization": 0.0,
+                    "total": 3.4983996259979904
+                },
+                "2500": {
+                    "drift_detection": 2.3577328748069704,
+                    "evaluation": 0.7454417918343097,
+                    "visualization": 0.0,
+                    "total": 3.10317466664128
+                }
+            },
+            "phases": {}
+        },
+        "synthetic_dataset_with_parallel_drifts_incremental": {
+            "total_time": 16.792604374699295,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 4.270037250127643,
+                    "evaluation": 0.9274348749313504,
+                    "visualization": 0.0,
+                    "total": 5.197472125058994
+                },
+                "1500": {
+                    "drift_detection": 3.262002999894321,
+                    "evaluation": 0.9397920828778297,
+                    "visualization": 0.0,
+                    "total": 4.201795082772151
+                },
+                "2000": {
+                    "drift_detection": 2.834332291968167,
+                    "evaluation": 0.7740427090320736,
+                    "visualization": 0.0,
+                    "total": 3.6083750010002404
+                },
+                "2500": {
+                    "drift_detection": 3.056657249806449,
+                    "evaluation": 0.728304916061461,
+                    "visualization": 0.0,
+                    "total": 3.78496216586791
+                }
+            },
+            "phases": {}
+        },
+        "synthetic_dataset_with_switching_drifts_abrupt": {
+            "total_time": 15.828583333874121,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 3.6376530828420073,
+                    "evaluation": 1.0328072090633214,
+                    "visualization": 0.0,
+                    "total": 4.670460291905329
+                },
+                "1500": {
+                    "drift_detection": 2.9249912090599537,
+                    "evaluation": 0.8555959169752896,
+                    "visualization": 0.0,
+                    "total": 3.7805871260352433
+                },
+                "2000": {
+                    "drift_detection": 3.0124850829597563,
+                    "evaluation": 0.8044275420252234,
+                    "visualization": 0.0,
+                    "total": 3.8169126249849796
+                },
+                "2500": {
+                    "drift_detection": 2.8227729159407318,
+                    "evaluation": 0.737850375007838,
+                    "visualization": 0.0,
+                    "total": 3.5606232909485698
+                }
+            },
+            "phases": {}
+        },
+        "synthetic_dataset_no_drifts": {
+            "total_time": 17.72951945802197,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 4.575878165895119,
+                    "evaluation": 0.9277939589228481,
+                    "visualization": 0.0,
+                    "total": 5.503672124817967
+                },
+                "1500": {
+                    "drift_detection": 3.804652291117236,
+                    "evaluation": 0.8326873749028891,
+                    "visualization": 0.0,
+                    "total": 4.637339666020125
+                },
+                "2000": {
+                    "drift_detection": 3.1672843750566244,
+                    "evaluation": 0.7569108339957893,
+                    "visualization": 0.0,
+                    "total": 3.9241952090524137
+                },
+                "2500": {
+                    "drift_detection": 2.9710017079487443,
+                    "evaluation": 0.693310750182718,
+                    "visualization": 0.0,
+                    "total": 3.6643124581314623
+                }
+            },
+            "phases": {}
+        },
+        "MULTISTAGGER": {
+            "total_time": 9.84970395732671,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 2.1463136659003794,
+                    "evaluation": 0.7959390410687774,
+                    "visualization": 0.0,
+                    "total": 2.942252706969157
+                },
+                "1500": {
+                    "drift_detection": 1.7135357500519603,
+                    "evaluation": 0.7326615829952061,
+                    "visualization": 0.0,
+                    "total": 2.4461973330471665
+                },
+                "2000": {
+                    "drift_detection": 1.5939085001591593,
+                    "evaluation": 0.6998312079813331,
+                    "visualization": 0.0,
+                    "total": 2.2937397081404924
+                },
+                "2500": {
+                    "drift_detection": 1.4873271251562983,
+                    "evaluation": 0.6801870840135962,
+                    "visualization": 0.0,
+                    "total": 2.1675142091698945
+                }
+            },
+            "phases": {}
+        },
+        "MULTISEA": {
+            "total_time": 10.238091625273228,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 2.246012708172202,
+                    "evaluation": 0.6611844170838594,
+                    "visualization": 0.0,
+                    "total": 2.9071971252560616
+                },
+                "1500": {
+                    "drift_detection": 1.8872858339454979,
+                    "evaluation": 0.6066887499764562,
+                    "visualization": 0.0,
+                    "total": 2.493974583921954
+                },
+                "2000": {
+                    "drift_detection": 1.8419988749083132,
+                    "evaluation": 0.6050997080747038,
+                    "visualization": 0.0,
+                    "total": 2.447098582983017
+                },
+                "2500": {
+                    "drift_detection": 1.7926799161359668,
+                    "evaluation": 0.5971414169762284,
+                    "visualization": 0.0,
+                    "total": 2.389821333112195
+                }
+            },
+            "phases": {}
+        },
+        "SEA": {
+            "total_time": 11.039031789870933,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 2.3852390409447253,
+                    "evaluation": 0.8274464590940624,
+                    "visualization": 0.0,
+                    "total": 3.2126855000387877
+                },
+                "1500": {
+                    "drift_detection": 2.193282207939774,
+                    "evaluation": 0.718711500056088,
+                    "visualization": 0.0,
+                    "total": 2.9119937079958618
+                },
+                "2000": {
+                    "drift_detection": 1.9243515830021352,
+                    "evaluation": 0.7644593329168856,
+                    "visualization": 0.0,
+                    "total": 2.6888109159190208
+                },
+                "2500": {
+                    "drift_detection": 1.6140999579802155,
+                    "evaluation": 0.6114417079370469,
+                    "visualization": 0.0,
+                    "total": 2.2255416659172624
+                }
+            },
+            "phases": {}
+        },
+        "STAGGER": {
+            "total_time": 10.364388208836317,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 2.203463749960065,
+                    "evaluation": 0.8619866669178009,
+                    "visualization": 0.0,
+                    "total": 3.065450416877866
+                },
+                "1500": {
+                    "drift_detection": 1.8171040420420468,
+                    "evaluation": 0.7830397910438478,
+                    "visualization": 0.0,
+                    "total": 2.6001438330858946
+                },
+                "2000": {
+                    "drift_detection": 1.699691749876365,
+                    "evaluation": 0.749079667031765,
+                    "visualization": 0.0,
+                    "total": 2.44877141690813
+                },
+                "2500": {
+                    "drift_detection": 1.504073791904375,
+                    "evaluation": 0.7459487500600517,
+                    "visualization": 0.0,
+                    "total": 2.2500225419644266
+                }
+            },
+            "phases": {}
+        },
+        "electricity": {
+            "total_time": 9.072486206889153,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 2.125279000028968,
+                    "evaluation": 0.5327838328666985,
+                    "visualization": 0.0,
+                    "total": 2.6580628328956664
+                },
+                "1500": {
+                    "drift_detection": 1.780973541783169,
+                    "evaluation": 0.4536817080806941,
+                    "visualization": 0.0,
+                    "total": 2.234655249863863
+                },
+                "2000": {
+                    "drift_detection": 1.7315054161008447,
+                    "evaluation": 0.4148781660478562,
+                    "visualization": 0.0,
+                    "total": 2.146383582148701
+                },
+                "2500": {
+                    "drift_detection": 1.636563542066142,
+                    "evaluation": 0.39682099991478026,
+                    "visualization": 0.0,
+                    "total": 2.0333845419809222
+                }
+            },
+            "phases": {}
+        },
+        "magic": {
+            "total_time": 6.141837834380567,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 1.50456608296372,
+                    "evaluation": 0.25196429109200835,
+                    "visualization": 0.0,
+                    "total": 1.7565303740557283
+                },
+                "1500": {
+                    "drift_detection": 1.3031989592127502,
+                    "evaluation": 0.2242017921525985,
+                    "visualization": 0.0,
+                    "total": 1.5274007513653487
+                },
+                "2000": {
+                    "drift_detection": 1.1846523338463157,
+                    "evaluation": 0.23906395817175508,
+                    "visualization": 0.0,
+                    "total": 1.4237162920180708
+                },
+                "2500": {
+                    "drift_detection": 1.2206671249587089,
+                    "evaluation": 0.21352329198271036,
+                    "visualization": 0.0,
+                    "total": 1.4341904169414192
+                }
+            },
+            "phases": {}
+        },
+        "Abrupt (imbal.)": {
+            "total_time": 407.8960902909748,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 89.90547037520446,
+                    "evaluation": 25.59862699988298,
+                    "visualization": 0.0,
+                    "total": 115.50409737508744
+                },
+                "1500": {
+                    "drift_detection": 72.5910585001111,
+                    "evaluation": 26.417459500022233,
+                    "visualization": 0.0,
+                    "total": 99.00851800013334
+                },
+                "2000": {
+                    "drift_detection": 69.45580962486565,
+                    "evaluation": 28.141966165974736,
+                    "visualization": 0.0,
+                    "total": 97.59777579084039
+                },
+                "2500": {
+                    "drift_detection": 70.50266774999909,
+                    "evaluation": 25.28303137491457,
+                    "visualization": 0.0,
+                    "total": 95.78569912491366
+                }
+            },
+            "phases": {}
+        },
+        "Abrupt (bal.)": {
+            "total_time": 64.62788491812535,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 13.147481583058834,
+                    "evaluation": 4.315301374997944,
+                    "visualization": 0.0,
+                    "total": 17.462782958056778
+                },
+                "1500": {
+                    "drift_detection": 11.824230832979083,
+                    "evaluation": 4.845908709103242,
+                    "visualization": 0.0,
+                    "total": 16.670139542082325
+                },
+                "2000": {
+                    "drift_detection": 11.45354820904322,
+                    "evaluation": 4.464955999981612,
+                    "visualization": 0.0,
+                    "total": 15.918504209024832
+                },
+                "2500": {
+                    "drift_detection": 10.195497791981325,
+                    "evaluation": 4.380960416980088,
+                    "visualization": 0.0,
+                    "total": 14.576458208961412
+                }
+            },
+            "phases": {}
+        },
+        "Incremental (bal.)": {
+            "total_time": 51.68297450011596,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 11.056583208031952,
+                    "evaluation": 3.006366250105202,
+                    "visualization": 0.0,
+                    "total": 14.062949458137155
+                },
+                "1500": {
+                    "drift_detection": 9.888603624887764,
+                    "evaluation": 3.662406791932881,
+                    "visualization": 0.0,
+                    "total": 13.551010416820645
+                },
+                "2000": {
+                    "drift_detection": 8.930855541024357,
+                    "evaluation": 3.3145996669773012,
+                    "visualization": 0.0,
+                    "total": 12.245455208001658
+                },
+                "2500": {
+                    "drift_detection": 8.565818125149235,
+                    "evaluation": 3.2577412920072675,
+                    "visualization": 0.0,
+                    "total": 11.823559417156503
+                }
+            },
+            "phases": {}
+        },
+        "Incremental (imbal.)": {
+            "total_time": 458.86519891838543,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 112.6765500002075,
+                    "evaluation": 24.615699499845505,
+                    "visualization": 0.0,
+                    "total": 137.292249500053
+                },
+                "1500": {
+                    "drift_detection": 96.71282295905985,
+                    "evaluation": 25.036896291887388,
+                    "visualization": 0.0,
+                    "total": 121.74971925094724
+                },
+                "2000": {
+                    "drift_detection": 77.47852720809169,
+                    "evaluation": 24.265158167108893,
+                    "visualization": 0.0,
+                    "total": 101.74368537520058
+                },
+                "2500": {
+                    "drift_detection": 74.3418920841068,
+                    "evaluation": 23.737652708077803,
+                    "visualization": 0.0,
+                    "total": 98.0795447921846
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-gradual (bal.)": {
+            "total_time": 28.136179497931153,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 5.350284583168104,
+                    "evaluation": 1.27424362488091,
+                    "visualization": 0.0,
+                    "total": 6.624528208049014
+                },
+                "1500": {
+                    "drift_detection": 6.154114415869117,
+                    "evaluation": 1.5915387079585344,
+                    "visualization": 0.0,
+                    "total": 7.745653123827651
+                },
+                "2000": {
+                    "drift_detection": 5.286804415984079,
+                    "evaluation": 1.4912222500424832,
+                    "visualization": 0.0,
+                    "total": 6.7780266660265625
+                },
+                "2500": {
+                    "drift_detection": 5.4791210000403225,
+                    "evaluation": 1.5088504999876022,
+                    "visualization": 0.0,
+                    "total": 6.987971500027925
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-gradual (imbal.)": {
+            "total_time": 131.70334049896337,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 29.65854858304374,
+                    "evaluation": 7.686583041911945,
+                    "visualization": 0.0,
+                    "total": 37.345131624955684
+                },
+                "1500": {
+                    "drift_detection": 24.945515375118703,
+                    "evaluation": 7.96078283386305,
+                    "visualization": 0.0,
+                    "total": 32.90629820898175
+                },
+                "2000": {
+                    "drift_detection": 23.336569083156064,
+                    "evaluation": 7.961924665840343,
+                    "visualization": 0.0,
+                    "total": 31.298493748996407
+                },
+                "2500": {
+                    "drift_detection": 22.22535291593522,
+                    "evaluation": 7.9280640000943094,
+                    "visualization": 0.0,
+                    "total": 30.153416916029528
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-abrupt-reoccurring (bal.)": {
+            "total_time": 51.85919645847753,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 10.786855166079476,
+                    "evaluation": 2.9346698340959847,
+                    "visualization": 0.0,
+                    "total": 13.721525000175461
+                },
+                "1500": {
+                    "drift_detection": 9.369748166995123,
+                    "evaluation": 3.5589341251179576,
+                    "visualization": 0.0,
+                    "total": 12.92868229211308
+                },
+                "2000": {
+                    "drift_detection": 10.47363324998878,
+                    "evaluation": 3.1587886661291122,
+                    "visualization": 0.0,
+                    "total": 13.632421916117892
+                },
+                "2500": {
+                    "drift_detection": 8.507109666941687,
+                    "evaluation": 3.069457583129406,
+                    "visualization": 0.0,
+                    "total": 11.576567250071093
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-abrupt-reoccurring (imbal.)": {
+            "total_time": 349.52315958286636,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 84.64448537491262,
+                    "evaluation": 19.194580791983753,
+                    "visualization": 0.0,
+                    "total": 103.83906616689637
+                },
+                "1500": {
+                    "drift_detection": 65.83633820898831,
+                    "evaluation": 19.87652491615154,
+                    "visualization": 0.0,
+                    "total": 85.71286312513985
+                },
+                "2000": {
+                    "drift_detection": 61.41630583303049,
+                    "evaluation": 19.668198791798204,
+                    "visualization": 0.0,
+                    "total": 81.0845046248287
+                },
+                "2500": {
+                    "drift_detection": 59.87310166587122,
+                    "evaluation": 19.01362400013022,
+                    "visualization": 0.0,
+                    "total": 78.88672566600144
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-reoccurring (bal.)": {
+            "total_time": 64.99236004427075,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 12.686355125159025,
+                    "evaluation": 4.316935084061697,
+                    "visualization": 0.0,
+                    "total": 17.003290209220722
+                },
+                "1500": {
+                    "drift_detection": 11.761525458889082,
+                    "evaluation": 5.067086667055264,
+                    "visualization": 0.0,
+                    "total": 16.828612125944346
+                },
+                "2000": {
+                    "drift_detection": 9.837459957925603,
+                    "evaluation": 4.721581042045727,
+                    "visualization": 0.0,
+                    "total": 14.55904099997133
+                },
+                "2500": {
+                    "drift_detection": 11.891289500053972,
+                    "evaluation": 4.710127209080383,
+                    "visualization": 0.0,
+                    "total": 16.601416709134355
+                }
+            },
+            "phases": {}
+        },
+        "Incremental-reoccurring (imbal.)": {
+            "total_time": 399.8279474172741,
+            "batch_timings": {
+                "1000": {
+                    "drift_detection": 86.56655716593377,
+                    "evaluation": 25.547611665911973,
+                    "visualization": 0.0,
+                    "total": 112.11416883184575
+                },
+                "1500": {
+                    "drift_detection": 72.1543667500373,
+                    "evaluation": 26.925910709192976,
+                    "visualization": 0.0,
+                    "total": 99.08027745923027
+                },
+                "2000": {
+                    "drift_detection": 71.77787400013767,
+                    "evaluation": 25.779765042010695,
+                    "visualization": 0.0,
+                    "total": 97.55763904214837
+                },
+                "2500": {
+                    "drift_detection": 65.99479120899923,
+                    "evaluation": 25.0810708750505,
+                    "visualization": 0.0,
+                    "total": 91.07586208404973
+                }
+            },
+            "phases": {}
+        }
+    },
+    "technique_performance": {
+        "HDDDM": {
+            "total_time": 181.30200333939865,
+            "executions": 84,
+            "avg_time": 2.158357182611889,
+            "details": [
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 0.4163659999612719,
+                    "timestamp": "2025-06-29T14:15:20.076935"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 0.35089304205030203,
+                    "timestamp": "2025-06-29T14:15:36.006211"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 0.3877577499952167,
+                    "timestamp": "2025-06-29T14:15:50.908111"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 0.2665492920204997,
+                    "timestamp": "2025-06-29T14:16:05.176727"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 0.43382683396339417,
+                    "timestamp": "2025-06-29T14:16:28.524868"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 0.3608539591077715,
+                    "timestamp": "2025-06-29T14:16:45.655512"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 0.3247641669586301,
+                    "timestamp": "2025-06-29T14:17:02.285281"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.2973822499625385,
+                    "timestamp": "2025-06-29T14:17:18.971614"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 0.44385958299972117,
+                    "timestamp": "2025-06-29T14:17:41.749313"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 0.4109600828960538,
+                    "timestamp": "2025-06-29T14:17:59.649095"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 0.2977922500576824,
+                    "timestamp": "2025-06-29T14:18:16.976949"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.3706315839663148,
+                    "timestamp": "2025-06-29T14:18:33.951966"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 0.5384356670547277,
+                    "timestamp": "2025-06-29T14:18:55.375594"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 0.4317551248241216,
+                    "timestamp": "2025-06-29T14:19:10.806060"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 0.3371810419484973,
+                    "timestamp": "2025-06-29T14:19:25.433340"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 0.27324787504039705,
+                    "timestamp": "2025-06-29T14:19:40.165197"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1000,
+                    "duration": 0.41525420802645385,
+                    "timestamp": "2025-06-29T14:20:02.153990"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1500,
+                    "duration": 0.34378354204818606,
+                    "timestamp": "2025-06-29T14:20:20.250980"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2000,
+                    "duration": 0.2992256670258939,
+                    "timestamp": "2025-06-29T14:20:37.319320"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2500,
+                    "duration": 0.27227929211221635,
+                    "timestamp": "2025-06-29T14:20:53.667119"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.342782957945019,
+                    "timestamp": "2025-06-29T14:21:04.107275"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.27952899993397295,
+                    "timestamp": "2025-06-29T14:21:07.081923"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.2797334580682218,
+                    "timestamp": "2025-06-29T14:21:09.621313"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.25998854101635516,
+                    "timestamp": "2025-06-29T14:21:11.993494"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1000,
+                    "duration": 0.2905644169077277,
+                    "timestamp": "2025-06-29T14:21:23.116625"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1500,
+                    "duration": 0.2522237920202315,
+                    "timestamp": "2025-06-29T14:21:26.084723"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2000,
+                    "duration": 0.23925995803438127,
+                    "timestamp": "2025-06-29T14:21:28.661876"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2500,
+                    "duration": 0.2975644578691572,
+                    "timestamp": "2025-06-29T14:21:31.262521"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1000,
+                    "duration": 0.34008733299560845,
+                    "timestamp": "2025-06-29T14:21:42.262485"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1500,
+                    "duration": 0.3029638750012964,
+                    "timestamp": "2025-06-29T14:21:45.538148"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2000,
+                    "duration": 0.27114133397117257,
+                    "timestamp": "2025-06-29T14:21:48.528544"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2500,
+                    "duration": 0.2450233749113977,
+                    "timestamp": "2025-06-29T14:21:51.294258"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.3834562909323722,
+                    "timestamp": "2025-06-29T14:22:02.281389"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.3023395410273224,
+                    "timestamp": "2025-06-29T14:22:05.364487"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.29269049991853535,
+                    "timestamp": "2025-06-29T14:22:08.051572"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.2711826250888407,
+                    "timestamp": "2025-06-29T14:22:10.571208"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1000,
+                    "duration": 0.3597950420808047,
+                    "timestamp": "2025-06-29T14:22:21.966730"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1500,
+                    "duration": 0.30423112493008375,
+                    "timestamp": "2025-06-29T14:22:24.665995"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2000,
+                    "duration": 0.2982971251476556,
+                    "timestamp": "2025-06-29T14:22:26.986849"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2500,
+                    "duration": 0.2835588329471648,
+                    "timestamp": "2025-06-29T14:22:29.208346"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1000,
+                    "duration": 0.2546075419522822,
+                    "timestamp": "2025-06-29T14:22:34.238999"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1500,
+                    "duration": 0.20809533400461078,
+                    "timestamp": "2025-06-29T14:22:36.037308"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2000,
+                    "duration": 0.1898040419910103,
+                    "timestamp": "2025-06-29T14:22:37.632472"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2500,
+                    "duration": 0.19411404198035598,
+                    "timestamp": "2025-06-29T14:22:39.145528"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 10.408986499998719,
+                    "timestamp": "2025-06-29T14:22:56.961841"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 8.532291749957949,
+                    "timestamp": "2025-06-29T14:24:50.695510"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 7.602170333033428,
+                    "timestamp": "2025-06-29T14:26:28.876961"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 8.21690116589889,
+                    "timestamp": "2025-06-29T14:28:07.195029"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1000,
+                    "duration": 2.0555284589063376,
+                    "timestamp": "2025-06-29T14:30:22.130899"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.9703209169674665,
+                    "timestamp": "2025-06-29T14:30:39.606557"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.6955874999985099,
+                    "timestamp": "2025-06-29T14:30:56.102957"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.399938500020653,
+                    "timestamp": "2025-06-29T14:31:11.823760"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.670617625117302,
+                    "timestamp": "2025-06-29T14:31:52.063081"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.2998778340406716,
+                    "timestamp": "2025-06-29T14:32:05.845390"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.236588333034888,
+                    "timestamp": "2025-06-29T14:32:19.429527"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.1117107910104096,
+                    "timestamp": "2025-06-29T14:32:31.641895"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 10.943721000105143,
+                    "timestamp": "2025-06-29T14:33:16.924321"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 8.688650458818302,
+                    "timestamp": "2025-06-29T14:35:32.058671"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 7.786286249989644,
+                    "timestamp": "2025-06-29T14:37:33.000223"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 7.006552959093824,
+                    "timestamp": "2025-06-29T14:39:14.061234"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1000,
+                    "duration": 0.7555466671474278,
+                    "timestamp": "2025-06-29T14:41:30.449132"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1500,
+                    "duration": 0.6823120000772178,
+                    "timestamp": "2025-06-29T14:41:37.096418"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2000,
+                    "duration": 0.6363983328919858,
+                    "timestamp": "2025-06-29T14:41:44.918366"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2500,
+                    "duration": 0.577668207930401,
+                    "timestamp": "2025-06-29T14:41:51.751854"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 3.3591385420877486,
+                    "timestamp": "2025-06-29T14:42:17.902192"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 2.8203644168097526,
+                    "timestamp": "2025-06-29T14:42:54.810652"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 2.496089833090082,
+                    "timestamp": "2025-06-29T14:43:27.485568"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 2.2934037919621915,
+                    "timestamp": "2025-06-29T14:43:58.681558"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.2883835840038955,
+                    "timestamp": "2025-06-29T14:45:01.514956"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.2787789171561599,
+                    "timestamp": "2025-06-29T14:45:22.021887"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.1050069169141352,
+                    "timestamp": "2025-06-29T14:45:34.881290"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.148838208988309,
+                    "timestamp": "2025-06-29T14:45:48.657591"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 8.525599000044167,
+                    "timestamp": "2025-06-29T14:46:29.908007"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 6.964799459092319,
+                    "timestamp": "2025-06-29T14:48:12.289342"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 6.0308706250507385,
+                    "timestamp": "2025-06-29T14:49:37.172099"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 5.692364416085184,
+                    "timestamp": "2025-06-29T14:50:58.020103"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.9618427911773324,
+                    "timestamp": "2025-06-29T14:52:55.821149"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.7178552921395749,
+                    "timestamp": "2025-06-29T14:53:12.678669"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.562163749942556,
+                    "timestamp": "2025-06-29T14:53:29.452270"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.458124834112823,
+                    "timestamp": "2025-06-29T14:53:44.006398"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 9.813117458019406,
+                    "timestamp": "2025-06-29T14:54:34.610361"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 8.435558666009456,
+                    "timestamp": "2025-06-29T14:56:25.455130"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 7.792414875002578,
+                    "timestamp": "2025-06-29T14:58:03.994933"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 7.263798624975607,
+                    "timestamp": "2025-06-29T14:59:41.129201"
+                }
+            ]
+        },
+        "KSDDM_95": {
+            "total_time": 680.2125212079845,
+            "executions": 84,
+            "avg_time": 8.097768109618864,
+            "details": [
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 1.8344257920980453,
+                    "timestamp": "2025-06-29T14:15:21.911388"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 1.288043332984671,
+                    "timestamp": "2025-06-29T14:15:37.294277"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 1.15290049999021,
+                    "timestamp": "2025-06-29T14:15:52.061039"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 1.3566085421480238,
+                    "timestamp": "2025-06-29T14:16:06.533360"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 1.2522177079226822,
+                    "timestamp": "2025-06-29T14:16:29.777113"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 0.9813523329794407,
+                    "timestamp": "2025-06-29T14:16:46.636886"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 1.090105792041868,
+                    "timestamp": "2025-06-29T14:17:03.375406"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.8462632501032203,
+                    "timestamp": "2025-06-29T14:17:19.817894"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 1.7192502079997212,
+                    "timestamp": "2025-06-29T14:17:43.468586"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 1.284986749989912,
+                    "timestamp": "2025-06-29T14:18:00.934103"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 1.1379347078036517,
+                    "timestamp": "2025-06-29T14:18:18.114907"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 1.1974721250589937,
+                    "timestamp": "2025-06-29T14:18:35.149460"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 1.329119292087853,
+                    "timestamp": "2025-06-29T14:18:56.704741"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 1.117662417003885,
+                    "timestamp": "2025-06-29T14:19:11.923741"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 1.1618948329705745,
+                    "timestamp": "2025-06-29T14:19:26.595254"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 1.1987257078289986,
+                    "timestamp": "2025-06-29T14:19:41.363946"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1000,
+                    "duration": 2.1340919169597328,
+                    "timestamp": "2025-06-29T14:20:04.288106"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1500,
+                    "duration": 1.8246158328838646,
+                    "timestamp": "2025-06-29T14:20:22.075623"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2000,
+                    "duration": 1.2745887918863446,
+                    "timestamp": "2025-06-29T14:20:38.593931"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2500,
+                    "duration": 1.2655216248240322,
+                    "timestamp": "2025-06-29T14:20:54.932661"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.7086672082077712,
+                    "timestamp": "2025-06-29T14:21:04.815967"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.5537105000112206,
+                    "timestamp": "2025-06-29T14:21:07.635654"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.5230761251877993,
+                    "timestamp": "2025-06-29T14:21:10.144408"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.515770792029798,
+                    "timestamp": "2025-06-29T14:21:12.509284"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1000,
+                    "duration": 0.8074427079409361,
+                    "timestamp": "2025-06-29T14:21:23.924091"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1500,
+                    "duration": 0.7081325410399586,
+                    "timestamp": "2025-06-29T14:21:26.792872"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2000,
+                    "duration": 0.7671262500807643,
+                    "timestamp": "2025-06-29T14:21:29.429022"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2500,
+                    "duration": 0.7253554579801857,
+                    "timestamp": "2025-06-29T14:21:31.987895"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1000,
+                    "duration": 0.8398076249286532,
+                    "timestamp": "2025-06-29T14:21:43.102311"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1500,
+                    "duration": 0.8952800000552088,
+                    "timestamp": "2025-06-29T14:21:46.433450"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2000,
+                    "duration": 0.7895159169565886,
+                    "timestamp": "2025-06-29T14:21:49.318080"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2500,
+                    "duration": 0.5899672920349985,
+                    "timestamp": "2025-06-29T14:21:51.884248"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.7074369578622282,
+                    "timestamp": "2025-06-29T14:22:02.988847"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.5743262919131666,
+                    "timestamp": "2025-06-29T14:22:05.938831"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.5393284170422703,
+                    "timestamp": "2025-06-29T14:22:08.590919"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.48409779090434313,
+                    "timestamp": "2025-06-29T14:22:11.055322"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1000,
+                    "duration": 0.7557449999731034,
+                    "timestamp": "2025-06-29T14:22:22.722495"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1500,
+                    "duration": 0.6103584170341492,
+                    "timestamp": "2025-06-29T14:22:25.276374"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2000,
+                    "duration": 0.5620182920247316,
+                    "timestamp": "2025-06-29T14:22:27.548885"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2500,
+                    "duration": 0.5294264580588788,
+                    "timestamp": "2025-06-29T14:22:29.737791"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1000,
+                    "duration": 0.5311920831445605,
+                    "timestamp": "2025-06-29T14:22:34.770207"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1500,
+                    "duration": 0.4243020829744637,
+                    "timestamp": "2025-06-29T14:22:36.461626"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2000,
+                    "duration": 0.39571783295832574,
+                    "timestamp": "2025-06-29T14:22:38.028204"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2500,
+                    "duration": 0.4549950831569731,
+                    "timestamp": "2025-06-29T14:22:39.600541"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 36.2109810418915,
+                    "timestamp": "2025-06-29T14:23:33.173003"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 29.369811750017107,
+                    "timestamp": "2025-06-29T14:25:20.065480"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 28.265976625028998,
+                    "timestamp": "2025-06-29T14:26:57.143078"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 28.288284625159577,
+                    "timestamp": "2025-06-29T14:28:35.483460"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.600915707880631,
+                    "timestamp": "2025-06-29T14:30:26.731850"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1500,
+                    "duration": 4.312837708974257,
+                    "timestamp": "2025-06-29T14:30:43.919433"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2000,
+                    "duration": 4.084263291908428,
+                    "timestamp": "2025-06-29T14:31:00.187253"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.9792690000031143,
+                    "timestamp": "2025-06-29T14:31:15.803064"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.069062291877344,
+                    "timestamp": "2025-06-29T14:31:56.132177"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1500,
+                    "duration": 3.711041583912447,
+                    "timestamp": "2025-06-29T14:32:09.556461"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2000,
+                    "duration": 3.339262542081997,
+                    "timestamp": "2025-06-29T14:32:22.768820"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.166905874852091,
+                    "timestamp": "2025-06-29T14:32:34.808841"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 52.953084958018735,
+                    "timestamp": "2025-06-29T14:34:09.877658"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 44.90666729095392,
+                    "timestamp": "2025-06-29T14:36:16.965553"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 33.916287124855444,
+                    "timestamp": "2025-06-29T14:38:06.916681"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 30.71995145897381,
+                    "timestamp": "2025-06-29T14:39:44.780146"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1000,
+                    "duration": 2.0432741658296436,
+                    "timestamp": "2025-06-29T14:41:32.492429"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1500,
+                    "duration": 2.4414651659317315,
+                    "timestamp": "2025-06-29T14:41:39.537911"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2000,
+                    "duration": 2.0387642909772694,
+                    "timestamp": "2025-06-29T14:41:46.957157"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2500,
+                    "duration": 2.220205208985135,
+                    "timestamp": "2025-06-29T14:41:53.972086"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 12.262183541897684,
+                    "timestamp": "2025-06-29T14:42:30.164443"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 10.212234125006944,
+                    "timestamp": "2025-06-29T14:43:05.022942"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 9.519856709055603,
+                    "timestamp": "2025-06-29T14:43:37.005476"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 9.134958082810044,
+                    "timestamp": "2025-06-29T14:44:07.816565"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.274809000082314,
+                    "timestamp": "2025-06-29T14:45:05.789771"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 3.9384101249743253,
+                    "timestamp": "2025-06-29T14:45:25.960258"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 4.247038625180721,
+                    "timestamp": "2025-06-29T14:45:39.128325"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.155752999940887,
+                    "timestamp": "2025-06-29T14:45:51.813359"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 37.5973198749125,
+                    "timestamp": "2025-06-29T14:47:07.505475"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 29.588956749998033,
+                    "timestamp": "2025-06-29T14:48:41.878422"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 26.97325541707687,
+                    "timestamp": "2025-06-29T14:50:04.145468"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 24.860090374946594,
+                    "timestamp": "2025-06-29T14:51:22.880301"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.633762959158048,
+                    "timestamp": "2025-06-29T14:53:00.454946"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 4.515047541819513,
+                    "timestamp": "2025-06-29T14:53:17.193753"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 3.7251017910894006,
+                    "timestamp": "2025-06-29T14:53:33.177399"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 4.529985249973834,
+                    "timestamp": "2025-06-29T14:53:48.536418"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 35.28933545900509,
+                    "timestamp": "2025-06-29T14:55:09.899838"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 29.229392000008374,
+                    "timestamp": "2025-06-29T14:56:54.684641"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 29.399368499871343,
+                    "timestamp": "2025-06-29T14:58:33.394424"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 27.046771791996434,
+                    "timestamp": "2025-06-29T15:00:08.176085"
+                }
+            ]
+        },
+        "KSDDM_90": {
+            "total_time": 613.0101695868652,
+            "executions": 84,
+            "avg_time": 7.297740114129348,
+            "details": [
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 1.6721608340740204,
+                    "timestamp": "2025-06-29T14:15:23.583573"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 1.2991151669993997,
+                    "timestamp": "2025-06-29T14:15:38.593414"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 1.047848666086793,
+                    "timestamp": "2025-06-29T14:15:53.108907"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 1.343139834003523,
+                    "timestamp": "2025-06-29T14:16:07.876527"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 1.169639374827966,
+                    "timestamp": "2025-06-29T14:16:30.946776"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 1.0529305001255125,
+                    "timestamp": "2025-06-29T14:16:47.689843"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 0.9915436250157654,
+                    "timestamp": "2025-06-29T14:17:04.366972"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.8588427498470992,
+                    "timestamp": "2025-06-29T14:17:20.676764"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 1.7269914590287954,
+                    "timestamp": "2025-06-29T14:17:45.195603"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 1.1494222918991,
+                    "timestamp": "2025-06-29T14:18:02.083544"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 1.1163776668254286,
+                    "timestamp": "2025-06-29T14:18:19.231310"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 1.2333132920321077,
+                    "timestamp": "2025-06-29T14:18:36.382795"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 1.3706851250026375,
+                    "timestamp": "2025-06-29T14:18:58.075457"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 1.0529501670971513,
+                    "timestamp": "2025-06-29T14:19:12.976709"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 1.1980214999057353,
+                    "timestamp": "2025-06-29T14:19:27.793299"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 1.105060749920085,
+                    "timestamp": "2025-06-29T14:19:42.469026"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1000,
+                    "duration": 1.5879072500392795,
+                    "timestamp": "2025-06-29T14:20:05.876038"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1500,
+                    "duration": 1.3058617499191314,
+                    "timestamp": "2025-06-29T14:20:23.381507"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2000,
+                    "duration": 1.3134088329970837,
+                    "timestamp": "2025-06-29T14:20:39.907365"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2500,
+                    "duration": 1.1817004170734435,
+                    "timestamp": "2025-06-29T14:20:56.114381"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.6943765829782933,
+                    "timestamp": "2025-06-29T14:21:05.510360"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.5669822921045125,
+                    "timestamp": "2025-06-29T14:21:08.202658"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.5213175839744508,
+                    "timestamp": "2025-06-29T14:21:10.665741"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.46783487498760223,
+                    "timestamp": "2025-06-29T14:21:12.977134"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1000,
+                    "duration": 0.7971519578713924,
+                    "timestamp": "2025-06-29T14:21:24.721262"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1500,
+                    "duration": 0.6405136249959469,
+                    "timestamp": "2025-06-29T14:21:27.433407"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2000,
+                    "duration": 0.6028824159875512,
+                    "timestamp": "2025-06-29T14:21:30.031924"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2500,
+                    "duration": 0.5443307079840451,
+                    "timestamp": "2025-06-29T14:21:32.532242"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1000,
+                    "duration": 0.8983122908975929,
+                    "timestamp": "2025-06-29T14:21:44.000646"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1500,
+                    "duration": 0.7409403338097036,
+                    "timestamp": "2025-06-29T14:21:47.174411"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2000,
+                    "duration": 0.615714916959405,
+                    "timestamp": "2025-06-29T14:21:49.933812"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2500,
+                    "duration": 0.5536863750312477,
+                    "timestamp": "2025-06-29T14:21:52.437956"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.7554688327945769,
+                    "timestamp": "2025-06-29T14:22:03.744337"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.6522981668822467,
+                    "timestamp": "2025-06-29T14:22:06.591153"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.5400857501663268,
+                    "timestamp": "2025-06-29T14:22:09.131022"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.4798897919245064,
+                    "timestamp": "2025-06-29T14:22:11.535231"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1000,
+                    "duration": 0.6766138749662787,
+                    "timestamp": "2025-06-29T14:22:23.399126"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1500,
+                    "duration": 0.5647942500654608,
+                    "timestamp": "2025-06-29T14:22:25.841189"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2000,
+                    "duration": 0.6089853751473129,
+                    "timestamp": "2025-06-29T14:22:28.157890"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2500,
+                    "duration": 0.5263013748917729,
+                    "timestamp": "2025-06-29T14:22:30.264113"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1000,
+                    "duration": 0.4784299579914659,
+                    "timestamp": "2025-06-29T14:22:35.248653"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1500,
+                    "duration": 0.47514295810833573,
+                    "timestamp": "2025-06-29T14:22:36.936784"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2000,
+                    "duration": 0.4114395419601351,
+                    "timestamp": "2025-06-29T14:22:38.439666"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2500,
+                    "duration": 0.40566966589540243,
+                    "timestamp": "2025-06-29T14:22:40.006228"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 34.520784083986655,
+                    "timestamp": "2025-06-29T14:24:07.693960"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 27.442203207872808,
+                    "timestamp": "2025-06-29T14:25:47.507821"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 26.784780374960974,
+                    "timestamp": "2025-06-29T14:27:23.927993"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 27.315409458009526,
+                    "timestamp": "2025-06-29T14:29:02.799011"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.651718083070591,
+                    "timestamp": "2025-06-29T14:30:31.383606"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1500,
+                    "duration": 4.030063917161897,
+                    "timestamp": "2025-06-29T14:30:47.949532"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2000,
+                    "duration": 4.107704332796857,
+                    "timestamp": "2025-06-29T14:31:04.294990"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.578344458946958,
+                    "timestamp": "2025-06-29T14:31:19.381442"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1000,
+                    "duration": 3.908872165950015,
+                    "timestamp": "2025-06-29T14:32:00.041083"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1500,
+                    "duration": 3.733862957917154,
+                    "timestamp": "2025-06-29T14:32:13.290358"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2000,
+                    "duration": 3.296863916097209,
+                    "timestamp": "2025-06-29T14:32:26.065716"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.301734291948378,
+                    "timestamp": "2025-06-29T14:32:38.110607"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 39.236272583017126,
+                    "timestamp": "2025-06-29T14:34:49.114129"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 35.15101929195225,
+                    "timestamp": "2025-06-29T14:36:52.116746"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 29.071093333885074,
+                    "timestamp": "2025-06-29T14:38:35.987920"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 30.46693250001408,
+                    "timestamp": "2025-06-29T14:40:15.247048"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.851820166921243,
+                    "timestamp": "2025-06-29T14:41:34.344271"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1500,
+                    "duration": 2.4469779999926686,
+                    "timestamp": "2025-06-29T14:41:41.984914"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2000,
+                    "duration": 2.0441668750718236,
+                    "timestamp": "2025-06-29T14:41:49.001346"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2500,
+                    "duration": 2.1865623749326915,
+                    "timestamp": "2025-06-29T14:41:56.158671"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 11.122663417132571,
+                    "timestamp": "2025-06-29T14:42:41.287170"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 9.522740917047486,
+                    "timestamp": "2025-06-29T14:43:14.545743"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 9.091297500068322,
+                    "timestamp": "2025-06-29T14:43:46.096823"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 8.713383834110573,
+                    "timestamp": "2025-06-29T14:44:16.529999"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 3.8237804579548538,
+                    "timestamp": "2025-06-29T14:45:09.613455"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 3.1319507078733295,
+                    "timestamp": "2025-06-29T14:45:29.092192"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 4.143610999919474,
+                    "timestamp": "2025-06-29T14:45:43.271945"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 3.2647526250220835,
+                    "timestamp": "2025-06-29T14:45:55.078132"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 31.682372709037736,
+                    "timestamp": "2025-06-29T14:47:39.187977"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 23.524563166080043,
+                    "timestamp": "2025-06-29T14:49:05.403085"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 23.195015374803916,
+                    "timestamp": "2025-06-29T14:50:27.340586"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 24.205874749924988,
+                    "timestamp": "2025-06-29T14:51:47.086278"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 4.341200042050332,
+                    "timestamp": "2025-06-29T14:53:04.796182"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 4.03700820915401,
+                    "timestamp": "2025-06-29T14:53:21.230790"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 3.1216857079416513,
+                    "timestamp": "2025-06-29T14:53:36.299112"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 4.611889084102586,
+                    "timestamp": "2025-06-29T14:53:53.148339"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 32.80278295907192,
+                    "timestamp": "2025-06-29T14:55:42.702750"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 27.121092916000634,
+                    "timestamp": "2025-06-29T14:57:21.805859"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 27.971144834067672,
+                    "timestamp": "2025-06-29T14:59:01.365687"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 25.458088249899447,
+                    "timestamp": "2025-06-29T15:00:33.634283"
+                }
+            ]
+        },
+        "JSDDM": {
+            "total_time": 157.86191695882007,
+            "executions": 84,
+            "avg_time": 1.8793085352240486,
+            "details": [
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 0.38705354183912277,
+                    "timestamp": "2025-06-29T14:15:23.970645"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 0.3127948751207441,
+                    "timestamp": "2025-06-29T14:15:38.906224"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 0.27286170795559883,
+                    "timestamp": "2025-06-29T14:15:53.381786"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 0.32773712486959994,
+                    "timestamp": "2025-06-29T14:16:08.204282"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 0.4164218751247972,
+                    "timestamp": "2025-06-29T14:16:31.363217"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 0.3330849159974605,
+                    "timestamp": "2025-06-29T14:16:48.022943"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 0.29359195893630385,
+                    "timestamp": "2025-06-29T14:17:04.660582"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.3551492500118911,
+                    "timestamp": "2025-06-29T14:17:21.031930"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1000,
+                    "duration": 0.37985604209825397,
+                    "timestamp": "2025-06-29T14:17:45.575475"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 1500,
+                    "duration": 0.41655533318407834,
+                    "timestamp": "2025-06-29T14:18:02.500120"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2000,
+                    "duration": 0.28214745805598795,
+                    "timestamp": "2025-06-29T14:18:19.513476"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                    "batch_size": 2500,
+                    "duration": 0.25516679184511304,
+                    "timestamp": "2025-06-29T14:18:36.637977"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1000,
+                    "duration": 0.39931720797903836,
+                    "timestamp": "2025-06-29T14:18:58.474793"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 1500,
+                    "duration": 0.3225508751347661,
+                    "timestamp": "2025-06-29T14:19:13.299279"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2000,
+                    "duration": 0.3153093329165131,
+                    "timestamp": "2025-06-29T14:19:28.108629"
+                },
+                {
+                    "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                    "batch_size": 2500,
+                    "duration": 0.2456603329628706,
+                    "timestamp": "2025-06-29T14:19:42.714702"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1000,
+                    "duration": 0.43854216602630913,
+                    "timestamp": "2025-06-29T14:20:06.314597"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 1500,
+                    "duration": 0.33030975004658103,
+                    "timestamp": "2025-06-29T14:20:23.711835"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2000,
+                    "duration": 0.27997654187493026,
+                    "timestamp": "2025-06-29T14:20:40.187361"
+                },
+                {
+                    "dataset": "synthetic_dataset_no_drifts",
+                    "batch_size": 2500,
+                    "duration": 0.2514148340560496,
+                    "timestamp": "2025-06-29T14:20:56.365818"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.4004112919792533,
+                    "timestamp": "2025-06-29T14:21:05.910787"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.3132397918961942,
+                    "timestamp": "2025-06-29T14:21:08.515914"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.2697121659293771,
+                    "timestamp": "2025-06-29T14:21:10.935471"
+                },
+                {
+                    "dataset": "MULTISTAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.24366483418270946,
+                    "timestamp": "2025-06-29T14:21:13.220813"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1000,
+                    "duration": 0.3507753340527415,
+                    "timestamp": "2025-06-29T14:21:25.072056"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 1500,
+                    "duration": 0.2863417500630021,
+                    "timestamp": "2025-06-29T14:21:27.719768"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2000,
+                    "duration": 0.23265720903873444,
+                    "timestamp": "2025-06-29T14:21:30.264596"
+                },
+                {
+                    "dataset": "MULTISEA",
+                    "batch_size": 2500,
+                    "duration": 0.22535037505440414,
+                    "timestamp": "2025-06-29T14:21:32.757610"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1000,
+                    "duration": 0.3069521249271929,
+                    "timestamp": "2025-06-29T14:21:44.307616"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 1500,
+                    "duration": 0.25401512486860156,
+                    "timestamp": "2025-06-29T14:21:47.428445"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2000,
+                    "duration": 0.2479015828575939,
+                    "timestamp": "2025-06-29T14:21:50.181729"
+                },
+                {
+                    "dataset": "SEA",
+                    "batch_size": 2500,
+                    "duration": 0.22533899988047779,
+                    "timestamp": "2025-06-29T14:21:52.663312"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1000,
+                    "duration": 0.3570134579204023,
+                    "timestamp": "2025-06-29T14:22:04.101378"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 1500,
+                    "duration": 0.2880549170076847,
+                    "timestamp": "2025-06-29T14:22:06.879230"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2000,
+                    "duration": 0.32751299999654293,
+                    "timestamp": "2025-06-29T14:22:09.458550"
+                },
+                {
+                    "dataset": "STAGGER",
+                    "batch_size": 2500,
+                    "duration": 0.2688235000241548,
+                    "timestamp": "2025-06-29T14:22:11.804073"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1000,
+                    "duration": 0.33304858300834894,
+                    "timestamp": "2025-06-29T14:22:23.732191"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 1500,
+                    "duration": 0.3015047078952193,
+                    "timestamp": "2025-06-29T14:22:26.142712"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2000,
+                    "duration": 0.26212762482464314,
+                    "timestamp": "2025-06-29T14:22:28.420034"
+                },
+                {
+                    "dataset": "electricity",
+                    "batch_size": 2500,
+                    "duration": 0.2972088339738548,
+                    "timestamp": "2025-06-29T14:22:30.561336"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1000,
+                    "duration": 0.24025604198686779,
+                    "timestamp": "2025-06-29T14:22:35.488932"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 1500,
+                    "duration": 0.19558991701342165,
+                    "timestamp": "2025-06-29T14:22:37.132389"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2000,
+                    "duration": 0.18761495780199766,
+                    "timestamp": "2025-06-29T14:22:38.627300"
+                },
+                {
+                    "dataset": "magic",
+                    "batch_size": 2500,
+                    "duration": 0.16579054202884436,
+                    "timestamp": "2025-06-29T14:22:40.172045"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 8.764623624971136,
+                    "timestamp": "2025-06-29T14:24:16.458641"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 7.246651750057936,
+                    "timestamp": "2025-06-29T14:25:54.754526"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 6.8027413750533015,
+                    "timestamp": "2025-06-29T14:27:30.730800"
+                },
+                {
+                    "dataset": "Abrupt (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 6.681913499953225,
+                    "timestamp": "2025-06-29T14:29:09.480972"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.8392400001175702,
+                    "timestamp": "2025-06-29T14:30:33.222869"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.51092837494798,
+                    "timestamp": "2025-06-29T14:30:49.460484"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.565900166053325,
+                    "timestamp": "2025-06-29T14:31:05.860918"
+                },
+                {
+                    "dataset": "Abrupt (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.2378684161230922,
+                    "timestamp": "2025-06-29T14:31:20.619330"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.407943750033155,
+                    "timestamp": "2025-06-29T14:32:01.449050"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.1437273330520838,
+                    "timestamp": "2025-06-29T14:32:14.434112"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.0580569999292493,
+                    "timestamp": "2025-06-29T14:32:27.123793"
+                },
+                {
+                    "dataset": "Incremental (bal.)",
+                    "batch_size": 2500,
+                    "duration": 0.9853783750440925,
+                    "timestamp": "2025-06-29T14:32:39.096006"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 9.543364458018914,
+                    "timestamp": "2025-06-29T14:34:58.657555"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 7.966379625024274,
+                    "timestamp": "2025-06-29T14:37:00.083188"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 6.704727292060852,
+                    "timestamp": "2025-06-29T14:38:42.692704"
+                },
+                {
+                    "dataset": "Incremental (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 6.1483208341524005,
+                    "timestamp": "2025-06-29T14:40:21.395406"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1000,
+                    "duration": 0.699558167019859,
+                    "timestamp": "2025-06-29T14:41:35.043851"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 1500,
+                    "duration": 0.5832720419857651,
+                    "timestamp": "2025-06-29T14:41:42.568206"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2000,
+                    "duration": 0.5673997078556567,
+                    "timestamp": "2025-06-29T14:41:49.568762"
+                },
+                {
+                    "dataset": "Incremental-gradual (bal.)",
+                    "batch_size": 2500,
+                    "duration": 0.4946033749729395,
+                    "timestamp": "2025-06-29T14:41:56.653293"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 2.9144768328405917,
+                    "timestamp": "2025-06-29T14:42:44.201676"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 2.3900866250041872,
+                    "timestamp": "2025-06-29T14:43:16.935854"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 2.229247083887458,
+                    "timestamp": "2025-06-29T14:43:48.326093"
+                },
+                {
+                    "dataset": "Incremental-gradual (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 2.0835299999453127,
+                    "timestamp": "2025-06-29T14:44:18.613556"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.399786707945168,
+                    "timestamp": "2025-06-29T14:45:17.689480"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.020531625021249,
+                    "timestamp": "2025-06-29T14:45:30.112729"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 0.9778947089798748,
+                    "timestamp": "2025-06-29T14:45:44.249855"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 0.9376805410720408,
+                    "timestamp": "2025-06-29T14:45:56.015833"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 6.839105375111103,
+                    "timestamp": "2025-06-29T14:47:46.027128"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 5.757931583095342,
+                    "timestamp": "2025-06-29T14:49:11.161054"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 5.217072166968137,
+                    "timestamp": "2025-06-29T14:50:32.557694"
+                },
+                {
+                    "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 5.114681791048497,
+                    "timestamp": "2025-06-29T14:51:52.200995"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1000,
+                    "duration": 1.7494597921613604,
+                    "timestamp": "2025-06-29T14:53:06.545663"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 1500,
+                    "duration": 1.491524500073865,
+                    "timestamp": "2025-06-29T14:53:22.722334"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2000,
+                    "duration": 1.4284308329224586,
+                    "timestamp": "2025-06-29T14:53:37.727565"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (bal.)",
+                    "batch_size": 2500,
+                    "duration": 1.291183500085026,
+                    "timestamp": "2025-06-29T14:53:54.439545"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1000,
+                    "duration": 8.661196915898472,
+                    "timestamp": "2025-06-29T14:55:51.364019"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 1500,
+                    "duration": 7.368224250152707,
+                    "timestamp": "2025-06-29T14:57:29.174127"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2000,
+                    "duration": 6.614830208942294,
+                    "timestamp": "2025-06-29T14:59:07.980561"
+                },
+                {
+                    "dataset": "Incremental-reoccurring (imbal.)",
+                    "batch_size": 2500,
+                    "duration": 6.226034166989848,
+                    "timestamp": "2025-06-29T15:00:39.860359"
+                }
+            ]
+        }
+    },
+    "batch_size_analysis": {},
+    "phase_timings": {
+        "drift_detection": [
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 1000,
+                "duration": 4.3100784588605165,
+                "timestamp": "2025-06-29T14:15:23.970652"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 1500,
+                "duration": 3.250919541809708,
+                "timestamp": "2025-06-29T14:15:38.906241"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 2000,
+                "duration": 2.861450750147924,
+                "timestamp": "2025-06-29T14:15:53.381802"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 2500,
+                "duration": 3.294122542021796,
+                "timestamp": "2025-06-29T14:16:08.204302"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 1000,
+                "duration": 3.2722000000067055,
+                "timestamp": "2025-06-29T14:16:31.363240"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 1500,
+                "duration": 2.7283040420152247,
+                "timestamp": "2025-06-29T14:16:48.022961"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 2000,
+                "duration": 2.700086334021762,
+                "timestamp": "2025-06-29T14:17:04.660600"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 2500,
+                "duration": 2.3577328748069704,
+                "timestamp": "2025-06-29T14:17:21.031953"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 1000,
+                "duration": 4.270037250127643,
+                "timestamp": "2025-06-29T14:17:45.575492"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 1500,
+                "duration": 3.262002999894321,
+                "timestamp": "2025-06-29T14:18:02.500140"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 2000,
+                "duration": 2.834332291968167,
+                "timestamp": "2025-06-29T14:18:19.513497"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 2500,
+                "duration": 3.056657249806449,
+                "timestamp": "2025-06-29T14:18:36.637994"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 1000,
+                "duration": 3.6376530828420073,
+                "timestamp": "2025-06-29T14:18:58.474811"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 1500,
+                "duration": 2.9249912090599537,
+                "timestamp": "2025-06-29T14:19:13.299297"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 2000,
+                "duration": 3.0124850829597563,
+                "timestamp": "2025-06-29T14:19:28.108646"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 2500,
+                "duration": 2.8227729159407318,
+                "timestamp": "2025-06-29T14:19:42.714721"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 1000,
+                "duration": 4.575878165895119,
+                "timestamp": "2025-06-29T14:20:06.314617"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 1500,
+                "duration": 3.804652291117236,
+                "timestamp": "2025-06-29T14:20:23.711853"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 2000,
+                "duration": 3.1672843750566244,
+                "timestamp": "2025-06-29T14:20:40.187381"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 2500,
+                "duration": 2.9710017079487443,
+                "timestamp": "2025-06-29T14:20:56.365838"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 1000,
+                "duration": 2.1463136659003794,
+                "timestamp": "2025-06-29T14:21:05.910801"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 1500,
+                "duration": 1.7135357500519603,
+                "timestamp": "2025-06-29T14:21:08.515927"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 2000,
+                "duration": 1.5939085001591593,
+                "timestamp": "2025-06-29T14:21:10.935486"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 2500,
+                "duration": 1.4873271251562983,
+                "timestamp": "2025-06-29T14:21:13.220826"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 1000,
+                "duration": 2.246012708172202,
+                "timestamp": "2025-06-29T14:21:25.072070"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 1500,
+                "duration": 1.8872858339454979,
+                "timestamp": "2025-06-29T14:21:27.719779"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 2000,
+                "duration": 1.8419988749083132,
+                "timestamp": "2025-06-29T14:21:30.264613"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 2500,
+                "duration": 1.7926799161359668,
+                "timestamp": "2025-06-29T14:21:32.757627"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 1000,
+                "duration": 2.3852390409447253,
+                "timestamp": "2025-06-29T14:21:44.307633"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 1500,
+                "duration": 2.193282207939774,
+                "timestamp": "2025-06-29T14:21:47.428460"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 2000,
+                "duration": 1.9243515830021352,
+                "timestamp": "2025-06-29T14:21:50.181749"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 2500,
+                "duration": 1.6140999579802155,
+                "timestamp": "2025-06-29T14:21:52.663332"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 1000,
+                "duration": 2.203463749960065,
+                "timestamp": "2025-06-29T14:22:04.101402"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 1500,
+                "duration": 1.8171040420420468,
+                "timestamp": "2025-06-29T14:22:06.879250"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 2000,
+                "duration": 1.699691749876365,
+                "timestamp": "2025-06-29T14:22:09.458569"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 2500,
+                "duration": 1.504073791904375,
+                "timestamp": "2025-06-29T14:22:11.804094"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 1000,
+                "duration": 2.125279000028968,
+                "timestamp": "2025-06-29T14:22:23.732210"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 1500,
+                "duration": 1.780973541783169,
+                "timestamp": "2025-06-29T14:22:26.142728"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 2000,
+                "duration": 1.7315054161008447,
+                "timestamp": "2025-06-29T14:22:28.420051"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 2500,
+                "duration": 1.636563542066142,
+                "timestamp": "2025-06-29T14:22:30.561348"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 1000,
+                "duration": 1.50456608296372,
+                "timestamp": "2025-06-29T14:22:35.488953"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 1500,
+                "duration": 1.3031989592127502,
+                "timestamp": "2025-06-29T14:22:37.132405"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 2000,
+                "duration": 1.1846523338463157,
+                "timestamp": "2025-06-29T14:22:38.627316"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 2500,
+                "duration": 1.2206671249587089,
+                "timestamp": "2025-06-29T14:22:40.172070"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 1000,
+                "duration": 89.90547037520446,
+                "timestamp": "2025-06-29T14:24:16.458663"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 1500,
+                "duration": 72.5910585001111,
+                "timestamp": "2025-06-29T14:25:54.754553"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 2000,
+                "duration": 69.45580962486565,
+                "timestamp": "2025-06-29T14:27:30.730860"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 2500,
+                "duration": 70.50266774999909,
+                "timestamp": "2025-06-29T14:29:09.481049"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 1000,
+                "duration": 13.147481583058834,
+                "timestamp": "2025-06-29T14:30:33.222890"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 1500,
+                "duration": 11.824230832979083,
+                "timestamp": "2025-06-29T14:30:49.460502"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 2000,
+                "duration": 11.45354820904322,
+                "timestamp": "2025-06-29T14:31:05.860956"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 2500,
+                "duration": 10.195497791981325,
+                "timestamp": "2025-06-29T14:31:20.619349"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 1000,
+                "duration": 11.056583208031952,
+                "timestamp": "2025-06-29T14:32:01.449072"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 1500,
+                "duration": 9.888603624887764,
+                "timestamp": "2025-06-29T14:32:14.434137"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 2000,
+                "duration": 8.930855541024357,
+                "timestamp": "2025-06-29T14:32:27.123816"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 2500,
+                "duration": 8.565818125149235,
+                "timestamp": "2025-06-29T14:32:39.096026"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 1000,
+                "duration": 112.6765500002075,
+                "timestamp": "2025-06-29T14:34:58.657577"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 1500,
+                "duration": 96.71282295905985,
+                "timestamp": "2025-06-29T14:37:00.083220"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 2000,
+                "duration": 77.47852720809169,
+                "timestamp": "2025-06-29T14:38:42.692757"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 2500,
+                "duration": 74.3418920841068,
+                "timestamp": "2025-06-29T14:40:21.395472"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 1000,
+                "duration": 5.350284583168104,
+                "timestamp": "2025-06-29T14:41:35.043873"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 1500,
+                "duration": 6.154114415869117,
+                "timestamp": "2025-06-29T14:41:42.568232"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 2000,
+                "duration": 5.286804415984079,
+                "timestamp": "2025-06-29T14:41:49.568780"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 2500,
+                "duration": 5.4791210000403225,
+                "timestamp": "2025-06-29T14:41:56.653310"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 1000,
+                "duration": 29.65854858304374,
+                "timestamp": "2025-06-29T14:42:44.201697"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 1500,
+                "duration": 24.945515375118703,
+                "timestamp": "2025-06-29T14:43:16.935876"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 2000,
+                "duration": 23.336569083156064,
+                "timestamp": "2025-06-29T14:43:48.326115"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 2500,
+                "duration": 22.22535291593522,
+                "timestamp": "2025-06-29T14:44:18.613573"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 1000,
+                "duration": 10.786855166079476,
+                "timestamp": "2025-06-29T14:45:17.689500"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 1500,
+                "duration": 9.369748166995123,
+                "timestamp": "2025-06-29T14:45:30.112745"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 2000,
+                "duration": 10.47363324998878,
+                "timestamp": "2025-06-29T14:45:44.249878"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 2500,
+                "duration": 8.507109666941687,
+                "timestamp": "2025-06-29T14:45:56.015856"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 1000,
+                "duration": 84.64448537491262,
+                "timestamp": "2025-06-29T14:47:46.027148"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 1500,
+                "duration": 65.83633820898831,
+                "timestamp": "2025-06-29T14:49:11.161074"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 2000,
+                "duration": 61.41630583303049,
+                "timestamp": "2025-06-29T14:50:32.557716"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 2500,
+                "duration": 59.87310166587122,
+                "timestamp": "2025-06-29T14:51:52.201018"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 1000,
+                "duration": 12.686355125159025,
+                "timestamp": "2025-06-29T14:53:06.545685"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 1500,
+                "duration": 11.761525458889082,
+                "timestamp": "2025-06-29T14:53:22.722361"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 2000,
+                "duration": 9.837459957925603,
+                "timestamp": "2025-06-29T14:53:37.727587"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 2500,
+                "duration": 11.891289500053972,
+                "timestamp": "2025-06-29T14:53:54.439590"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 1000,
+                "duration": 86.56655716593377,
+                "timestamp": "2025-06-29T14:55:51.364038"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 1500,
+                "duration": 72.1543667500373,
+                "timestamp": "2025-06-29T14:57:29.174153"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 2000,
+                "duration": 71.77787400013767,
+                "timestamp": "2025-06-29T14:59:07.980585"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 2500,
+                "duration": 65.99479120899923,
+                "timestamp": "2025-06-29T15:00:39.860394"
+            }
+        ],
+        "evaluation": [
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 1000,
+                "duration": 0.8817492499947548,
+                "timestamp": "2025-06-29T14:15:24.852743"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 1500,
+                "duration": 0.7916608329396695,
+                "timestamp": "2025-06-29T14:15:39.698250"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 2000,
+                "duration": 0.7368628750555217,
+                "timestamp": "2025-06-29T14:15:54.119027"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_abrupt",
+                "batch_size": 2500,
+                "duration": 0.7191537918988615,
+                "timestamp": "2025-06-29T14:16:08.923770"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 1000,
+                "duration": 0.9831168327946216,
+                "timestamp": "2025-06-29T14:16:32.346820"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 1500,
+                "duration": 0.8625240421388298,
+                "timestamp": "2025-06-29T14:16:48.886023"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 2000,
+                "duration": 0.7983132919762284,
+                "timestamp": "2025-06-29T14:17:05.459348"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_incremental",
+                "batch_size": 2500,
+                "duration": 0.7454417918343097,
+                "timestamp": "2025-06-29T14:17:21.777739"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 1000,
+                "duration": 0.9274348749313504,
+                "timestamp": "2025-06-29T14:17:46.503304"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 1500,
+                "duration": 0.9397920828778297,
+                "timestamp": "2025-06-29T14:18:03.440397"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 2000,
+                "duration": 0.7740427090320736,
+                "timestamp": "2025-06-29T14:18:20.287848"
+            },
+            {
+                "dataset": "synthetic_dataset_with_parallel_drifts_incremental",
+                "batch_size": 2500,
+                "duration": 0.728304916061461,
+                "timestamp": "2025-06-29T14:18:37.366581"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 1000,
+                "duration": 1.0328072090633214,
+                "timestamp": "2025-06-29T14:18:59.508031"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 1500,
+                "duration": 0.8555959169752896,
+                "timestamp": "2025-06-29T14:19:14.155484"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 2000,
+                "duration": 0.8044275420252234,
+                "timestamp": "2025-06-29T14:19:28.913453"
+            },
+            {
+                "dataset": "synthetic_dataset_with_switching_drifts_abrupt",
+                "batch_size": 2500,
+                "duration": 0.737850375007838,
+                "timestamp": "2025-06-29T14:19:43.452927"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 1000,
+                "duration": 0.9277939589228481,
+                "timestamp": "2025-06-29T14:20:07.242425"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 1500,
+                "duration": 0.8326873749028891,
+                "timestamp": "2025-06-29T14:20:24.544554"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 2000,
+                "duration": 0.7569108339957893,
+                "timestamp": "2025-06-29T14:20:40.944306"
+            },
+            {
+                "dataset": "synthetic_dataset_no_drifts",
+                "batch_size": 2500,
+                "duration": 0.693310750182718,
+                "timestamp": "2025-06-29T14:20:57.059161"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 1000,
+                "duration": 0.7959390410687774,
+                "timestamp": "2025-06-29T14:21:06.706753"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 1500,
+                "duration": 0.7326615829952061,
+                "timestamp": "2025-06-29T14:21:09.248601"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 2000,
+                "duration": 0.6998312079813331,
+                "timestamp": "2025-06-29T14:21:11.635328"
+            },
+            {
+                "dataset": "MULTISTAGGER",
+                "batch_size": 2500,
+                "duration": 0.6801870840135962,
+                "timestamp": "2025-06-29T14:21:13.901025"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 1000,
+                "duration": 0.6611844170838594,
+                "timestamp": "2025-06-29T14:21:25.733266"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 1500,
+                "duration": 0.6066887499764562,
+                "timestamp": "2025-06-29T14:21:28.326478"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 2000,
+                "duration": 0.6050997080747038,
+                "timestamp": "2025-06-29T14:21:30.869723"
+            },
+            {
+                "dataset": "MULTISEA",
+                "batch_size": 2500,
+                "duration": 0.5971414169762284,
+                "timestamp": "2025-06-29T14:21:33.354780"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 1000,
+                "duration": 0.8274464590940624,
+                "timestamp": "2025-06-29T14:21:45.135094"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 1500,
+                "duration": 0.718711500056088,
+                "timestamp": "2025-06-29T14:21:48.147186"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 2000,
+                "duration": 0.7644593329168856,
+                "timestamp": "2025-06-29T14:21:50.946222"
+            },
+            {
+                "dataset": "SEA",
+                "batch_size": 2500,
+                "duration": 0.6114417079370469,
+                "timestamp": "2025-06-29T14:21:53.274785"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 1000,
+                "duration": 0.8619866669178009,
+                "timestamp": "2025-06-29T14:22:04.963403"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 1500,
+                "duration": 0.7830397910438478,
+                "timestamp": "2025-06-29T14:22:07.662301"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 2000,
+                "duration": 0.749079667031765,
+                "timestamp": "2025-06-29T14:22:10.207660"
+            },
+            {
+                "dataset": "STAGGER",
+                "batch_size": 2500,
+                "duration": 0.7459487500600517,
+                "timestamp": "2025-06-29T14:22:12.550055"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 1000,
+                "duration": 0.5327838328666985,
+                "timestamp": "2025-06-29T14:22:24.265005"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 1500,
+                "duration": 0.4536817080806941,
+                "timestamp": "2025-06-29T14:22:26.596423"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 2000,
+                "duration": 0.4148781660478562,
+                "timestamp": "2025-06-29T14:22:28.834939"
+            },
+            {
+                "dataset": "electricity",
+                "batch_size": 2500,
+                "duration": 0.39682099991478026,
+                "timestamp": "2025-06-29T14:22:30.958184"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 1000,
+                "duration": 0.25196429109200835,
+                "timestamp": "2025-06-29T14:22:35.740930"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 1500,
+                "duration": 0.2242017921525985,
+                "timestamp": "2025-06-29T14:22:37.356616"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 2000,
+                "duration": 0.23906395817175508,
+                "timestamp": "2025-06-29T14:22:38.866391"
+            },
+            {
+                "dataset": "magic",
+                "batch_size": 2500,
+                "duration": 0.21352329198271036,
+                "timestamp": "2025-06-29T14:22:40.385602"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 1000,
+                "duration": 25.59862699988298,
+                "timestamp": "2025-06-29T14:24:42.057416"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 1500,
+                "duration": 26.417459500022233,
+                "timestamp": "2025-06-29T14:26:21.172142"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 2000,
+                "duration": 28.141966165974736,
+                "timestamp": "2025-06-29T14:27:58.872967"
+            },
+            {
+                "dataset": "Abrupt (imbal.)",
+                "batch_size": 2500,
+                "duration": 25.28303137491457,
+                "timestamp": "2025-06-29T14:29:34.764207"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 1000,
+                "duration": 4.315301374997944,
+                "timestamp": "2025-06-29T14:30:37.538219"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 1500,
+                "duration": 4.845908709103242,
+                "timestamp": "2025-06-29T14:30:54.306442"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 2000,
+                "duration": 4.464955999981612,
+                "timestamp": "2025-06-29T14:31:10.325944"
+            },
+            {
+                "dataset": "Abrupt (bal.)",
+                "batch_size": 2500,
+                "duration": 4.380960416980088,
+                "timestamp": "2025-06-29T14:31:25.000339"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 1000,
+                "duration": 3.006366250105202,
+                "timestamp": "2025-06-29T14:32:04.455460"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 1500,
+                "duration": 3.662406791932881,
+                "timestamp": "2025-06-29T14:32:18.096570"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 2000,
+                "duration": 3.3145996669773012,
+                "timestamp": "2025-06-29T14:32:30.438440"
+            },
+            {
+                "dataset": "Incremental (bal.)",
+                "batch_size": 2500,
+                "duration": 3.2577412920072675,
+                "timestamp": "2025-06-29T14:32:42.353793"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 1000,
+                "duration": 24.615699499845505,
+                "timestamp": "2025-06-29T14:35:23.273402"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 1500,
+                "duration": 25.036896291887388,
+                "timestamp": "2025-06-29T14:37:25.120241"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 2000,
+                "duration": 24.265158167108893,
+                "timestamp": "2025-06-29T14:39:06.957217"
+            },
+            {
+                "dataset": "Incremental (imbal.)",
+                "batch_size": 2500,
+                "duration": 23.737652708077803,
+                "timestamp": "2025-06-29T14:40:45.133213"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 1000,
+                "duration": 1.27424362488091,
+                "timestamp": "2025-06-29T14:41:36.318131"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 1500,
+                "duration": 1.5915387079585344,
+                "timestamp": "2025-06-29T14:41:44.159786"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 2000,
+                "duration": 1.4912222500424832,
+                "timestamp": "2025-06-29T14:41:51.060017"
+            },
+            {
+                "dataset": "Incremental-gradual (bal.)",
+                "batch_size": 2500,
+                "duration": 1.5088504999876022,
+                "timestamp": "2025-06-29T14:41:58.162192"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 1000,
+                "duration": 7.686583041911945,
+                "timestamp": "2025-06-29T14:42:51.888354"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 1500,
+                "duration": 7.96078283386305,
+                "timestamp": "2025-06-29T14:43:24.896703"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 2000,
+                "duration": 7.961924665840343,
+                "timestamp": "2025-06-29T14:43:56.288081"
+            },
+            {
+                "dataset": "Incremental-gradual (imbal.)",
+                "batch_size": 2500,
+                "duration": 7.9280640000943094,
+                "timestamp": "2025-06-29T14:44:26.541677"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 1000,
+                "duration": 2.9346698340959847,
+                "timestamp": "2025-06-29T14:45:20.624136"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 1500,
+                "duration": 3.5589341251179576,
+                "timestamp": "2025-06-29T14:45:33.671666"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 2000,
+                "duration": 3.1587886661291122,
+                "timestamp": "2025-06-29T14:45:47.408674"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (bal.)",
+                "batch_size": 2500,
+                "duration": 3.069457583129406,
+                "timestamp": "2025-06-29T14:45:59.085327"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 1000,
+                "duration": 19.194580791983753,
+                "timestamp": "2025-06-29T14:48:05.221813"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 1500,
+                "duration": 19.87652491615154,
+                "timestamp": "2025-06-29T14:49:31.037682"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 2000,
+                "duration": 19.668198791798204,
+                "timestamp": "2025-06-29T14:50:52.225998"
+            },
+            {
+                "dataset": "Incremental-abrupt-reoccurring (imbal.)",
+                "batch_size": 2500,
+                "duration": 19.01362400013022,
+                "timestamp": "2025-06-29T14:52:11.214722"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 1000,
+                "duration": 4.316935084061697,
+                "timestamp": "2025-06-29T14:53:10.862646"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 1500,
+                "duration": 5.067086667055264,
+                "timestamp": "2025-06-29T14:53:27.789480"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 2000,
+                "duration": 4.721581042045727,
+                "timestamp": "2025-06-29T14:53:42.449197"
+            },
+            {
+                "dataset": "Incremental-reoccurring (bal.)",
+                "batch_size": 2500,
+                "duration": 4.710127209080383,
+                "timestamp": "2025-06-29T14:53:59.149745"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 1000,
+                "duration": 25.547611665911973,
+                "timestamp": "2025-06-29T14:56:16.911734"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 1500,
+                "duration": 26.925910709192976,
+                "timestamp": "2025-06-29T14:57:56.100174"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 2000,
+                "duration": 25.779765042010695,
+                "timestamp": "2025-06-29T14:59:33.760456"
+            },
+            {
+                "dataset": "Incremental-reoccurring (imbal.)",
+                "batch_size": 2500,
+                "duration": 25.0810708750505,
+                "timestamp": "2025-06-29T15:01:04.941569"
+            }
+        ]
+    }
+}
