@@ -32,6 +32,7 @@ from codes.plots import (
     plot_drift_points,
     plot_feature_and_its_variations,
 )
+from codes.experiment_timer import timer
 
 from river import tree
 
@@ -158,44 +159,47 @@ def fetch_all_drifts(
     drift_alignment_within_batch: Optional[float] = None,
     plot_heatmaps: bool = True,
 ):
-    hd_drifts = fetch_hdddm_drifts(
-        batch_size=batch_size,
-        plot_heatmaps=plot_heatmaps,
-        dataset=dataset,
-        drift_alignment_within_batch=drift_alignment_within_batch,
-    )
+    """Fetch drift detection results with individual technique timing."""
+    results = {}
 
-    ks_drifts = fetch_ksddm_drifts(
-        batch_size=batch_size,
-        dataset=dataset,
-        mean_threshold=0.05,
-        plot_heatmaps=plot_heatmaps,
-        text="KSDDM 95",
-        drift_alignment_within_batch=drift_alignment_within_batch,
-    )
+    # Time each technique individually for granular performance analysis
+    with timer.time_technique("HDDDM", dataset, batch_size):
+        results["hd_drifts"] = fetch_hdddm_drifts(
+            batch_size=batch_size,
+            plot_heatmaps=plot_heatmaps,
+            dataset=dataset,
+            drift_alignment_within_batch=drift_alignment_within_batch,
+        )
 
-    ks_90_drifts = fetch_ksddm_drifts(
-        batch_size=batch_size,
-        dataset=dataset,
-        plot_heatmaps=plot_heatmaps,
-        mean_threshold=0.10,
-        text="KSDDM 90",
-        drift_alignment_within_batch=drift_alignment_within_batch,
-    )
+    with timer.time_technique("KSDDM_95", dataset, batch_size):
+        results["ks_drifts"] = fetch_ksddm_drifts(
+            batch_size=batch_size,
+            dataset=dataset,
+            mean_threshold=0.05,
+            plot_heatmaps=plot_heatmaps,
+            text="KSDDM 95",
+            drift_alignment_within_batch=drift_alignment_within_batch,
+        )
 
-    js_drifts = fetch_jsddm_drifts(
-        batch_size=batch_size,
-        plot_heatmaps=plot_heatmaps,
-        dataset=dataset,
-        drift_alignment_within_batch=drift_alignment_within_batch,
-    )
+    with timer.time_technique("KSDDM_90", dataset, batch_size):
+        results["ks_90_drifts"] = fetch_ksddm_drifts(
+            batch_size=batch_size,
+            dataset=dataset,
+            plot_heatmaps=plot_heatmaps,
+            mean_threshold=0.10,
+            text="KSDDM 90",
+            drift_alignment_within_batch=drift_alignment_within_batch,
+        )
 
-    return {
-        "ks_drifts": ks_drifts,
-        "ks_90_drifts": ks_90_drifts,
-        "hd_drifts": hd_drifts,
-        "js_drifts": js_drifts,
-    }
+    with timer.time_technique("JSDDM", dataset, batch_size):
+        results["js_drifts"] = fetch_jsddm_drifts(
+            batch_size=batch_size,
+            plot_heatmaps=plot_heatmaps,
+            dataset=dataset,
+            drift_alignment_within_batch=drift_alignment_within_batch,
+        )
+
+    return results
 
 
 def run_test(
@@ -584,6 +588,10 @@ def consolidate_results(csv_file_paths):
 def run_full_experiment():
     """Run the full experiment pipeline."""
 
+    # Start timing the entire experiment
+    timer.start_experiment()
+    print("Starting experiment with timing measurement...")
+
     results = {}
     csv_file_paths = []
     json_file_paths = []
@@ -608,6 +616,9 @@ def run_full_experiment():
     for dataset in datasets:
         dataset_results = {}
 
+        # Set timing context for this dataset
+        print(f"\n=== Processing Dataset: {dataset} ===")
+
         # Clear old csvs
         output_path = prepare_output_path(dataset)
         csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
@@ -619,6 +630,9 @@ def run_full_experiment():
             print(f"Algorithm - {algorithm}")
 
             for batch_size in batch_sizes:
+                # Set current context for timing
+                timer.set_current_context(dataset, batch_size)
+                print(f"Processing {dataset} with batch size {batch_size}...")
                 if dataset.startswith("synthetic_"):
                     type_of_dataset = "synthetic"
 
@@ -638,23 +652,27 @@ def run_full_experiment():
 
                         print(f"{dataset} - {batch_size}")
 
-                        detected_drifts_dict = fetch_all_drifts(
-                            batch_size,
-                            dataset,
-                            drift_alignment_within_batch=None,
-                            plot_heatmaps=True,
-                        )
+                        # Time drift detection phase
+                        with timer.time_phase("drift_detection", dataset, batch_size):
+                            detected_drifts_dict = fetch_all_drifts(
+                                batch_size,
+                                dataset,
+                                drift_alignment_within_batch=None,
+                                plot_heatmaps=True,
+                            )
 
-                        (
-                            test_results,
-                            drift_results,
-                            num_batches,
-                        ) = run_single_experiment(
-                            dataset,
-                            batch_size,
-                            algorithm,
-                            detected_drifts_dict=detected_drifts_dict,
-                        )
+                        # Time evaluation phase
+                        with timer.time_phase("evaluation", dataset, batch_size):
+                            (
+                                test_results,
+                                drift_results,
+                                num_batches,
+                            ) = run_single_experiment(
+                                dataset,
+                                batch_size,
+                                algorithm,
+                                detected_drifts_dict=detected_drifts_dict,
+                            )
                         plot_drift_points(
                             drift_results,
                             dataset,
@@ -727,12 +745,16 @@ def run_full_experiment():
 
                             print(f"{dataset} - {batch_size} - {drift_within_batch}")
 
-                            detected_drifts_dict = fetch_all_drifts(
-                                batch_size,
-                                dataset,
-                                drift_alignment_within_batch=drift_within_batch,
-                                plot_heatmaps=True,
-                            )
+                            # Time drift detection phase
+                            with timer.time_phase(
+                                "drift_detection", dataset, batch_size
+                            ):
+                                detected_drifts_dict = fetch_all_drifts(
+                                    batch_size,
+                                    dataset,
+                                    drift_alignment_within_batch=drift_within_batch,
+                                    plot_heatmaps=True,
+                                )
 
                             # TODO: Generate dataset synthetic_drift_points, detected_drifts_dict
                             output_file_drifts_analysis_file = (
@@ -747,17 +769,19 @@ def run_full_experiment():
 
                             json_file_paths.append(output_file_drifts_analysis_file)
 
-                            (
-                                test_results,
-                                drift_results,
-                                num_batches,
-                            ) = run_single_experiment(
-                                dataset,
-                                batch_size,
-                                algorithm,
-                                drift_alignment_within_batch=drift_within_batch,
-                                detected_drifts_dict=detected_drifts_dict,
-                            )
+                            # Time evaluation phase
+                            with timer.time_phase("evaluation", dataset, batch_size):
+                                (
+                                    test_results,
+                                    drift_results,
+                                    num_batches,
+                                ) = run_single_experiment(
+                                    dataset,
+                                    batch_size,
+                                    algorithm,
+                                    drift_alignment_within_batch=drift_within_batch,
+                                    detected_drifts_dict=detected_drifts_dict,
+                                )
                             plot_drift_points(
                                 drift_results,
                                 dataset,
@@ -795,23 +819,27 @@ def run_full_experiment():
                 else:
                     print(f"{dataset} - {batch_size}")
 
-                    detected_drifts_dict = fetch_all_drifts(
-                        batch_size,
-                        dataset,
-                        drift_alignment_within_batch=None,
-                        plot_heatmaps=True,
-                    )
+                    # Time drift detection phase
+                    with timer.time_phase("drift_detection", dataset, batch_size):
+                        detected_drifts_dict = fetch_all_drifts(
+                            batch_size,
+                            dataset,
+                            drift_alignment_within_batch=None,
+                            plot_heatmaps=True,
+                        )
 
-                    (
-                        test_results,
-                        drift_results,
-                        num_batches,
-                    ) = run_single_experiment(
-                        dataset,
-                        batch_size,
-                        algorithm,
-                        detected_drifts_dict=detected_drifts_dict,
-                    )
+                    # Time evaluation phase
+                    with timer.time_phase("evaluation", dataset, batch_size):
+                        (
+                            test_results,
+                            drift_results,
+                            num_batches,
+                        ) = run_single_experiment(
+                            dataset,
+                            batch_size,
+                            algorithm,
+                            detected_drifts_dict=detected_drifts_dict,
+                        )
 
                     save_results_to_csv(
                         dataset,
@@ -834,6 +862,20 @@ def run_full_experiment():
             # Load and plot original dataset features
             df, _, _ = load_and_prepare_dataset(dataset)
             plot_all_features(df, dataset)
+
+    # Update dataset totals for timing
+    for dataset in datasets:
+        timer.update_dataset_total(dataset)
+
+    # End timing and save results
+    total_time = timer.end_experiment()
+    print(f"\n🎉 Experiment completed in {total_time:.2f} seconds!")
+
+    # Save timing results
+    timer.save_timing_results(output_dir)
+
+    # Print timing summary
+    timer.print_timing_summary()
 
     # Consolidate all CSV files into a single CSV
     consolidate_results(list(set(csv_file_paths)))
