@@ -37,7 +37,7 @@ comparison_results/
 ├── experiment_timing_results.json    # Detailed timing data
 └── timing_summary.csv                # Tabular summary
 
-timing_analysis/                      # Analysis reports
+execution_time_analysis/              # Analysis reports
 ├── timing_analysis_overview.png
 ├── technique_performance.png
 ├── technique_detailed_analysis.png
