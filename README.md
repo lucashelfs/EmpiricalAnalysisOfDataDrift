@@ -74,4 +74,12 @@ Comprehensive tables presenting F1 and AUC metrics across different batch sizes:
 - Clear formatting with highlighted best-performing methods
 - Dataset abbreviations and method explanations
 
+### [Execution Times Documentation](timing_documentation.md)
+Comprehensive documentation of experiment timing and performance analysis:
+- Hierarchical timing measurement (experiment, dataset, phase, and technique levels)
+- Automatic data collection and context-aware tracking
+- Detailed analysis tools and visualization capabilities
+- Performance insights for batch size optimization and technique comparison
+- File structure and usage examples for timing analysis
+
 These documentation files provide essential information for understanding the experimental setup, reproducing results, and extending the framework for future research.
