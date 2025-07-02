@@ -23,6 +23,10 @@
         ]
     },
     "detected_drifts": {
+        "hd_drifts": [
+            3,
+            17
+        ],
         "ks_drifts": [
             3,
             4,
@@ -40,10 +44,6 @@
             17,
             18,
             19
-        ],
-        "hd_drifts": [
-            3,
-            17
         ],
         "js_drifts": [
             3,

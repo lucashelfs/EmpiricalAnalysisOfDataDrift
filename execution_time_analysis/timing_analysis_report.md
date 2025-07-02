@@ -27,6 +27,7 @@
 
 ## Files Generated
 - `timing_analysis_overview.png`: Comprehensive timing visualizations
+- `batch_size_performance.png`: Individual batch size performance chart
 - `technique_performance.png`: Technique-specific performance charts
 - `detailed_timing_data.csv`: Raw timing data for further analysis
 - `timing_analysis_report.md`: This summary report

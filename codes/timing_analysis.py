@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 import numpy as np
 
+# Set seaborn style
+sns.set(style="whitegrid")
+
 
 def load_timing_data(timing_json_path: str) -> dict:
     """Load timing data from JSON file."""
@@ -12,7 +15,7 @@ def load_timing_data(timing_json_path: str) -> dict:
         return json.load(f)
 
 
-def create_timing_analysis_report(timing_data: dict, output_dir: str = "timing_analysis"):
+def create_timing_analysis_report(timing_data: dict, output_dir: str = "execution_time_analysis"):
     """Create comprehensive timing analysis report with visualizations."""
     
     Path(output_dir).mkdir(exist_ok=True)
@@ -38,43 +41,61 @@ def create_timing_analysis_report(timing_data: dict, output_dir: str = "timing_a
     
     # 2. Batch Size Analysis
     if not df_performance.empty:
+        # Create separate subplot 1 first (for individual file)
+        batch_size_analysis = df_performance.groupby('batch_size')['total_time'].agg(['mean', 'std']).reset_index()
+        
+        # Individual subplot 1 file
+        fig_batch, ax_batch = plt.subplots(figsize=(12, 8))
+        ax_batch.bar(batch_size_analysis['batch_size'], batch_size_analysis['mean'], 
+                    yerr=batch_size_analysis['std'], capsize=5)
+        ax_batch.set_title('Average Execution Time by Batch Size', fontsize=20)
+        ax_batch.set_xlabel('Batch Size', fontsize=20)
+        ax_batch.set_ylabel('Time (seconds)', fontsize=20)
+        ax_batch.tick_params(axis='both', which='major', labelsize=15)
+        fig_batch.tight_layout()
+        fig_batch.savefig(f"{output_dir}/batch_size_performance.png", bbox_inches='tight')
+        plt.close(fig_batch)
+        
+        # Main overview plot with all 4 subplots
         plt.figure(figsize=(15, 10))
         
         # Subplot 1: Total time by batch size
         plt.subplot(2, 2, 1)
-        batch_size_analysis = df_performance.groupby('batch_size')['total_time'].agg(['mean', 'std']).reset_index()
         plt.bar(batch_size_analysis['batch_size'], batch_size_analysis['mean'], 
                 yerr=batch_size_analysis['std'], capsize=5)
-        plt.title('Average Execution Time by Batch Size')
-        plt.xlabel('Batch Size')
-        plt.ylabel('Time (seconds)')
+        plt.title('Average Execution Time by Batch Size', fontsize=16)
+        plt.xlabel('Batch Size', fontsize=14)
+        plt.ylabel('Time (seconds)', fontsize=14)
+        plt.tick_params(axis='both', which='major', labelsize=12)
         
         # Subplot 2: Phase breakdown by batch size
         plt.subplot(2, 2, 2)
         phase_data = df_performance.groupby('batch_size')[['drift_detection_time', 'evaluation_time']].mean()
         phase_data.plot(kind='bar', stacked=True, ax=plt.gca())
-        plt.title('Phase Breakdown by Batch Size')
-        plt.xlabel('Batch Size')
-        plt.ylabel('Time (seconds)')
+        plt.title('Phase Breakdown by Batch Size', fontsize=16)
+        plt.xlabel('Batch Size', fontsize=14)
+        plt.ylabel('Time (seconds)', fontsize=14)
         plt.legend(['Drift Detection', 'Evaluation'])
         plt.xticks(rotation=45)
+        plt.tick_params(axis='both', which='major', labelsize=12)
         
         # Subplot 3: Dataset comparison heatmap
         plt.subplot(2, 2, 3)
         pivot_data = df_performance.pivot_table(values='total_time', index='dataset', columns='batch_size', aggfunc='mean')
         sns.heatmap(pivot_data, annot=True, fmt='.2f', cmap='YlOrRd')
-        plt.title('Execution Time Heatmap (Dataset vs Batch Size)')
-        plt.xticks(rotation=45)
-        plt.yticks(rotation=0)
+        plt.title('Execution Time Heatmap (Dataset vs Batch Size)', fontsize=16)
+        plt.xticks(rotation=45, fontsize=12)
+        plt.yticks(rotation=0, fontsize=12)
         
         # Subplot 4: Top 10 slowest dataset-batch combinations
         plt.subplot(2, 2, 4)
         top_slow = df_performance.nlargest(10, 'total_time')
         top_slow['dataset_batch'] = top_slow['dataset'] + '\n(' + top_slow['batch_size'].astype(str) + ')'
         plt.barh(range(len(top_slow)), top_slow['total_time'])
-        plt.yticks(range(len(top_slow)), top_slow['dataset_batch'])
-        plt.title('Top 10 Slowest Combinations')
-        plt.xlabel('Time (seconds)')
+        plt.yticks(range(len(top_slow)), top_slow['dataset_batch'].tolist(), fontsize=10)
+        plt.title('Top 10 Slowest Combinations', fontsize=16)
+        plt.xlabel('Time (seconds)', fontsize=14)
+        plt.tick_params(axis='x', which='major', labelsize=12)
         
         plt.tight_layout()
         plt.savefig(f"{output_dir}/timing_analysis_overview.png", dpi=300, bbox_inches='tight')
@@ -82,29 +103,31 @@ def create_timing_analysis_report(timing_data: dict, output_dir: str = "timing_a
     
     # 3. Technique Performance Analysis
     if technique_performance:
-        plt.figure(figsize=(12, 6))
+        fig_tech, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 8))
         
         techniques = list(technique_performance.keys())
         avg_times = [technique_performance[tech]['avg_time'] for tech in techniques]
         executions = [technique_performance[tech]['executions'] for tech in techniques]
         
-        plt.subplot(1, 2, 1)
-        plt.bar(techniques, avg_times)
-        plt.title('Average Execution Time by Technique')
-        plt.xlabel('Technique')
-        plt.ylabel('Average Time (seconds)')
-        plt.xticks(rotation=45)
+        # Subplot 1: Average execution time
+        ax1.bar(techniques, avg_times)
+        ax1.set_title('Average Execution Time by Technique', fontsize=20)
+        ax1.set_xlabel('Technique', fontsize=20)
+        ax1.set_ylabel('Average Time (seconds)', fontsize=20)
+        ax1.tick_params(axis='both', which='major', labelsize=15)
+        plt.setp(ax1.get_xticklabels(), rotation=45)
         
-        plt.subplot(1, 2, 2)
-        plt.bar(techniques, executions)
-        plt.title('Number of Executions by Technique')
-        plt.xlabel('Technique')
-        plt.ylabel('Number of Executions')
-        plt.xticks(rotation=45)
+        # Subplot 2: Number of executions
+        ax2.bar(techniques, executions)
+        ax2.set_title('Number of Executions by Technique', fontsize=20)
+        ax2.set_xlabel('Technique', fontsize=20)
+        ax2.set_ylabel('Number of Executions', fontsize=20)
+        ax2.tick_params(axis='both', which='major', labelsize=15)
+        plt.setp(ax2.get_xticklabels(), rotation=45)
         
-        plt.tight_layout()
-        plt.savefig(f"{output_dir}/technique_performance.png", dpi=300, bbox_inches='tight')
-        plt.close()
+        fig_tech.tight_layout()
+        fig_tech.savefig(f"{output_dir}/technique_performance.png", bbox_inches='tight')
+        plt.close(fig_tech)
     
     # 4. Generate summary report
     report_lines = [
@@ -173,6 +196,7 @@ def create_timing_analysis_report(timing_data: dict, output_dir: str = "timing_a
         report_lines.extend([
             "## Files Generated",
             "- `timing_analysis_overview.png`: Comprehensive timing visualizations",
+            "- `batch_size_performance.png`: Individual batch size performance chart",
             "- `technique_performance.png`: Technique-specific performance charts",
             "- `detailed_timing_data.csv`: Raw timing data for further analysis",
             "- `timing_analysis_report.md`: This summary report",
@@ -186,7 +210,7 @@ def create_timing_analysis_report(timing_data: dict, output_dir: str = "timing_a
     return df_performance
 
 
-def analyze_technique_performance_from_csv(csv_path: str, output_dir: str = "timing_analysis"):
+def analyze_technique_performance_from_csv(csv_path: str, output_dir: str = "execution_time_analysis"):
     """Analyze technique-level performance from the enhanced CSV format."""
     
     Path(output_dir).mkdir(exist_ok=True)
