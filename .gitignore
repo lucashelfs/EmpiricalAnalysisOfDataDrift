@@ -2,3 +2,13 @@ data/usp-stream-data/*.arff
 *.DS_Store
 *__pycache__*
 .idea
+.ipynb_checkpoints
+*.pyc
+*.pyo
+*.pyd
+*.egg   
+.pytest_cache
+*.coverage
+.coverage.*
+*.log
+*memory_bank/*
