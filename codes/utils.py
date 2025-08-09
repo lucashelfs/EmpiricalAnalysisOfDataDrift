@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Tuple
 
 from codes.config import insects_datasets
-from drift_info import extract_drift_info
+from codes.drift_info import extract_drift_info
 from codes.common import (
     calculate_index,
     load_and_prepare_dataset,

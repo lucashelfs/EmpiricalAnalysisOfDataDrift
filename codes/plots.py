@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker
 import pandas as pd
 
 from codes.config import comparisons_output_dir as output_dir
-from utils import fetch_dataset_change_points
+from codes.utils import fetch_dataset_change_points
 
 from PIL import Image
 
@@ -106,10 +106,14 @@ def plot_drift_points(
     synthetic_drift_points: dict = None,
     drift_alignment_within_batch: float = None,
     max_index: int = None,
+    custom_output_dir=None,
 ):
     """Plot drift points."""
-    os.makedirs(output_dir + f"/{dataset}/detected_drifts/", exist_ok=True)
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    os.makedirs(os.path.join(base_output_dir, dataset, "detected_drifts"), exist_ok=True)
     plt.figure(figsize=(12, 8))
+    
     colors = {"KS95": "r", "KS90": "g", "HD": "b", "JS": "m"}
 
     # Ensure all methods are on the Y-axis
@@ -237,7 +241,7 @@ def plot_drift_points(
 
     plt.savefig(
         os.path.join(
-            output_dir + f"/{dataset}/detected_drifts/",
+            base_output_dir, dataset, "detected_drifts",
             filename,
         ),
         bbox_inches="tight",
@@ -325,13 +329,17 @@ def plot_all_features(
     suffix: str = "",
     batch_size: int = 1000,
     use_batch_numbers: bool = False,
+    custom_output_dir=None,
 ):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
     # Exclude class column
     feature_columns = [col for col in df.columns if col != "class"]
 
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    
     # Create a directory for the plots
-    dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    dataset_output_dir = os.path.join(base_output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
     # Create subplots for each feature column in a single file
@@ -513,9 +521,13 @@ def plot_feature_and_its_variations(
     dataset_name: str,
     column: str,
     suffix: str,
+    custom_output_dir=None,
 ):
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    
     # Create a directory for the plots
-    dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    dataset_output_dir = os.path.join(base_output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
     concated_features_plot = os.path.join(

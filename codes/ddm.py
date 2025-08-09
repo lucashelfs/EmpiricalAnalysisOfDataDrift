@@ -36,8 +36,11 @@ def plot_heatmap(
     change_points=None,
     suffix="",
     drift_alignment_within_batch: Optional[float] = None,
+    custom_output_dir=None,
 ):
-    os.makedirs(output_dir + f"/{dataset}/heatmaps/", exist_ok=True)
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    os.makedirs(os.path.join(base_output_dir, dataset, "heatmaps"), exist_ok=True)
     sns.set(rc={"figure.figsize": (12, 8)})
     grid_kws = {"height_ratios": (0.9, 0.05), "hspace": 0.3}
     f, (ax, cbar_ax) = plt.subplots(2, gridspec_kw=grid_kws)
@@ -163,12 +166,12 @@ def plot_heatmap(
 
     if "Chunked" in suffix:
         filename = os.path.join(
-            output_dir + f"/{dataset}/heatmaps/",
+            base_output_dir, dataset, "heatmaps",
             f"{batch_size}_{technique}_chunked_heatmap_{drift_alignment_within_batch}.png",
         )
     else:
         filename = os.path.join(
-            output_dir + f"/{dataset}/heatmaps/",
+            base_output_dir, dataset, "heatmaps",
             f"{batch_size}_{technique}_heatmap_{drift_alignment_within_batch}.png",
         )
 
@@ -196,6 +199,7 @@ def fetch_ksddm_drifts(
     plot_heatmaps=False,
     text="KSDDM",
     drift_alignment_within_batch: Optional[float] = None,
+    custom_output_dir=None,
 ):
     if dataset is None:
         return
@@ -223,6 +227,7 @@ def fetch_ksddm_drifts(
             batch_size,
             change_points=drift_list,
             drift_alignment_within_batch=drift_alignment_within_batch,
+            custom_output_dir=custom_output_dir,
         )
         plot_heatmap(
             text,
@@ -231,6 +236,7 @@ def fetch_ksddm_drifts(
             batch_size,
             change_points=drift_list,
             suffix="Chunked",
+            custom_output_dir=custom_output_dir,
         )
 
     return plot_data["Detected Drift"]
@@ -242,6 +248,7 @@ def fetch_hdddm_drifts(
     dataset=None,
     plot_heatmaps=False,
     drift_alignment_within_batch: Optional[float] = None,
+    custom_output_dir=None,
 ):
     if dataset is not None:
         reference_batch = 1
@@ -280,6 +287,7 @@ def fetch_hdddm_drifts(
                 batch_size,
                 change_points=drift_list,
                 drift_alignment_within_batch=drift_alignment_within_batch,
+                custom_output_dir=custom_output_dir,
             )
 
         return plot_data["Detected Drift"]
@@ -291,6 +299,7 @@ def fetch_jsddm_drifts(
     dataset=None,
     plot_heatmaps=False,
     drift_alignment_within_batch: Optional[float] = None,
+    custom_output_dir=None,
 ):
     if dataset is not None:
         X, _, _ = load_and_prepare_dataset(dataset=dataset)
@@ -329,6 +338,7 @@ def fetch_jsddm_drifts(
                 batch_size,
                 change_points=drift_list,
                 drift_alignment_within_batch=drift_alignment_within_batch,
+                custom_output_dir=custom_output_dir,
             )
 
         return plot_data["Detected Drift"]
