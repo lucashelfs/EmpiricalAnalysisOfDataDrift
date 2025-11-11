@@ -12,3 +12,4 @@ data/usp-stream-data/*.arff
 .coverage.*
 *.log
 *memory_bank/*
+comparison_results/*
