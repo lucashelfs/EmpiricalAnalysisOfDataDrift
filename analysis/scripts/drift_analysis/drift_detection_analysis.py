@@ -16,8 +16,19 @@ and significance testing to provide robust conclusions.
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 from pathlib import Path
 from scipy import stats
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    DRIFT_ANALYSIS_RESULTS,
+    COMPARISON_RESULTS,
+    ensure_results_dirs
+)
 
 # Set professional plotting style
 plt.style.use('default')
@@ -28,7 +39,7 @@ plt.rcParams['grid.alpha'] = 0.3
 
 def load_experiment_data(experiment_id):
     """Load the raw experiment data from multi-run experiment."""
-    data_path = Path(f"comparison_results/{experiment_id}/analysis/all_runs_combined.csv")
+    data_path = COMPARISON_RESULTS / experiment_id / "analysis" / "all_runs_combined.csv"
     df = pd.read_csv(data_path)
     return df
 
@@ -139,17 +150,18 @@ def analyze_batch_size_impact(performance_stats):
 
 def create_scenario_performance_visualization(performance_stats, output_path):
     """Create visualization showing average performance per scenario."""
-    
+
+    ensure_results_dirs()
     # Average across batch sizes for cleaner visualization
     scenario_avg = performance_stats.groupby(['scenario', 'technique', 'algorithm']).agg({
         'mean': 'mean',
         'std': 'mean'
     }).reset_index()
-    
+
     algorithms = scenario_avg['algorithm'].unique()
     scenarios = scenario_avg['scenario'].unique()
     techniques = scenario_avg['technique'].unique()
-    
+
     # Create subplots based on number of algorithms
     if len(algorithms) == 1:
         fig, ax1 = plt.subplots(1, 1, figsize=(12, 8))
@@ -159,37 +171,38 @@ def create_scenario_performance_visualization(performance_stats, output_path):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
         fig.suptitle('Average Performance by Scenario and Technique', fontsize=14, fontweight='bold')
         axes = [ax1, ax2]
-    
+
     x = np.arange(len(scenarios))
     width = 0.15
-    
+
     for idx, algorithm in enumerate(algorithms):
         ax = axes[idx]
         alg_data = scenario_avg[scenario_avg['algorithm'] == algorithm]
-        
+
         for i, technique in enumerate(techniques):
             tech_data = alg_data[alg_data['technique'] == technique]
             tech_data = tech_data.set_index('scenario').reindex(scenarios)
-            
-            ax.bar(x + i*width, tech_data['mean'], width, 
-                   label=technique, alpha=0.8, 
+
+            ax.bar(x + i*width, tech_data['mean'], width,
+                   label=technique, alpha=0.8,
                    yerr=tech_data['std'], capsize=3)
-        
+
         ax.set_title(f'{algorithm} Algorithm', fontweight='bold')
         ax.set_ylabel('Accuracy')
         ax.set_xlabel('Scenario')
         ax.set_xticks(x + width * 2)
         ax.set_xticklabels(scenarios, rotation=45, ha='right')
         ax.legend()
-        
+
         # Set appropriate y-limits based on algorithm
         if algorithm == 'NB':
             ax.set_ylim(0.6, 0.85)
         else:
             ax.set_ylim(0.7, 0.95)
-    
+
     plt.tight_layout()
-    plt.savefig(output_path / 'scenario_performance_analysis.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'scenario_performance_analysis.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def create_drift_benefit_visualization(benefit_analysis, output_path):
@@ -237,7 +250,8 @@ def create_drift_benefit_visualization(benefit_analysis, output_path):
         ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
     
     plt.tight_layout()
-    plt.savefig(output_path / 'drift_detection_benefit.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'drift_detection_benefit.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def create_batch_size_visualization(batch_analysis, output_path):
@@ -283,7 +297,8 @@ def create_batch_size_visualization(batch_analysis, output_path):
         ax.legend()
     
     plt.tight_layout()
-    plt.savefig(output_path / 'batch_size_optimization.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'batch_size_optimization.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def generate_research_report(df, performance_stats, benefit_analysis, batch_analysis, output_path):
@@ -513,10 +528,10 @@ This report presents a statistical analysis of drift detection techniques based 
 
 def main():
     """Execute the complete drift detection analysis."""
-    
+
     # Configuration
     experiment_id = "multi_run_20250710_000110"
-    output_path = Path(f"comparison_results/{experiment_id}/analysis")
+    output_path = COMPARISON_RESULTS / experiment_id / "analysis"
     
     print("Drift Detection Effectiveness Analysis")
     print("=" * 50)
