@@ -6,12 +6,23 @@ This script tests the larger dataset configuration (160k entries, 40k drift leng
 with plotting enabled to verify drift patterns are correctly generated and visualized.
 """
 
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
 from codes.synthetic_multi_run_experiment import SyntheticMultiRunExperiment
+from analysis.config import ensure_results_dirs
 
 def main():
     print("Large Dataset Test with Visualization")
     print("=" * 50)
-    
+
+    # Ensure results directories exist
+    ensure_results_dirs()
+
     # Configure experiment for large dataset with plotting
     experiment = SyntheticMultiRunExperiment(
         target_runs=2,  # Just 2 runs for quick testing

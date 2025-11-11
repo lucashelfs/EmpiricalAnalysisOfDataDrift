@@ -10,7 +10,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import sys
 from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    MULTI_RUN_RESULTS,
+    COMPARISON_RESULTS,
+    ensure_results_dirs
+)
 
 # Set style for better plots
 plt.style.use('default')
@@ -18,22 +29,23 @@ sns.set_palette("husl")
 
 def load_results(experiment_id):
     """Load the analysis results from the experiment."""
-    base_path = Path(f"comparison_results/{experiment_id}/analysis")
-    
+    base_path = COMPARISON_RESULTS / experiment_id / "analysis"
+
     statistical_summary = pd.read_csv(base_path / "statistical_summary.csv")
     technique_comparison = pd.read_csv(base_path / "technique_comparison.csv")
-    
+
     # Load the raw aggregated data if available
     try:
         aggregated_results = pd.read_csv(base_path / "aggregated_results.csv")
     except FileNotFoundError:
         aggregated_results = None
-    
+
     return statistical_summary, technique_comparison, aggregated_results
 
 def create_technique_comparison_plot(technique_comparison, output_path):
     """Create a comprehensive technique comparison plot."""
-    
+
+    ensure_results_dirs()
     # Filter for accuracy metric
     accuracy_data = technique_comparison[technique_comparison['metric'] == 'accuracy'].copy()
     
@@ -99,7 +111,8 @@ def create_technique_comparison_plot(technique_comparison, output_path):
                 f'{cv_val:.1f}%', ha='center', va='bottom', fontsize=9)
     
     plt.tight_layout()
-    plt.savefig(output_path / 'technique_comparison_analysis.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'technique_comparison_analysis.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def create_variance_analysis_plot(technique_comparison, output_path):
@@ -146,9 +159,10 @@ def create_variance_analysis_plot(technique_comparison, output_path):
     
     # Remove the extra subplot
     axes[5].remove()
-    
+
     plt.tight_layout()
-    plt.savefig(output_path / 'variance_analysis_all_metrics.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'variance_analysis_all_metrics.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def create_statistical_significance_plot(technique_comparison, output_path):
@@ -198,7 +212,8 @@ def create_statistical_significance_plot(technique_comparison, output_path):
                 f'{width:.4f}', ha='center', va='bottom', fontsize=9)
     
     plt.tight_layout()
-    plt.savefig(output_path / 'statistical_significance_analysis.png', dpi=300, bbox_inches='tight')
+    output_file = output_path / 'statistical_significance_analysis.png'
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.show()
 
 def generate_comprehensive_summary(statistical_summary, technique_comparison, output_path):
@@ -321,10 +336,10 @@ The synthetic multi-run experiment framework has **successfully solved the deter
 
 def main():
     """Main analysis function."""
-    
+
     # Configuration
     experiment_id = "multi_run_20250709_222114"
-    output_path = Path(f"comparison_results/{experiment_id}/analysis")
+    output_path = COMPARISON_RESULTS / experiment_id / "analysis"
     
     print(f"🔍 Analyzing Synthetic Multi-Run Experiment Results")
     print(f"📂 Experiment ID: {experiment_id}")
