@@ -9,13 +9,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import sys
 from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    STATISTICAL_RESULTS,
+    ensure_results_dirs
+)
 
 def create_summary_visualizations():
     """Create summary visualizations of the statistical significance analysis."""
-    
+
     # Read the detailed results
-    df = pd.read_csv('statistical_significance_detailed_results.csv')
+    df = pd.read_csv(STATISTICAL_RESULTS / 'statistical_significance_detailed_results.csv')
     
     # Set up the plotting style
     plt.style.use('default')
@@ -124,16 +134,18 @@ def create_summary_visualizations():
     cbar = plt.colorbar(scatter, ax=axes[1, 2])
     cbar.set_label('Effect Size (|Cohen\'s d|)')
     
+    ensure_results_dirs()
     plt.tight_layout()
-    plt.savefig('statistical_significance_summary.png', dpi=300, bbox_inches='tight')
+    output_path = STATISTICAL_RESULTS / 'statistical_significance_summary.png'
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.show()
-    
-    print("Summary visualization saved as 'statistical_significance_summary.png'")
+
+    print(f"Summary visualization saved as '{output_path}'")
 
 def create_detailed_summary_report():
     """Create a detailed text summary report."""
-    
-    df = pd.read_csv('statistical_significance_detailed_results.csv')
+
+    df = pd.read_csv(STATISTICAL_RESULTS / 'statistical_significance_detailed_results.csv')
     
     report = []
     report.append("="*80)
@@ -218,9 +230,11 @@ def create_detailed_summary_report():
     report.append("and publications. Single-run results are not scientifically reliable.")
     report.append("")
     report.append("="*80)
-    
+
     # Save report
-    with open('statistical_significance_summary_report.txt', 'w') as f:
+    ensure_results_dirs()
+    report_path = STATISTICAL_RESULTS / 'statistical_significance_summary_report.txt'
+    with open(report_path, 'w') as f:
         f.write('\n'.join(report))
     
     # Print report

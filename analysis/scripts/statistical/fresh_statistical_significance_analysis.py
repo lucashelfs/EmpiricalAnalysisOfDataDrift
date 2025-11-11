@@ -10,10 +10,21 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import os
+import sys
 from pathlib import Path
 from typing import Dict
 import warnings
 warnings.filterwarnings('ignore')
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    STATISTICAL_RESULTS,
+    COMPARISON_RESULTS,
+    ensure_results_dirs
+)
 
 class FreshStatisticalSignificanceAnalyzer:
     """
@@ -22,8 +33,8 @@ class FreshStatisticalSignificanceAnalyzer:
     
     def __init__(self):
         """Initialize the analyzer with paths to result directories."""
-        self.baseline_dir = Path("comparison_results/statistical_relevance_published_results/analysis")
-        self.fresh_results_dir = Path("comparison_results_fresh_validation")
+        self.baseline_dir = COMPARISON_RESULTS / "statistical_relevance_published_results" / "analysis"
+        self.fresh_results_dir = COMPARISON_RESULTS / "fresh_validation"
         
         # Define synthetic datasets to analyze
         self.synthetic_datasets = [
@@ -223,7 +234,7 @@ class FreshStatisticalSignificanceAnalyzer:
         
         # Load original results for comparison
         try:
-            original_df = pd.read_csv('statistical_significance_detailed_results.csv')
+            original_df = pd.read_csv(STATISTICAL_RESULTS / 'statistical_significance_detailed_results.csv')
             original_summary = {
                 'total_comparisons': len(original_df),
                 'significant_05': len(original_df[original_df['is_significant_05']]),
@@ -257,24 +268,26 @@ class FreshStatisticalSignificanceAnalyzer:
         if not self.significance_results:
             print("No fresh results to save")
             return
-        
+
+        ensure_results_dirs()
         df = pd.DataFrame(self.significance_results)
-        
+
         # Round numerical columns for readability
         numerical_cols = ['observed_value', 'baseline_mean', 'baseline_std', 'standard_error',
                          'z_score', 'p_value', 'cohens_d', 'ci_95_lower', 'ci_95_upper',
                          'ci_99_lower', 'ci_99_upper', 'deviation_from_mean', 'percent_deviation']
-        
+
         for col in numerical_cols:
             if col in df.columns:
                 df[col] = df[col].round(6)
-        
+
         # Sort by significance and effect size
-        df = df.sort_values(['is_significant_05', 'p_value', 'cohens_d'], 
+        df = df.sort_values(['is_significant_05', 'p_value', 'cohens_d'],
                            ascending=[False, True, False])
-        
-        df.to_csv(output_file, index=False)
-        print(f"Fresh detailed results saved to: {output_file}")
+
+        output_path = STATISTICAL_RESULTS / output_file
+        df.to_csv(output_path, index=False)
+        print(f"Fresh detailed results saved to: {output_path}")
     
     def print_sample_comparisons(self, n_samples: int = 10) -> None:
         """Print sample comparisons to show the pattern."""

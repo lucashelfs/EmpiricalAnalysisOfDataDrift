@@ -13,25 +13,38 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import os
+import sys
 from pathlib import Path
 import json
 from typing import Dict, List, Tuple, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    STATISTICAL_RESULTS,
+    COMPARISON_RESULTS,
+    ensure_results_dirs
+)
+
 class StatisticalSignificanceAnalyzer:
     """
     Analyzes statistical significance of single-run results against multi-run baselines.
     """
     
-    def __init__(self, comparison_results_dir: str = "comparison_results"):
+    def __init__(self, comparison_results_dir: Path = None):
         """
         Initialize the analyzer with paths to result directories.
-        
+
         Args:
-            comparison_results_dir: Path to the comparison results directory
+            comparison_results_dir: Path to the comparison results directory (uses config if None)
         """
-        self.comparison_results_dir = Path(comparison_results_dir)
+        if comparison_results_dir is None:
+            comparison_results_dir = COMPARISON_RESULTS
+        self.comparison_results_dir = comparison_results_dir
         self.baseline_dir = self.comparison_results_dir / "statistical_relevance_published_results"
         self.baseline_analysis_dir = self.baseline_dir / "analysis"
         
@@ -279,24 +292,26 @@ class StatisticalSignificanceAnalyzer:
         if not self.significance_results:
             print("No results to save")
             return
-        
+
+        ensure_results_dirs()
         df = pd.DataFrame(self.significance_results)
-        
+
         # Round numerical columns for readability
         numerical_cols = ['observed_value', 'baseline_mean', 'baseline_std', 'standard_error',
                          'z_score', 'p_value', 'cohens_d', 'ci_95_lower', 'ci_95_upper',
                          'ci_99_lower', 'ci_99_upper', 'deviation_from_mean', 'percent_deviation']
-        
+
         for col in numerical_cols:
             if col in df.columns:
                 df[col] = df[col].round(6)
-        
+
         # Sort by significance and effect size
-        df = df.sort_values(['is_significant_05', 'p_value', 'cohens_d'], 
+        df = df.sort_values(['is_significant_05', 'p_value', 'cohens_d'],
                            ascending=[False, True, False])
-        
-        df.to_csv(output_file, index=False)
-        print(f"Detailed results saved to: {output_file}")
+
+        output_path = STATISTICAL_RESULTS / output_file
+        df.to_csv(output_path, index=False)
+        print(f"Detailed results saved to: {output_path}")
     
     def create_significance_matrix(self) -> pd.DataFrame:
         """Create a matrix showing significance by dataset, technique, and metric."""
@@ -361,8 +376,9 @@ class StatisticalSignificanceAnalyzer:
         # Create and save significance matrix
         significance_matrix = self.create_significance_matrix()
         if not significance_matrix.empty:
-            significance_matrix.to_csv("significance_matrix.csv")
-            print(f"\nSignificance matrix saved to: significance_matrix.csv")
+            matrix_path = STATISTICAL_RESULTS / "significance_matrix.csv"
+            significance_matrix.to_csv(matrix_path)
+            print(f"\nSignificance matrix saved to: {matrix_path}")
         
         print(f"\n{'='*80}")
         print("ANALYSIS COMPLETE")
