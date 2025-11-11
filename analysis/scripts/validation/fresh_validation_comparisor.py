@@ -8,10 +8,21 @@ for statistical validation comparison.
 
 import json
 import os
+import sys
 from typing import Any, Dict, List, Optional
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    VALIDATION_RESULTS,
+    ensure_results_dirs
+)
 from sklearn.metrics import (
     accuracy_score,
     auc,
@@ -43,8 +54,8 @@ from codes.experiment_timer import timer
 
 from river import tree
 
-# Modified output directory for fresh validation
-FRESH_OUTPUT_DIR = "comparison_results_fresh_validation"
+# Use centralized validation results directory
+FRESH_OUTPUT_DIR = VALIDATION_RESULTS / "fresh_validation"
 
 
 def run_prequential_naive_bayes(
@@ -293,8 +304,9 @@ def save_results_to_csv(
 
 def prepare_output_path(dataset):
     """Create and return the output directory for a dataset."""
-    output_path = os.path.join(FRESH_OUTPUT_DIR, f"{dataset}")
-    os.makedirs(output_path, exist_ok=True)
+    ensure_results_dirs()
+    output_path = FRESH_OUTPUT_DIR / dataset
+    output_path.mkdir(parents=True, exist_ok=True)
     return output_path
 
 
@@ -353,12 +365,13 @@ def run_single_experiment(
 
 def run_fresh_validation_experiment():
     """Run fresh validation experiment on synthetic datasets only."""
-    
+
     print("Starting Fresh Validation Experiment")
     print("=" * 60)
-    
+
     # Create output directory
-    os.makedirs(FRESH_OUTPUT_DIR, exist_ok=True)
+    ensure_results_dirs()
+    FRESH_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
     # Parameters matching original comparisor.py exactly
     synthetic_datasets = [
@@ -378,13 +391,13 @@ def run_fresh_validation_experiment():
 
     for dataset in synthetic_datasets:
         print(f"\n=== Processing Dataset: {dataset} ===")
-        
+
         # Clear old csvs
         output_path = prepare_output_path(dataset)
-        csv_file_path = os.path.join(output_path, f"{dataset}_results.csv")
+        csv_file_path = output_path / f"{dataset}_results.csv"
 
-        if os.path.exists(csv_file_path):
-            os.remove(csv_file_path)
+        if csv_file_path.exists():
+            csv_file_path.unlink()
 
         for batch_size in batch_sizes:
             print(f"Processing {dataset} with batch size {batch_size}...")
@@ -404,7 +417,7 @@ def run_fresh_validation_experiment():
                     dataset,
                     drift_alignment_within_batch=None,
                     plot_heatmaps=False,
-                    custom_output_dir=FRESH_OUTPUT_DIR,
+                    custom_output_dir=str(FRESH_OUTPUT_DIR),
                 )
 
                 test_results, drift_results, num_batches = run_single_experiment(
@@ -456,7 +469,7 @@ def run_fresh_validation_experiment():
                         dataset,
                         drift_alignment_within_batch=drift_within_batch,
                         plot_heatmaps=False,
-                        custom_output_dir=FRESH_OUTPUT_DIR,
+                        custom_output_dir=str(FRESH_OUTPUT_DIR),
                     )
 
                     test_results, drift_results, num_batches = run_single_experiment(

@@ -9,9 +9,20 @@ techniques (KS95, KS90, HD, JS) outperform the base classifier in any scenarios.
 import pandas as pd
 import numpy as np
 from scipy import stats
+import sys
 from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import (
+    VALIDATION_RESULTS,
+    COMPARISON_RESULTS,
+    ensure_results_dirs
+)
 
 class TechniquePerformanceAnalyzer:
     """
@@ -20,7 +31,7 @@ class TechniquePerformanceAnalyzer:
     
     def __init__(self):
         """Initialize the analyzer."""
-        self.results_dir = Path("comparison_results/statistical_relevance_published_results")
+        self.results_dir = COMPARISON_RESULTS / "statistical_relevance_published_results"
         self.analysis_dir = self.results_dir / "analysis"
         
         # Define techniques and metrics
@@ -338,24 +349,26 @@ class TechniquePerformanceAnalyzer:
         if not self.comparison_results:
             print("No results to save.")
             return
-        
+
+        ensure_results_dirs()
         df = pd.DataFrame(self.comparison_results)
-        
+
         # Round numerical columns
         numerical_cols = ['base_mean', 'tech_mean', 'mean_difference', 'percent_difference',
                          'pooled_se', 't_statistic', 'p_value', 'cohens_d',
                          'base_ci_lower', 'base_ci_upper', 'tech_ci_lower', 'tech_ci_upper']
-        
+
         for col in numerical_cols:
             if col in df.columns:
                 df[col] = df[col].round(6)
-        
+
         # Sort by improvement potential
-        df = df.sort_values(['technique_substantially_better', 'percent_difference'], 
+        df = df.sort_values(['technique_substantially_better', 'percent_difference'],
                            ascending=[False, False])
-        
-        df.to_csv(filename, index=False)
-        print(f"Detailed results saved to: {filename}")
+
+        output_path = VALIDATION_RESULTS / filename
+        df.to_csv(output_path, index=False)
+        print(f"Detailed results saved to: {output_path}")
     
     def run_analysis(self) -> None:
         """Run the complete technique performance analysis."""
