@@ -357,13 +357,13 @@ def save_results_to_csv(
             "type_of_dataset": type_of_dataset,
             "algorithm": algorithm,
         }
-        
+
         # Add run metadata if provided
         if run_id is not None:
             row_data["run_id"] = run_id
         if algorithm_seed is not None:
             row_data["algorithm_seed"] = algorithm_seed
-            
+
         data.append(row_data)
 
     # Convert the data into a DataFrame
@@ -394,36 +394,29 @@ def consolidate_csv_files(csv_file_paths: List[str], target_csv_file: str):
 
 def prepare_datasets():
     """Prepare the list of datasets to be processed."""
-    # return [
-    #     "synthetic_dataset_with_parallel_drifts_abrupt",
-    #     "synthetic_dataset_with_switching_drifts_incremental",
-    #     "synthetic_dataset_with_parallel_drifts_incremental",
-    #     "synthetic_dataset_with_switching_drifts_abrupt",
-    #     "synthetic_dataset_no_drifts",
-    #     # Concept drift datasets below
-    #     "MULTISTAGGER",
-    #     "MULTISEA",
-    #     "SEA",
-    #     "STAGGER",
-    #     "electricity",
-    #     "magic",
-    #     "Abrupt (imbal.)",
-    #     "Abrupt (bal.)",
-    #     "Incremental (bal.)",
-    #     "Incremental (imbal.)",
-    #     "Incremental-gradual (bal.)",
-    #     "Incremental-gradual (imbal.)",
-    #     "Incremental-abrupt-reoccurring (bal.)",
-    #     "Incremental-abrupt-reoccurring (imbal.)",
-    #     "Incremental-reoccurring (bal.)",
-    #     "Incremental-reoccurring (imbal.)",
-    # ]
-        return [
+    return [
         "synthetic_dataset_with_parallel_drifts_abrupt",
         "synthetic_dataset_with_switching_drifts_incremental",
         "synthetic_dataset_with_parallel_drifts_incremental",
         "synthetic_dataset_with_switching_drifts_abrupt",
         "synthetic_dataset_no_drifts",
+        # Concept drift datasets below
+        "MULTISTAGGER",
+        "MULTISEA",
+        "SEA",
+        "STAGGER",
+        "electricity",
+        "magic",
+        "Abrupt (imbal.)",
+        "Abrupt (bal.)",
+        "Incremental (bal.)",
+        "Incremental (imbal.)",
+        "Incremental-gradual (bal.)",
+        "Incremental-gradual (imbal.)",
+        "Incremental-abrupt-reoccurring (bal.)",
+        "Incremental-abrupt-reoccurring (imbal.)",
+        "Incremental-reoccurring (bal.)",
+        "Incremental-reoccurring (imbal.)",
     ]
 
 
