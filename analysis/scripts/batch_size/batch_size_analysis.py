@@ -12,18 +12,31 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 import os
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from analysis.config import BATCH_SIZE_RESULTS, COMPARISON_RESULTS, ensure_results_dirs
 
 def load_batch_size_results():
     """Load the 3-run batch size experiment results."""
-    results_path = "comparison_results/multi_run_20250712_132621/analysis/all_runs_combined.csv"
-    
-    if os.path.exists(results_path):
-        df = pd.read_csv(results_path)
-        print(f"✅ Loaded {len(df)} records from batch size experiment")
-        return df
-    else:
-        print(f"❌ No results found at {results_path}")
-        return None
+    # Try to find the most recent multi_run results
+    comparison_dir = Path(COMPARISON_RESULTS)
+    multi_run_dirs = sorted(comparison_dir.glob("multi_run_*/"))
+
+    if multi_run_dirs:
+        # Use the most recent multi_run directory
+        results_path = multi_run_dirs[-1] / "analysis" / "all_runs_combined.csv"
+        if results_path.exists():
+            df = pd.read_csv(results_path)
+            print(f"✅ Loaded {len(df)} records from {results_path.parent.parent.name}")
+            return df
+
+    print(f"❌ No multi_run results found in {comparison_dir}")
+    return None
 
 def analyze_batch_size_impact():
     """Analyze the impact of batch sizes on drift detection performance."""
@@ -139,7 +152,9 @@ def create_batch_size_visualizations(df):
     sns.set_palette("husl")
     
     # Create output directory
-    output_dir = "batch_size_analysis"
+    # Ensure results directory exists
+    ensure_results_dirs()
+    output_dir = BATCH_SIZE_RESULTS
     os.makedirs(output_dir, exist_ok=True)
     
     # 1. Overall Batch Size Performance
@@ -224,7 +239,7 @@ def create_batch_size_visualizations(df):
     plt.legend(title='Technique')
     
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/batch_size_analysis.png', dpi=300, bbox_inches='tight')
+    plt.savefig(output_dir / 'batch_size_analysis.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     # 2. Detailed heatmap
@@ -240,7 +255,7 @@ def create_batch_size_visualizations(df):
     plt.ylabel('Technique')
     
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/batch_size_heatmap.png', dpi=300, bbox_inches='tight')
+    plt.savefig(output_dir / 'batch_size_heatmap.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     print(f"📊 Visualizations saved to {output_dir}/")
@@ -248,8 +263,9 @@ def create_batch_size_visualizations(df):
 def generate_batch_size_report(df):
     """Generate a comprehensive batch size analysis report."""
     
-    output_dir = "batch_size_analysis"
-    report_path = f"{output_dir}/batch_size_analysis_report.md"
+    ensure_results_dirs()
+    output_dir = BATCH_SIZE_RESULTS
+    report_path = output_dir / "batch_size_analysis_report.md"
     
     with open(report_path, 'w') as f:
         f.write("# Batch Size Impact Analysis Report\n\n")
