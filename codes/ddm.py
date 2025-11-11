@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from codes.common import load_and_prepare_dataset, find_indexes
 from codes.config import comparisons_output_dir as output_dir
+from codes.plot_config import HeatmapConfig, COLOR_PALETTES
 
 from codes.KSDDM import initialize_ksddm, process_batches
 from codes.HDDDM import HDDDM, JSDDM
@@ -41,16 +42,14 @@ def plot_heatmap(
     # Backward compatibility: use custom_output_dir if provided, otherwise use default
     base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
     os.makedirs(os.path.join(base_output_dir, dataset, "heatmaps"), exist_ok=True)
-    sns.set(rc={"figure.figsize": (12, 8)})
-    grid_kws = {"height_ratios": (0.9, 0.05), "hspace": 0.3}
-    f, (ax, cbar_ax) = plt.subplots(2, gridspec_kw=grid_kws)
+    
+    # Use centralized configuration
+    config = HeatmapConfig()
+    sns.set(rc={"figure.figsize": config.figure_size})
+    f, (ax, cbar_ax) = plt.subplots(2, gridspec_kw=config.grid_kws)
 
-    coloring = sns.cubehelix_palette(
-        start=0.8,
-        rot=-0.5,
-        as_cmap=True,
-        reverse=True if "KSDDM" in technique else False,
-    )
+    # Use cubehelix palette from centralized config
+    coloring = COLOR_PALETTES['cubehelix_reverse'] if "KSDDM" in technique else COLOR_PALETTES['cubehelix']
 
     min_value = 0 if "KSDDM" in technique else None
     max_value = 1
@@ -70,15 +69,14 @@ def plot_heatmap(
         vmax=max_value,
         xticklabels=heatmap_data.columns,
         yticklabels=heatmap_data.index + 1,
-        linewidths=0.5,
+        linewidths=config.linewidths,
         cbar_ax=cbar_ax,
-        cbar_kws={"orientation": "horizontal"},
+        cbar_kws={"orientation": config.cbar_orientation},
     )
 
     if change_points:
         for batch_number in change_points:
             ax.axvline(
-                # x=batch_number - 1.5,
                 x=batch_number - 1.5,
                 color="red",
                 linestyle="--",
@@ -91,31 +89,27 @@ def plot_heatmap(
     if dataset == "synthetic_dataset_with_switching_drifts_abrupt":
         ax.set_title(
             f"{technique} - Heatmap for dataset SYN-SA (Batch Size {batch_size})",
-            fontsize=20,
+            fontsize=config.title_fontsize,
         )
-
     elif dataset == "synthetic_dataset_with_switching_drifts_incremental":
         ax.set_title(
             f"{technique} - Heatmap for dataset SYN-SI (Batch Size {batch_size})",
-            fontsize=20,
+            fontsize=config.title_fontsize,
         )
-
     elif dataset == "synthetic_dataset_with_parallel_drifts_abrupt":
         ax.set_title(
             f"{technique} - Heatmap for dataset SYN-PA (Batch Size {batch_size})",
-            fontsize=20,
+            fontsize=config.title_fontsize,
         )
-
     elif dataset == "synthetic_dataset_with_parallel_drifts_incremental":
         ax.set_title(
             f"{technique} - Heatmap for dataset SYN-PI (Batch Size {batch_size})",
-            fontsize=20,
+            fontsize=config.title_fontsize,
         )
-
     else:
         ax.set_title(
             f"{technique} - Heatmap for dataset {dataset} (Batch Size {batch_size})",
-            fontsize=20,
+            fontsize=config.title_fontsize,
         )
 
     ax.set(xlabel="Batch", ylabel="Feature")
@@ -126,43 +120,34 @@ def plot_heatmap(
         else "Distance between batch and reference"
     )
 
-    # This part of the code fixes the indexes plots and etc
+    # Apply consistent font sizing using centralized config
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=config.tick_fontsize)
+    ax.collections[0].colorbar.set_label(label=label_text, fontsize=config.label_fontsize)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=config.tick_fontsize)
 
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=15)
-    ax.collections[0].colorbar.set_label(label=label_text, fontsize=15)
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=15)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=15)
-
-    max_xticks = 25  # Adjust this value as needed
-
-    if len(heatmap_data.columns) > max_xticks:
+    if len(heatmap_data.columns) > config.max_xticks:
         xticks = list(
             range(
                 0,
                 len(heatmap_data.columns),
-                len(heatmap_data.columns) // max_xticks + 1,
+                len(heatmap_data.columns) // config.max_xticks + 1,
             )
         )
-        ax.set_xticks(
-            [i + 1.0 for i in xticks]
-        )  # Shift tick positions to align with columns
+        ax.set_xticks([i + 1.0 for i in xticks])
         ax.set_xticklabels(
             [heatmap_data.columns[i] for i in xticks],
-            # rotation=45,
             ha="right",
-            fontsize=13,
+            fontsize=config.tick_fontsize,
         )
     else:
-        ax.set_xticks(
-            [i + 1.0 for i in range(len(heatmap_data.columns))]
-        )  # Align ticks
-        ax.set_xticklabels(heatmap_data.columns, ha="right", fontsize=13)
+        ax.set_xticks([i + 1.0 for i in range(len(heatmap_data.columns))])
+        ax.set_xticklabels(heatmap_data.columns, ha="right", fontsize=config.tick_fontsize)
 
     handles, labels = ax.get_legend_handles_labels()
     unique_labels = dict(zip(labels, handles))
-    ax.legend(unique_labels.values(), unique_labels.keys(), fontsize=15)
-    ax.set_ylabel("Features", fontsize=20)
-    ax.set_xlabel("Batch Index", fontsize=20)
+    ax.legend(unique_labels.values(), unique_labels.keys(), fontsize=config.legend_fontsize)
+    ax.set_ylabel("Features", fontsize=config.label_fontsize)
+    ax.set_xlabel("Batch Index", fontsize=config.label_fontsize)
 
     if "Chunked" in suffix:
         filename = os.path.join(
