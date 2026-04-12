@@ -38,6 +38,7 @@ To run the full experiment, you can use the following commands:
 
 ```bash
 poetry shell
+eval $(poetry env activate)
 PYTHONPATH=. python codes/comparisor.py
 ```
 
