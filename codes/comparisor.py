@@ -158,6 +158,7 @@ def fetch_all_drifts(
     dataset,
     drift_alignment_within_batch: Optional[float] = None,
     plot_heatmaps: bool = True,
+    custom_output_dir=None,
 ):
     """Fetch drift detection results with individual technique timing."""
     results = {}
@@ -169,6 +170,7 @@ def fetch_all_drifts(
             plot_heatmaps=plot_heatmaps,
             dataset=dataset,
             drift_alignment_within_batch=drift_alignment_within_batch,
+            custom_output_dir=custom_output_dir,
         )
 
     with timer.time_technique("KSDDM_95", dataset, batch_size):
@@ -179,6 +181,7 @@ def fetch_all_drifts(
             plot_heatmaps=plot_heatmaps,
             text="KSDDM 95",
             drift_alignment_within_batch=drift_alignment_within_batch,
+            custom_output_dir=custom_output_dir,
         )
 
     with timer.time_technique("KSDDM_90", dataset, batch_size):
@@ -189,6 +192,7 @@ def fetch_all_drifts(
             mean_threshold=0.10,
             text="KSDDM 90",
             drift_alignment_within_batch=drift_alignment_within_batch,
+            custom_output_dir=custom_output_dir,
         )
 
     with timer.time_technique("JSDDM", dataset, batch_size):
@@ -197,6 +201,7 @@ def fetch_all_drifts(
             plot_heatmaps=plot_heatmaps,
             dataset=dataset,
             drift_alignment_within_batch=drift_alignment_within_batch,
+            custom_output_dir=custom_output_dir,
         )
 
     return results
@@ -322,6 +327,8 @@ def save_results_to_csv(
     scenario: str = "N/A",
     type_of_dataset: str = "N/A",
     algorithm: str = "N/A",
+    run_id: Optional[int] = None,
+    algorithm_seed: Optional[int] = None,
 ):
     """Save experiment results to csv."""
     # Create the data structure to be saved in CSV
@@ -334,24 +341,30 @@ def save_results_to_csv(
 
         _, _, roc_auc = metrics["roc_curve"]
 
-        data.append(
-            {
-                "dataset": dataset,
-                "batch_size": batch_size,
-                "technique": technique,
-                "accuracy": metrics["accuracy"],
-                "precision": metrics["precision"],
-                "recall": metrics["recall"],
-                "f1": metrics["f1"],
-                "num_drifts": num_drifts,
-                "num_batches": num_batches,
-                "auc": roc_auc,
-                "drift_alignment_with_batch": drift_alignment_with_batch,
-                "scenario": scenario,
-                "type_of_dataset": type_of_dataset,
-                "algorithm": algorithm,
-            }
-        )
+        row_data = {
+            "dataset": dataset,
+            "batch_size": batch_size,
+            "technique": technique,
+            "accuracy": metrics["accuracy"],
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "f1": metrics["f1"],
+            "num_drifts": num_drifts,
+            "num_batches": num_batches,
+            "auc": roc_auc,
+            "drift_alignment_with_batch": drift_alignment_with_batch,
+            "scenario": scenario,
+            "type_of_dataset": type_of_dataset,
+            "algorithm": algorithm,
+        }
+
+        # Add run metadata if provided
+        if run_id is not None:
+            row_data["run_id"] = run_id
+        if algorithm_seed is not None:
+            row_data["algorithm_seed"] = algorithm_seed
+
+        data.append(row_data)
 
     # Convert the data into a DataFrame
     df = pd.DataFrame(data)

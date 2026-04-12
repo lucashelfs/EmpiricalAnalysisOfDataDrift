@@ -5,28 +5,29 @@ from typing import Any, Dict, List, Tuple
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from matplotlib.lines import Line2D
 import pandas as pd
+import seaborn as sns
 
 from codes.config import comparisons_output_dir as output_dir
-from utils import fetch_dataset_change_points
+from codes.utils import fetch_dataset_change_points
+from codes.plot_config import (
+    setup_seaborn_style, 
+    get_color_mapping, 
+    ScatterPlotConfig, 
+    LineplotConfig, 
+    FeaturePlotConfig,
+    apply_common_styling,
+    setup_figure_with_config,
+    FONT_SIZES
+)
 
 from PIL import Image
 
-
 warnings.filterwarnings("ignore", message="No artists with labels found")
 
-# Set global style parameters
-plt.rcParams["figure.facecolor"] = "#EAEAF2"  # Set the background color to grey
-plt.rcParams["axes.facecolor"] = "#EAEAF2"  # Set the axes background color to grey
-plt.rcParams[
-    "savefig.facecolor"
-] = "white"  # Set the saved figure background color to grey
-plt.rcParams["grid.color"] = "white"  # Set the grid color to white
-plt.rcParams["axes.grid"] = True  # Enable grid by default
-plt.rcParams["legend.frameon"] = True  # Enable legend frame
-plt.rcParams["legend.framealpha"] = 0.9  # Set legend frame transparency
-plt.rcParams["legend.facecolor"] = "white"  # Set legend background color
-plt.rcParams["legend.edgecolor"] = "black"  # Set legend edge color
+# Initialize seaborn styling
+setup_seaborn_style()
 
 
 def plot_legend_on_other_file(dataset, batch_size):
@@ -35,46 +36,58 @@ def plot_legend_on_other_file(dataset, batch_size):
     ax_legend = fig_legend.add_subplot(111)
     ax_legend.axis("off")  # Hide axes
 
+    # Get specific colors from coolwarm palette
+    # coolwarm goes from blue (cool) to red (warm)
+    coolwarm_colors = sns.color_palette("coolwarm", 4)
+    
+    # Assign specific colors: KS methods = blue, HD = orange, JS = reddish
+    color_mapping = {
+        "KS95": coolwarm_colors[0],  # Darkest blue (coolest)
+        "KS90": coolwarm_colors[1],  # Lighter blue 
+        "HD": coolwarm_colors[2],    # Orange (middle-warm)
+        "JS": coolwarm_colors[3]     # Reddish (warmest)
+    }
+
     # Create the legend
     legend = ax_legend.legend(
         handles=[
-            plt.Line2D(
+            Line2D(
                 [0],
                 [0],
                 marker="o",
                 color="w",
-                markerfacecolor="r",
-                markersize=10,
-                label="KS95",
-            ),
-            plt.Line2D(
-                [0],
-                [0],
-                marker="o",
-                color="w",
-                markerfacecolor="g",
-                markersize=10,
-                label="KS90",
-            ),
-            plt.Line2D(
-                [0],
-                [0],
-                marker="o",
-                color="w",
-                markerfacecolor="b",
-                markersize=10,
-                label="HD",
-            ),
-            plt.Line2D(
-                [0],
-                [0],
-                marker="o",
-                color="w",
-                markerfacecolor="m",
+                markerfacecolor=color_mapping["JS"],
                 markersize=10,
                 label="JS",
             ),
-            plt.Line2D([0], [0], linestyle="--", color="k", label="Change point"),
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                color="w",
+                markerfacecolor=color_mapping["HD"],
+                markersize=10,
+                label="HD",
+            ),
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                color="w",
+                markerfacecolor=color_mapping["KS90"],
+                markersize=10,
+                label="KS90",
+            ),
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                color="w",
+                markerfacecolor=color_mapping["KS95"],
+                markersize=10,
+                label="KS95",
+            ),
+            Line2D([0], [0], linestyle="--", color="k", label="Change point"),
         ],
         loc="center",
         ncol=5,  # Arrange in a single row
@@ -106,26 +119,41 @@ def plot_drift_points(
     synthetic_drift_points: dict = None,
     drift_alignment_within_batch: float = None,
     max_index: int = None,
+    custom_output_dir=None,
 ):
     """Plot drift points."""
-    os.makedirs(output_dir + f"/{dataset}/detected_drifts/", exist_ok=True)
-    plt.figure(figsize=(12, 8))
-    colors = {"KS95": "r", "KS90": "g", "HD": "b", "JS": "m"}
-
-    # Ensure all methods are on the Y-axis
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    os.makedirs(os.path.join(base_output_dir, dataset, "detected_drifts"), exist_ok=True)
+    
+    config = ScatterPlotConfig()
+    fig, ax = setup_figure_with_config(config)
+    
+    # Ensure all methods are on the Y-axis with consistent color mapping
     methods = ["KS95", "KS90", "HD", "JS"]
+    
+    # Use the same color mapping as in the legend
+    coolwarm_colors = sns.color_palette("coolwarm", 4)
+    colors = {
+        "KS95": coolwarm_colors[0],  # Darkest blue (coolest)
+        "KS90": coolwarm_colors[1],  # Lighter blue 
+        "HD": coolwarm_colors[2],    # Orange (middle-warm)
+        "JS": coolwarm_colors[3]     # Reddish (warmest)
+    }
+    
     for method in methods:
         drifts = drift_results.get(method, [])
 
         # Remove the first batch, which is the start of the detections
         drifts = [x for x in drifts if x != 1]
 
-        plt.scatter(
+        ax.scatter(
             drifts,
             [method] * len(drifts),
             color=colors[method],
             label=method if len(drifts) > 0 else None,
-            s=50,
+            s=config.marker_size,
+            alpha=config.alpha,
         )
 
     # Initialize change_points and feature_regions
@@ -237,7 +265,7 @@ def plot_drift_points(
 
     plt.savefig(
         os.path.join(
-            output_dir + f"/{dataset}/detected_drifts/",
+            base_output_dir, dataset, "detected_drifts",
             filename,
         ),
         bbox_inches="tight",
@@ -254,40 +282,62 @@ def plot_results(
 
     os.makedirs(output_dir + f"/{dataset}/metrics/", exist_ok=True)
     metrics = ["accuracy", "precision", "recall", "f1"]
+    
+    config = LineplotConfig()
 
     # Create separate plots for each metric
     for metric in metrics:
-        plt.figure(figsize=(10, 6))
-        for model in results[batch_sizes[0]]:
+        fig, ax = setup_figure_with_config(config)
+        
+        models = list(results[batch_sizes[0]].keys())
+        colors = get_color_mapping(models)
+        
+        for model in models:
             metric_values = [
                 results[batch_size][model][metric] for batch_size in batch_sizes
             ]
-            plt.plot(batch_sizes, metric_values, marker="o", label=model)
-        plt.xlabel("Batch Size")
-        plt.ylabel(metric.capitalize())
-        plt.title(f"{metric.capitalize()} Comparison for {dataset}")
-        plt.legend()
-        plt.grid(True)
-        plt.xticks(batch_sizes)
-        plt.savefig(os.path.join(output_dir + f"/{dataset}/metrics/", f"{metric}.png"))
+            ax.plot(batch_sizes, metric_values, 
+                   marker=config.marker, 
+                   label=model, 
+                   color=colors[model],
+                   linewidth=config.linewidth)
+        
+        ax.set_xlabel("Batch Size", fontsize=config.label_fontsize)
+        ax.set_ylabel(metric.capitalize(), fontsize=config.label_fontsize)
+        ax.set_title(f"{metric.capitalize()} Comparison for {dataset}", fontsize=config.title_fontsize)
+        ax.legend(fontsize=config.legend_fontsize)
+        ax.grid(True)
+        ax.set_xticks(batch_sizes)
+        ax.tick_params(labelsize=config.tick_fontsize)
+        
+        plt.savefig(os.path.join(output_dir + f"/{dataset}/metrics/", f"{metric}.png"), bbox_inches="tight")
         plt.close()
 
     # Plot ROC Curve for each batch size in separate files
     for batch_size in batch_sizes:
-        plt.figure(figsize=(10, 6))
-        for model in results[batch_size]:
+        fig, ax = setup_figure_with_config(config)
+        
+        models = list(results[batch_size].keys())
+        colors = get_color_mapping(models)
+        
+        for model in models:
             fpr, tpr, roc_auc = results[batch_size][model]["roc_curve"]
-            plt.plot(fpr, tpr, label=f"{model} (AUC = {roc_auc:.4f})")
-        plt.plot([0, 1], [0, 1], "k--")
-        plt.xlabel("False Positive Rate")
-        plt.ylabel("True Positive Rate")
-        plt.title(f"ROC Curve for {dataset} (Batch Size: {batch_size})")
-        plt.legend()
-        plt.grid(True)
+            ax.plot(fpr, tpr, 
+                   label=f"{model} (AUC = {roc_auc:.4f})", 
+                   color=colors[model],
+                   linewidth=config.linewidth)
+        
+        ax.plot([0, 1], [0, 1], "k--", alpha=0.5)
+        ax.set_xlabel("False Positive Rate", fontsize=config.label_fontsize)
+        ax.set_ylabel("True Positive Rate", fontsize=config.label_fontsize)
+        ax.set_title(f"ROC Curve for {dataset} (Batch Size: {batch_size})", fontsize=config.title_fontsize)
+        ax.legend(fontsize=config.legend_fontsize)
+        ax.grid(True)
+        ax.tick_params(labelsize=config.tick_fontsize)
+        
         plt.savefig(
-            os.path.join(
-                output_dir + f"/{dataset}/metrics/", f"roc_curve_{batch_size}.png"
-            )
+            os.path.join(output_dir + f"/{dataset}/metrics/", f"roc_curve_{batch_size}.png"),
+            bbox_inches="tight"
         )
         plt.close()
 
@@ -302,17 +352,28 @@ def plot_results(
 
     # Sort ROC curves by AUC in descending order and plot the top 3
     roc_curves.sort(key=lambda x: x[2], reverse=True)
-    plt.figure(figsize=(10, 6))
+    fig, ax = setup_figure_with_config(config)
+    
+    top_3_labels = [label for _, _, _, label in roc_curves[:3]]
+    colors = get_color_mapping(top_3_labels)
+    
     for fpr, tpr, roc_auc, label in roc_curves[:3]:
-        plt.plot(fpr, tpr, label=f"{label}, AUC = {roc_auc:.4f}")
-    plt.plot([0, 1], [0, 1], "k--")
-    plt.xlabel("False Positive Rate")
-    plt.ylabel("True Positive Rate")
-    plt.title(f"Top 3 ROC Curves for {dataset}")
-    plt.legend()
-    plt.grid(True)
+        ax.plot(fpr, tpr, 
+               label=f"{label}, AUC = {roc_auc:.4f}", 
+               color=colors[label],
+               linewidth=config.linewidth)
+    
+    ax.plot([0, 1], [0, 1], "k--", alpha=0.5)
+    ax.set_xlabel("False Positive Rate", fontsize=config.label_fontsize)
+    ax.set_ylabel("True Positive Rate", fontsize=config.label_fontsize)
+    ax.set_title(f"Top 3 ROC Curves for {dataset}", fontsize=config.title_fontsize)
+    ax.legend(fontsize=config.legend_fontsize)
+    ax.grid(True)
+    ax.tick_params(labelsize=config.tick_fontsize)
+    
     plt.savefig(
-        os.path.join(output_dir + f"/{dataset}/metrics/", f"top3_roc_curve.png")
+        os.path.join(output_dir + f"/{dataset}/metrics/", f"top3_roc_curve.png"),
+        bbox_inches="tight"
     )
     plt.close()
 
@@ -325,13 +386,17 @@ def plot_all_features(
     suffix: str = "",
     batch_size: int = 1000,
     use_batch_numbers: bool = False,
+    custom_output_dir=None,
 ):
     """Plot all feature columns for a given dataset in individual subplots and save them."""
     # Exclude class column
     feature_columns = [col for col in df.columns if col != "class"]
 
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    
     # Create a directory for the plots
-    dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    dataset_output_dir = os.path.join(base_output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
     # Create subplots for each feature column in a single file
@@ -513,9 +578,13 @@ def plot_feature_and_its_variations(
     dataset_name: str,
     column: str,
     suffix: str,
+    custom_output_dir=None,
 ):
+    # Backward compatibility: use custom_output_dir if provided, otherwise use default
+    base_output_dir = custom_output_dir if custom_output_dir is not None else output_dir
+    
     # Create a directory for the plots
-    dataset_output_dir = os.path.join(output_dir, dataset_name, "feature_plots")
+    dataset_output_dir = os.path.join(base_output_dir, dataset_name, "feature_plots")
     os.makedirs(dataset_output_dir, exist_ok=True)
 
     concated_features_plot = os.path.join(
@@ -552,3 +621,13 @@ def plot_feature_and_its_variations(
     # Save the concatenated image
     concatenated_image.save(concated_features_plot)
     print(f"Concatenated image saved to {concated_features_plot}")
+
+
+if __name__ == "__main__":
+    # Example usage - you can modify these parameters as needed
+    dataset = "Abrupt (bal.)"  # Change this to your desired dataset
+    batch_size = 1000  # Change this to your desired batch size
+    
+    print(f"Generating legend for dataset: {dataset} with batch size: {batch_size}")
+    plot_legend_on_other_file(dataset, batch_size)
+    print(f"Legend saved successfully for {dataset} with batch size {batch_size}")

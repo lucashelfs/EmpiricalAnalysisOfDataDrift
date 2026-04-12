@@ -12,3 +12,25 @@ data/usp-stream-data/*.arff
 .coverage.*
 *.log
 *memory_bank/*
+comparison_results/*
+
+# Analysis results (generated outputs)
+analysis/results/*
+!analysis/results/.gitkeep
+
+# Large generated output directories
+batch_size_analysis/
+large_dataset_analysis/
+docs/
+examples/
+
+# Generated images
+*.png
+concept_drift_images/
+data_drift_images/
+virtual_drift_images/
+
+# Generated data files
+significance_matrix.csv
+statistical_significance_detailed_results.csv
+*.txt

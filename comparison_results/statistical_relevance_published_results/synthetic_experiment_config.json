@@ -1,0 +1,29 @@
+{
+    "experiment_id": "statistical_relevance_published_results",
+    "experiment_type": "synthetic_multi_run",
+    "target_runs": 31,
+    "base_seed": 42,
+    "dataframe_size": 80000,
+    "total_drift_length": 20000,
+    "num_drifts": 2,
+    "features_with_drifts": [
+        "feature1",
+        "feature3",
+        "feature5"
+    ],
+    "synthetic_scenarios": [
+        "all"
+    ],
+    "dataset_filter": "synthetic_only",
+    "batch_sizes": [
+        1000,
+        1500,
+        2000,
+        2500
+    ],
+    "algorithms": [
+        "NB"
+    ],
+    "created_at": "2025-07-12T15:28:11.346586",
+    "existing_runs_at_start": 0
+}

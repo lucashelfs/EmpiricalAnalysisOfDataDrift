@@ -1,0 +1,62 @@
+{
+    "experiment_id": "drift_sensitivity_10_drifts",
+    "experiment_type": "drift_sensitivity_multi_run",
+    "num_drifts": 10,
+    "target_runs": 30,
+    "base_seed": 42,
+    "dataframe_size": 80000,
+    "total_drift_length": 20000,
+    "drift_length_per_window": 2000,
+    "features_with_drifts": [
+        "feature1",
+        "feature3",
+        "feature5"
+    ],
+    "synthetic_scenarios": [
+        "all"
+    ],
+    "dataset_filter": "synthetic_only",
+    "batch_sizes": [
+        1000,
+        1500,
+        2000,
+        2500
+    ],
+    "algorithms": [
+        "NB"
+    ],
+    "output_directory": "comparison_results/drift_sensitivity_10_drifts",
+    "created_at": "2025-07-13T15:33:00.332536",
+    "seeds": [
+        42,
+        142,
+        242,
+        342,
+        442,
+        542,
+        642,
+        742,
+        842,
+        942,
+        1042,
+        1142,
+        1242,
+        1342,
+        1442,
+        1542,
+        1642,
+        1742,
+        1842,
+        1942,
+        2042,
+        2142,
+        2242,
+        2342,
+        2442,
+        2542,
+        2642,
+        2742,
+        2842,
+        2942
+    ]
+}
